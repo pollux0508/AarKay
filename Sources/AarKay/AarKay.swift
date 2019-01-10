@@ -230,7 +230,9 @@ public class AarKay {
                 let currentString = try String(contentsOf: url)
                 let string = stringBlock(currentString)
                 if string != currentString {
-                    try string.write(toFile: url.path, atomically: true, encoding: .utf8)
+                    if !options.dryrun {
+                        try string.write(toFile: url.path, atomically: true, encoding: .utf8)
+                    }
                     AarKayLogger.logFileModified(at: url)
                 } else {
                     if self.options.verbose {
@@ -240,8 +242,10 @@ public class AarKay {
             }
         } else {
             let string = stringBlock(nil)
-            try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
-            try string.write(toFile: url.path, atomically: true, encoding: .utf8)
+            if !options.dryrun {
+                try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
+                try string.write(toFile: url.path, atomically: true, encoding: .utf8)
+            }
             AarKayLogger.logFileAdded(at: url)
         }
     }
