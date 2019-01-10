@@ -169,7 +169,14 @@ public class AarKay {
         do {
             /// Read the contents of the Datafile.
             let contents = try String(contentsOf: sourceUrl)
-
+            
+            var templateUrls: [URL]!
+            if aarkayTemplatesUrl.path == aarkayGlobalTemplatesUrl.path {
+                templateUrls = [aarkayTemplatesUrl]
+            } else {
+                templateUrls = [aarkayGlobalTemplatesUrl, aarkayTemplatesUrl]
+            }
+            
             /// Returns all generated files result.
             let renderedfiles = try AarKayKit.bootstrap(
                 plugin: plugin,
@@ -178,7 +185,7 @@ public class AarKay {
                 directory: directory,
                 template: template,
                 contents: contents,
-                globalTemplates: [aarkayTemplatesUrl, aarkayGlobalTemplatesUrl]
+                globalTemplates: templateUrls
             )
 
             try renderedfiles.forEach { renderedfile in
