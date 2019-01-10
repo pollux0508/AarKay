@@ -12,13 +12,13 @@ protocol AarKayService {
     func templateClass(
         plugin: String,
         template: String
-    ) throws -> Templatable.Type
+    ) -> Templatable.Type?
 
     func generatedfiles(
         datafile: Datafile,
         fileName: String?,
         contextArray: [[String: Any]],
-        templateClass: Templatable.Type
+        templateClass: Templatable.Type?
     ) -> [Result<Generatedfile, AnyError>]
 
     func renderedFiles(

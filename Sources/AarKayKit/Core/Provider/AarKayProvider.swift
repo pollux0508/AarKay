@@ -12,13 +12,13 @@ class AarKayProvider: AarKayService {
     func templateClass(
         plugin: String,
         template: String
-    ) throws -> Templatable.Type {
+    ) -> Templatable.Type? {
         if let templateClass = NSClassFromString("\(plugin).\(template)") as? Templatable.Type {
             return templateClass
         } else if let templateClass = NSClassFromString("aarkay_plugin_\(plugin.lowercased()).\(template)") as? Templatable.Type {
             return templateClass
         } else {
-            throw AarKayError.missingPlugin(plugin + "." + template)
+            return nil
         }
     }
 
@@ -26,7 +26,7 @@ class AarKayProvider: AarKayService {
         datafile: Datafile,
         fileName: String?,
         contextArray: [[String: Any]],
-        templateClass: Templatable.Type
+        templateClass: Templatable.Type?
     ) -> [Result<Generatedfile, AnyError>] {
         let files = contextArray.map { context in
             Result<Generatedfile, AnyError> {
@@ -44,11 +44,15 @@ class AarKayProvider: AarKayService {
                 return generatedfile
             }
         }
-        return self.templateGeneratedfiles(
-            datafile: datafile,
-            generatedfiles: files,
-            templateClass: templateClass
-        )
+        if let templateClass = templateClass {
+            return self.templateGeneratedfiles(
+                datafile: datafile,
+                generatedfiles: files,
+                templateClass: templateClass
+            )
+        } else {
+            return files
+        }
     }
 
     func templateGeneratedfiles(

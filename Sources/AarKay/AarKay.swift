@@ -23,6 +23,11 @@ public class AarKay {
     lazy var aarkayFilesUrl: URL = {
         url.appendingPathComponent("AarKay/AarKayData", isDirectory: true)
     }()
+    
+    /// The template files url relative to the project url.
+    lazy var aarkayTemplatesUrl: URL = {
+        url.appendingPathComponent("AarKay/AarKayTemplates", isDirectory: true)
+    }()
 
     /// Constructs an `AarKay` project.
     ///
@@ -166,7 +171,8 @@ public class AarKay {
                 fileName: name,
                 directory: directory,
                 template: template,
-                contents: contents
+                contents: contents,
+                globalTemplates: aarkayTemplatesUrl
             )
 
             try renderedfiles.forEach { renderedfile in

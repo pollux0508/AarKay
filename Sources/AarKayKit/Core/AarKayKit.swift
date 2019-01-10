@@ -11,13 +11,16 @@ import Result
 public class AarKayKit {
     let datafile: Datafile
     let aarkayService: AarKayService
+    let globalTemplates: URL
 
     init(
         datafile: Datafile,
-        aarkayService: AarKayService
+        aarkayService: AarKayService,
+        globalTemplates: URL
     ) {
         self.datafile = datafile
         self.aarkayService = aarkayService
+        self.globalTemplates = globalTemplates
     }
 }
 
@@ -28,7 +31,8 @@ extension AarKayKit {
         fileName: String,
         directory: String,
         template: String,
-        contents: String
+        contents: String,
+        globalTemplates: URL
     ) throws -> [Result<Renderedfile, AnyError>] {
         let datafile = Datafile(
             plugin: plugin,
@@ -41,7 +45,8 @@ extension AarKayKit {
 
         let aarkayKit = AarKayKit(
             datafile: datafile,
-            aarkayService: AarKayProvider()
+            aarkayService: AarKayProvider(),
+            globalTemplates: globalTemplates
         )
 
         return try aarkayKit.bootstrap()
@@ -51,15 +56,24 @@ extension AarKayKit {
 extension AarKayKit {
     func bootstrap() throws -> [Result<Renderedfile, AnyError>] {
         // 1.
-        var templateClass: Templatable.Type!
-        var context: Any?
+        let templateClass = self.aarkayService.templateClass(
+            plugin: self.datafile.plugin,
+            template: self.datafile.template
+        )
+        
+        var inputSerializer: InputSerializable!
+        var templatesUrl: URL!
+        if let templateClass = templateClass {
+            inputSerializer = templateClass.inputSerializer()
+            templatesUrl = templateClass.resource().rk.templatesDirectory()
+        } else {
+            inputSerializer = YamlInputSerializer()
+            templatesUrl = globalTemplates
+        }
+        
+        var context: Any!
         do {
-            templateClass = try self.aarkayService.templateClass(
-                plugin: self.datafile.plugin,
-                template: self.datafile.template
-            )
-            context = try templateClass
-                .inputSerializer()
+            context = try inputSerializer
                 .context(contents: self.datafile.contents)
         } catch {
             throw AnyError(error)
@@ -86,7 +100,7 @@ extension AarKayKit {
 
         // 4.
         return self.aarkayService.renderedFiles(
-            url: templateClass.resource().rk.templatesDirectory(),
+            url: templatesUrl,
             generatedfiles: generatedFiles,
             context: self.datafile.globalContext
         )
