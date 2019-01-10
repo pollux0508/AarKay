@@ -17,7 +17,8 @@ class RunnerFiles {
 
     let options = AarKayOptions(
         force: CommandLine.arguments.contains("--force"),
-        verbose: CommandLine.arguments.contains("--verbose")
+        verbose: CommandLine.arguments.contains("--verbose"),
+        dryrun: CommandLine.arguments.contains("--dryrun")
     )
     AarKay(url: url, options: options).bootstrap()
     """
