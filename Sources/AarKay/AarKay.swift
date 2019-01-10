@@ -28,6 +28,12 @@ public class AarKay {
     lazy var aarkayTemplatesUrl: URL = {
         url.appendingPathComponent("AarKay/AarKayTemplates", isDirectory: true)
     }()
+    
+    /// The global template files url relative to the project url.
+    lazy var aarkayGlobalTemplatesUrl: URL = {
+        URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
+            .appendingPathComponent("AarKay/AarKayTemplates", isDirectory: true)
+    }()
 
     /// Constructs an `AarKay` project.
     ///
@@ -172,7 +178,7 @@ public class AarKay {
                 directory: directory,
                 template: template,
                 contents: contents,
-                globalTemplates: aarkayTemplatesUrl
+                globalTemplates: [aarkayTemplatesUrl, aarkayGlobalTemplatesUrl]
             )
 
             try renderedfiles.forEach { renderedfile in

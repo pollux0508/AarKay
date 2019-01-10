@@ -98,13 +98,13 @@ class AarKayProvider: AarKayService {
     }
 
     func renderedFiles(
-        url: URL,
+        urls: [URL],
         generatedfiles: [Result<Generatedfile, AnyError>],
         context: [String: Any]?
     ) -> [Result<Renderedfile, AnyError>] {
         let renderedFiles: [Result<Renderedfile, AnyError>] = generatedfiles.tryMap {
             return try AarKayTemplates.default.render(
-                url: url, generatedfile: $0, context: context
+                urls: urls, generatedfile: $0, context: context
             )
         }
         return renderedFiles

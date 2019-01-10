@@ -21,7 +21,7 @@ extension FileManager {
             }
         return results
     }
-
+    
     public func subFiles(atUrl url: URL) -> [URL]? {
         let enumerator = self.enumerator(at: url, includingPropertiesForKeys: [.isDirectoryKey])
         let results = enumerator?
@@ -32,8 +32,18 @@ extension FileManager {
                 } else {
                     return false
                 }
-            }
+        }
         return results
+    }
+    
+    public func subFiles(atUrls urls: [URL]) -> [URL]? {
+        return urls.reduce([URL](), { (initial: [URL], next: URL) -> [URL] in
+            if let urls = subFiles(atUrl: next) {
+                return initial + urls
+            } else {
+                return initial
+            }
+        })
     }
 
     public func isDirectory(url: URL) -> Bool? {

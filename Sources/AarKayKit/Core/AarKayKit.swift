@@ -11,12 +11,12 @@ import Result
 public class AarKayKit {
     let datafile: Datafile
     let aarkayService: AarKayService
-    let globalTemplates: URL
+    let globalTemplates: [URL]
 
     init(
         datafile: Datafile,
         aarkayService: AarKayService,
-        globalTemplates: URL
+        globalTemplates: [URL]
     ) {
         self.datafile = datafile
         self.aarkayService = aarkayService
@@ -32,7 +32,7 @@ extension AarKayKit {
         directory: String,
         template: String,
         contents: String,
-        globalTemplates: URL
+        globalTemplates: [URL]
     ) throws -> [Result<Renderedfile, AnyError>] {
         let datafile = Datafile(
             plugin: plugin,
@@ -62,10 +62,10 @@ extension AarKayKit {
         )
         
         var inputSerializer: InputSerializable!
-        var templatesUrl: URL!
+        var templatesUrl: [URL]!
         if let templateClass = templateClass {
             inputSerializer = templateClass.inputSerializer()
-            templatesUrl = templateClass.resource().rk.templatesDirectory()
+            templatesUrl = [templateClass.resource().rk.templatesDirectory()]
         } else {
             inputSerializer = YamlInputSerializer()
             templatesUrl = globalTemplates
@@ -100,7 +100,7 @@ extension AarKayKit {
 
         // 4.
         return self.aarkayService.renderedFiles(
-            url: templatesUrl,
+            urls: templatesUrl,
             generatedfiles: generatedFiles,
             context: self.datafile.globalContext
         )

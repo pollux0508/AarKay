@@ -16,9 +16,9 @@ class AarKayTemplates {
         let files: [String: URL]
     }
 
-    private var environmentCache = Dictionary<URL, Cache>()
+    private var environmentCache = Dictionary<String, Cache>()
 
-    func render(url: URL, generatedfile: Generatedfile, context: [String: Any]?) throws -> Renderedfile {
+    func render(urls: [URL], generatedfile: Generatedfile, context: [String: Any]?) throws -> Renderedfile {
         var stringContents: String!
         var pathExtension: String = generatedfile.ext ?? ""
 
@@ -26,7 +26,7 @@ class AarKayTemplates {
             stringContents = templateString
         } else {
             let (string, ext) = try AarKayTemplates.default.renderTemplate(
-                url: url,
+                urls: urls,
                 name: generatedfile.template,
                 context: context + generatedfile.contents
             )
@@ -46,13 +46,13 @@ class AarKayTemplates {
     }
 
     private func renderTemplate(
-        url: URL,
+        urls: [URL],
         name: String,
         context: [String: Any]? = nil
     ) throws -> (String, String) {
-        let cache = self.cache(url: url)
+        let cache = self.cache(urls: urls)
         guard let templateUrl = cache.files[name] else { throw AarKayError.templateNotFound(name) }
-        if let (templateName, ext) = try url.rk.template(url: templateUrl) {
+        if let (templateName, ext) = try templateUrl.rk.template() {
             let rendered = try cache.environment.renderTemplate(
                 name: templateName, context: context
             )
@@ -65,12 +65,13 @@ class AarKayTemplates {
         }
     }
 
-    private func cache(url: URL) -> Cache {
-        if let cache = environmentCache[url] {
-            return cache
-        }
-        let env = url.rk.environment()
-        let files = FileManager.default.subFiles(atUrl: url) ?? []
+    private func cache(urls: [URL]) -> Cache {
+        let cacheKey: String = urls.reduce("", { (initial: String, next: URL) -> String in
+            return initial + next.path
+        })
+        if let cache = environmentCache[cacheKey] { return cache }
+        let env = urls.rk.environment()
+        let files = FileManager.default.subFiles(atUrls: urls) ?? []
         let fcs = files.filter { !$0.lastPathComponent.hasPrefix(".") }
             .reduce(Dictionary<String, URL>()) { initial, item in
                 guard let name = item.lastPathComponent.components(separatedBy: ".").first else { return initial }
@@ -79,7 +80,7 @@ class AarKayTemplates {
                 return initial
             }
         let cache = Cache(environment: env, files: fcs)
-        environmentCache[url] = cache
+        environmentCache[cacheKey] = cache
         return cache
     }
 }

@@ -22,7 +22,7 @@ protocol AarKayService {
     ) -> [Result<Generatedfile, AnyError>]
 
     func renderedFiles(
-        url: URL,
+        urls: [URL],
         generatedfiles: [Result<Generatedfile, AnyError>],
         context: [String: Any]?
     ) -> [Result<Renderedfile, AnyError>]
