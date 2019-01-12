@@ -139,8 +139,10 @@ extension Template {
     public func generatedfiles() -> [Generatedfile] {
         var all = [Generatedfile]()
         var templatesDir = "AarKay/AarKayTemplates"
-        let directoryComponents = datafile.directory.components(separatedBy: "/")
-        directoryComponents.forEach { _ in templatesDir = "../" + templatesDir }
+        if let directory = datafile.directory {
+            let directoryComponents = directory.components(separatedBy: "/")
+            directoryComponents.forEach { _ in templatesDir = "../" + templatesDir }
+        }
         templateFiles(
             generatedFile: rk_generatedfile(),
             templatesDir: templatesDir,

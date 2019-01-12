@@ -10,7 +10,7 @@ import Foundation
 public struct Datafile {
     public let plugin: String
     public let name: String
-    public let directory: String
+    public let directory: String?
     public let template: String
     public let contents: String
     public let globalContext: [String: Any]?
@@ -18,7 +18,7 @@ public struct Datafile {
     init(
         plugin: String,
         name: String,
-        directory: String,
+        directory: String?,
         template: String,
         contents: String,
         globalContext: [String: Any]?

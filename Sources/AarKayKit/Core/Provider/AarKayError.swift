@@ -8,7 +8,6 @@
 import Foundation
 
 enum AarKayError: Error {
-    case missingPlugin(String)
     case missingFileName(String, String, [String: Any])
     case modelDecodingFailure(String, String)
     case templateNotFound(String)
@@ -18,8 +17,6 @@ enum AarKayError: Error {
 extension AarKayError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .missingPlugin(let name):
-            return "Couldn't find the plugin with the name \(name)"
         case .missingFileName(let plugin, let template, let context):
             return "Couldn't resolve filename in \(plugin).\(template) with \(context)"
         case .modelDecodingFailure(let name, let model):
