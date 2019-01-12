@@ -11,11 +11,13 @@ import AarKayPlugin
 import Foundation
 
 public class PLUGINNAME: NSObject, Templatable {
+    private let datafile: Datafile
     private var model: PLUGINNAMEModel
     public var generatedfile: Generatedfile
 
-    public required init?(generatedfile: Generatedfile) throws {
+    public required init?(datafile: Datafile, generatedfile: Generatedfile) throws {
         guard let contents = generatedfile.contents else { return nil }
+        self.datafile = datafile
         self.model = try contents.decode(type: PLUGINNAMEModel.self)
         var generatedfile = generatedfile
         generatedfile.contents = try Dictionary.encode(data: model)
