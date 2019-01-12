@@ -102,10 +102,25 @@ class AarKayProvider: AarKayService {
         generatedfiles: [Result<Generatedfile, AnyError>],
         context: [String: Any]?
     ) -> [Result<Renderedfile, AnyError>] {
-        let renderedFiles: [Result<Renderedfile, AnyError>] = generatedfiles.tryMap {
-            return try AarKayTemplates.default.render(
-                urls: urls, generatedfile: $0, context: context
-            )
+        let renderedFiles: [Result<Renderedfile, AnyError>] = generatedfiles.reduce(
+            [Result<Renderedfile, AnyError>]()
+        ) { (initial, next) -> [Result<Renderedfile, AnyError>] in
+            var result: [Result<Renderedfile, AnyError>] = []
+            switch next {
+            case .success(let file):
+                let filesResult = Result { try AarKayTemplates.default.render(
+                    urls: urls, generatedfile: file, context: context
+                ) }
+                switch filesResult {
+                case .success(let files):
+                    result = result + files.map { Result<Renderedfile, AnyError>.success($0) }
+                case .failure(let error):
+                    result.append(.failure(error))
+                }
+            case .failure(let error):
+                result.append(.failure(error))
+            }
+            return initial + result
         }
         return renderedFiles
     }
