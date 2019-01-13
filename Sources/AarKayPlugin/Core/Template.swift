@@ -135,7 +135,7 @@ public class TemplateModel: Codable {
 
 // MARK: - AarKayEnd
 extension Template {
-    public func generatedfiles() -> [Generatedfile] {
+    public func generatedfiles() throws -> [Generatedfile] {
         var all = [Generatedfile]()
         var templatesDir = "AarKay/AarKayTemplates"
         if let directory = datafile.directory {
@@ -149,7 +149,7 @@ extension Template {
             model: model,
             all: &all
         )
-        modelFiles(
+        try modelFiles(
             generatedFile: rk_generatedfile(),
             model: model,
             all: &all
@@ -207,13 +207,15 @@ extension Template {
         }
     }
 
-    func modelFiles(generatedFile: Generatedfile, model: TemplateModel, all: inout [Generatedfile]) {
+    func modelFiles(generatedFile: Generatedfile,
+                    model: TemplateModel,
+                    all: inout [Generatedfile]) throws {
         var gFile = generatedFile
         gFile.setName(model.name)
         all.append(gFile)
 
         guard let subs = model.subs else { return }
-        subs.forEach { sub in
+        try subs.forEach { sub in
             sub.base = (model.properties.isEmpty) ? model.base : model.name
             sub.baseProperties = model.baseProperties + model.properties
             let subDir = generatedFile.directory != nil ?
@@ -221,8 +223,8 @@ extension Template {
                 model.name
             var subFile = generatedFile
             subFile.setDirectory(subDir)
-            subFile.setContents(try! Dictionary.encode(data: sub))
-            modelFiles(generatedFile: subFile, model: sub, all: &all)
+            subFile.setContents(try Dictionary.encode(data: sub))
+            try modelFiles(generatedFile: subFile, model: sub, all: &all)
         }
     }
 }

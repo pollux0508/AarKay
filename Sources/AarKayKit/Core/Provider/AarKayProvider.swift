@@ -85,7 +85,11 @@ class AarKayProvider: AarKayService {
                 datafile: datafile,
                 generatedfile: generatedfile
             ) {
-                return templatable.generatedfiles().map { .success($0) }
+                do {
+                    return try templatable.generatedfiles().map { .success($0) }
+                } catch {
+                    return [Result.failure(AnyError(error))]
+                }
             } else {
                 let error = AarKayError.modelDecodingFailure(
                     generatedfile.name, generatedfile.template + "Model"
