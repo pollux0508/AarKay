@@ -27,7 +27,7 @@ class AarKayTemplates {
             let file = renderedFile(
                 generatedfile: generatedfile,
                 stringContents: templateString,
-                pathExtension: generatedfile.ext ?? ""
+                pathExtension: generatedfile.ext
             )
             return [file]
         } else {
@@ -49,11 +49,11 @@ class AarKayTemplates {
     private func renderedFile(
         generatedfile: Generatedfile,
         stringContents: String,
-        pathExtension: String
+        pathExtension: String?
     ) -> Renderedfile {
-        let fileName = pathExtension.isEmpty ? generatedfile.name : generatedfile.name + "." + pathExtension
         let file = Renderedfile(
-            fileName: fileName,
+            name: generatedfile.name,
+            ext: pathExtension,
             directory: generatedfile.directory,
             override: generatedfile.override
         ) {
@@ -70,10 +70,10 @@ class AarKayTemplates {
         urls: [URL],
         name: String,
         context: [String: Any]? = nil
-    ) throws -> [(String, String)] {
+    ) throws -> [(String, String?)] {
         let cache = self.cache(urls: urls)
         guard let templateUrls = cache.files[name] else { throw AarKayError.templateNotFound(name) }
-        var result: [(String, String)] = []
+        var result: [(String, String?)] = []
         try templateUrls.forEach { templateUrl in
             if let (templateName, ext) = try templateUrl.rk.template() {
                 let rendered = try cache.environment.renderTemplate(
@@ -84,7 +84,7 @@ class AarKayTemplates {
                 let rendered = try cache.environment.renderTemplate(
                     name: name, context: context
                 )
-                result.append((rendered, ""))
+                result.append((rendered, nil))
             }
         }
         return result

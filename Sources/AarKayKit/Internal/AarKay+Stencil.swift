@@ -17,12 +17,12 @@ extension AarKay where Base == URL {
         return [base].rk.environment()
     }
 
-    func template() throws -> (String, String)? {
+    func template() throws -> (String, String?)? {
         let name = base.lastPathComponent
         let fc = name.components(separatedBy: ".")
         guard fc.count > 1 && fc.count <= 3 else { throw AarKayError.invalidTemplate(name) }
         let templateName = fc.joined(separator: ".")
-        let ext = fc.count == 3 ? fc[1] : ""
+        let ext = fc.count == 3 ? fc[1] : nil
         return (templateName, ext)
     }
 }

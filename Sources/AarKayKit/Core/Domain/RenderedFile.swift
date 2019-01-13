@@ -8,18 +8,29 @@
 import Foundation
 
 public struct Renderedfile {
-    public let fileName: String
+    public let name: String
+    public let ext: String?
     public let directory: String?
     public let override: Bool
     public let stringBlock: (String?) -> String
 
+    public var nameWithExt: String {
+        if let ext = ext {
+            return name + "." + ext
+        } else {
+            return name
+        }
+    }
+    
     init(
-        fileName: String,
+        name: String,
+        ext: String?,
         directory: String?,
         override: Bool,
         stringBlock: @escaping (String?) -> String
     ) {
-        self.fileName = fileName
+        self.name = name
+        self.ext = ext
         self.directory = directory
         self.override = override
         self.stringBlock = stringBlock

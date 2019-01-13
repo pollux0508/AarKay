@@ -218,7 +218,7 @@ public class AarKay {
                 .appendingPathComponent(directory, isDirectory: true)
                 .standardized
         }
-        url.appendPathComponent(renderedfile.fileName)
+        url.appendPathComponent(renderedfile.nameWithExt)
         let stringBlock = renderedfile.stringBlock
         let override = renderedfile.override
         if self.fileManager.fileExists(atPath: url.path) {
