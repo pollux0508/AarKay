@@ -32,35 +32,35 @@ public struct Generatedfile {
         self.override = override
         self.template = template
     }
-    
+
     public mutating func setPlugin(_ plugin: String) {
         self.plugin = plugin.failIfEmpty()
     }
-    
+
     public mutating func setName(_ name: String) {
         self.name = name.failIfEmpty()
     }
-    
+
     public mutating func setDirectory(_ directory: String?) {
         self.directory = directory.nilIfEmpty()
     }
-    
+
     public mutating func setContents(_ contents: [String: Any]?) {
-        self.contents = contents//.nilIfEmpty()
+        self.contents = contents //.nilIfEmpty()
     }
-    
+
     public mutating func setOverride(_ override: Bool) {
         self.override = override
     }
-    
+
     public mutating func setTemplate(_ template: String) {
         self.template = template
     }
-    
+
     public mutating func setTemplateString(_ templateString: String?) {
         self.templateString = templateString.nilIfEmpty()
     }
-    
+
     public mutating func setExt(_ ext: String?) {
         self.ext = ext.nilIfEmpty()
     }

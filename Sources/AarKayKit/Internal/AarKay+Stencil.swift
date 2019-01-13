@@ -30,15 +30,16 @@ extension AarKay where Base == URL {
 extension Array: AarKayExtensionsProvider where Element == URL {}
 
 extension AarKay where Base == [URL] {
-    
     func environment() -> Environment {
-        let directories = base.reduce(base, { (initial: [URL], next: URL) -> [URL] in
-            if let subDirs = FileManager.default.subDirectories(atUrl: next) {
-                return initial + subDirs
-            } else {
-                return initial
+        let directories = base.reduce(
+            base, { (initial: [URL], next: URL) -> [URL] in
+                if let subDirs = FileManager.default.subDirectories(atUrl: next) {
+                    return initial + subDirs
+                } else {
+                    return initial
+                }
             }
-        })
+        )
         let paths = directories.map { Path($0.path) }
         let aarkayFilesLoader = FileSystemLoader(paths: paths)
         let ext = Extension()
@@ -50,5 +51,4 @@ extension AarKay where Base == [URL] {
         )
         return environment
     }
-    
 }

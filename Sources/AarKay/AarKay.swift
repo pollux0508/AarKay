@@ -23,12 +23,12 @@ public class AarKay {
     lazy var aarkayFilesUrl: URL = {
         url.appendingPathComponent("AarKay/AarKayData", isDirectory: true)
     }()
-    
+
     /// The template files url relative to the project url.
     lazy var aarkayTemplatesUrl: URL = {
         url.appendingPathComponent("AarKay/AarKayTemplates", isDirectory: true)
     }()
-    
+
     /// The global template files url relative to the project url.
     lazy var aarkayGlobalTemplatesUrl: URL = {
         URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
@@ -110,7 +110,7 @@ public class AarKay {
             AarKayLogger.logError(error)
         }
     }
-    
+
     /// Reads the global context url from the path "{PROJECT_ROOT}/AarKay/.aarkay" and serializes it into a dictionary using Yaml serialzer.
     ///
     /// - Returns: The dictionary from contents.
@@ -169,14 +169,14 @@ public class AarKay {
         do {
             /// Read the contents of the Datafile.
             let contents = try String(contentsOf: sourceUrl)
-            
+
             var templateUrls: [URL]!
-            if aarkayTemplatesUrl.path == aarkayGlobalTemplatesUrl.path {
+            if self.aarkayTemplatesUrl.path == self.aarkayGlobalTemplatesUrl.path {
                 templateUrls = [aarkayTemplatesUrl]
             } else {
                 templateUrls = [aarkayGlobalTemplatesUrl, aarkayTemplatesUrl]
             }
-            
+
             /// Returns all generated files result.
             let renderedfiles = try AarKayKit.bootstrap(
                 plugin: plugin,
@@ -230,7 +230,7 @@ public class AarKay {
                 let currentString = try String(contentsOf: url)
                 let string = stringBlock(currentString)
                 if string != currentString {
-                    if !options.dryrun {
+                    if !self.options.dryrun {
                         try string.write(toFile: url.path, atomically: true, encoding: .utf8)
                     }
                     AarKayLogger.logFileModified(at: url)
@@ -242,8 +242,8 @@ public class AarKay {
             }
         } else {
             let string = stringBlock(nil)
-            if !options.dryrun {
-                try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
+            if !self.options.dryrun {
+                try self.fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
                 try string.write(toFile: url.path, atomically: true, encoding: .utf8)
             }
             AarKayLogger.logFileAdded(at: url)

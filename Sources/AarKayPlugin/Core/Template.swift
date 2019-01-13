@@ -134,6 +134,7 @@ public class TemplateModel: Codable {
 }
 
 // MARK: - AarKayEnd
+
 extension Template {
     public func generatedfiles() throws -> [Generatedfile] {
         var all = [Generatedfile]()
@@ -143,21 +144,26 @@ extension Template {
             let backPath = Array(repeating: "../", count: components.count).joined()
             templatesDir = backPath + templatesDir
         }
-        templateFiles(
+        self.templateFiles(
             generatedFile: rk_generatedfile(),
             templatesDir: templatesDir,
-            model: model,
+            model: self.model,
             all: &all
         )
-        try modelFiles(
+        try self.modelFiles(
             generatedFile: rk_generatedfile(),
-            model: model,
+            model: self.model,
             all: &all
         )
         return all
     }
 
-    func templateFiles(generatedFile: Generatedfile, templatesDir: String, model: TemplateModel, all: inout [Generatedfile]) {
+    func templateFiles(
+        generatedFile: Generatedfile,
+        templatesDir: String,
+        model: TemplateModel,
+        all: inout [Generatedfile]
+    ) {
         let templateFilename = model.name
 
         var templatesDir = templatesDir
@@ -207,9 +213,11 @@ extension Template {
         }
     }
 
-    func modelFiles(generatedFile: Generatedfile,
-                    model: TemplateModel,
-                    all: inout [Generatedfile]) throws {
+    func modelFiles(
+        generatedFile: Generatedfile,
+        model: TemplateModel,
+        all: inout [Generatedfile]
+    ) throws {
         var gFile = generatedFile
         gFile.setName(model.name)
         all.append(gFile)

@@ -14,7 +14,7 @@ public struct AarKayOptions {
 
     /// The verbose flag.
     let verbose: Bool
-    
+
     /// The dryrun flag.
     let dryrun: Bool
 

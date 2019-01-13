@@ -60,7 +60,7 @@ extension AarKayKit {
             plugin: self.datafile.plugin,
             template: self.datafile.template
         )
-        
+
         var inputSerializer: InputSerializable!
         var templatesUrl: [URL]!
         if let templateClass = templateClass {
@@ -70,9 +70,9 @@ extension AarKayKit {
             inputSerializer = YamlInputSerializer()
             templatesUrl = globalTemplates
         } else {
-            throw AarKayError.templateNotFound(datafile.template)
+            throw AarKayError.templateNotFound(self.datafile.template)
         }
-        
+
         var context: Any!
         do {
             context = try inputSerializer

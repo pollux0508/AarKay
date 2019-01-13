@@ -45,7 +45,7 @@ class AarKayTemplates {
             }
         }
     }
-    
+
     private func renderedFile(
         generatedfile: Generatedfile,
         stringContents: String,
@@ -91,9 +91,11 @@ class AarKayTemplates {
     }
 
     private func cache(urls: [URL]) -> Cache {
-        let cacheKey: String = urls.reduce("", { (initial: String, next: URL) -> String in
-            return initial + next.path
-        })
+        let cacheKey: String = urls.reduce(
+            "", { (initial: String, next: URL) -> String in
+                initial + next.path
+            }
+        )
         if let cache = environmentCache[cacheKey] { return cache }
         let env = urls.rk.environment()
         let files = FileManager.default.subFiles(atUrls: urls) ?? []

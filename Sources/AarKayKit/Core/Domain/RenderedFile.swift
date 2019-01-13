@@ -15,10 +15,10 @@ public struct Renderedfile {
     public let stringBlock: (String?) -> String
 
     public var nameWithExt: String {
-        if let ext = ext {
-            return name + "." + ext
+        if let ext = self.ext {
+            return self.name + "." + ext
         } else {
-            return name
+            return self.name
         }
     }
 
@@ -35,19 +35,19 @@ public struct Renderedfile {
         self.override = override
         self.stringBlock = stringBlock
     }
-    
+
     public mutating func setName(_ name: String) {
         self.name = name.failIfEmpty()
     }
-    
+
     public mutating func setExt(_ ext: String?) {
         self.ext = ext.nilIfEmpty()
     }
-    
+
     public mutating func setDirectory(_ directory: String?) {
         self.directory = directory.nilIfEmpty()
     }
-    
+
     public mutating func setOverride(_ override: Bool) {
         self.override = override
     }
