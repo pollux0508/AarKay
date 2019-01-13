@@ -21,7 +21,7 @@ public struct Renderedfile {
             return name
         }
     }
-    
+
     init(
         name: String,
         ext: String?,
@@ -29,9 +29,9 @@ public struct Renderedfile {
         override: Bool,
         stringBlock: @escaping (String?) -> String
     ) {
-        self.name = name
-        self.ext = ext
-        self.directory = directory
+        self.name = name.failIfEmpty()
+        self.ext = ext.nilIfEmpty()
+        self.directory = directory.nilIfEmpty()
         self.override = override
         self.stringBlock = stringBlock
     }

@@ -23,9 +23,9 @@ public struct Datafile {
         contents: String,
         globalContext: [String: Any]?
     ) {
-        self.plugin = plugin
-        self.name = name
-        self.directory = directory
+        self.plugin = plugin.failIfEmpty()
+        self.name = name.failIfEmpty()
+        self.directory = directory.nilIfEmpty()
         self.template = template
         self.contents = contents
         self.globalContext = globalContext

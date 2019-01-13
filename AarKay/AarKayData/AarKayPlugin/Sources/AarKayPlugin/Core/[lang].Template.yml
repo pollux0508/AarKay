@@ -16,7 +16,7 @@
   isTemplate: false
   isPlugin: false
   properties:
-    - ext|String
+    - ext|String?
     - suffix|String?
     - string|String
     - subString|String?

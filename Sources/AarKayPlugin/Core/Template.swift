@@ -19,7 +19,7 @@ public class Template: NSObject, Templatable {
         self.datafile = datafile
         self.model = try contents.decode(type: TemplateModel.self)
         var generatedfile = generatedfile
-        generatedfile.contents = try Dictionary.encode(data: model)
+        generatedfile.setContents(try Dictionary.encode(data: model))
         self.generatedfile = generatedfile
     }
 
@@ -134,14 +134,14 @@ public class TemplateModel: Codable {
 }
 
 // MARK: - AarKayEnd
-
 extension Template {
     public func generatedfiles() -> [Generatedfile] {
         var all = [Generatedfile]()
         var templatesDir = "AarKay/AarKayTemplates"
         if let directory = datafile.directory {
-            let directoryComponents = directory.components(separatedBy: "/")
-            directoryComponents.forEach { _ in templatesDir = "../" + templatesDir }
+            let components = directory.components(separatedBy: "/")
+            let backPath = Array(repeating: "../", count: components.count).joined()
+            templatesDir = backPath + templatesDir
         }
         templateFiles(
             generatedFile: rk_generatedfile(),
@@ -149,7 +149,11 @@ extension Template {
             model: model,
             all: &all
         )
-        modelFiles(generatedFile: rk_generatedfile(), model: model, all: &all)
+        modelFiles(
+            generatedFile: rk_generatedfile(),
+            model: model,
+            all: &all
+        )
         return all
     }
 
@@ -166,10 +170,14 @@ extension Template {
                 of: "{{self.name}}", with: model.name
             )
             var gfile = generatedFile
-            gfile.directory = templatesDir
-            gfile.templateString = templateString
-            gfile.name = fileName
-            gfile.ext = "\($0.ext).stencil"
+            gfile.setDirectory(templatesDir)
+            gfile.setTemplateString(templateString)
+            gfile.setName(fileName)
+            if let ext = $0.ext.nilIfEmpty() {
+                gfile.setExt("\(ext).stencil")
+            } else {
+                gfile.setExt("stencil")
+            }
             all.append(gfile)
         }
 
@@ -201,7 +209,7 @@ extension Template {
 
     func modelFiles(generatedFile: Generatedfile, model: TemplateModel, all: inout [Generatedfile]) {
         var gFile = generatedFile
-        gFile.name = model.name
+        gFile.setName(model.name)
         all.append(gFile)
 
         guard let subs = model.subs else { return }
@@ -212,8 +220,8 @@ extension Template {
                 generatedFile.directory! + "/" + model.name :
                 model.name
             var subFile = generatedFile
-            subFile.directory = subDir
-            subFile.contents = try! Dictionary.encode(data: sub)
+            subFile.setDirectory(subDir)
+            subFile.setContents(try! Dictionary.encode(data: sub))
             modelFiles(generatedFile: subFile, model: sub, all: &all)
         }
     }

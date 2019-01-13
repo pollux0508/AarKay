@@ -19,7 +19,7 @@ public class Template: NSObject, Templatable {
         self.datafile = datafile
         self.model = try contents.decode(type: TemplateModel.self)
         var generatedfile = generatedfile
-        generatedfile.contents = try Dictionary.encode(data: model)
+        generatedfile.setContents(try Dictionary.encode(data: model))
         self.generatedfile = generatedfile
     }
 
