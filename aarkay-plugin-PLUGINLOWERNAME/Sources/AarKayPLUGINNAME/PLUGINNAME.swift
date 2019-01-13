@@ -20,7 +20,7 @@ public class PLUGINNAME: NSObject, Templatable {
         self.datafile = datafile
         self.model = try contents.decode(type: PLUGINNAMEModel.self)
         var generatedfile = generatedfile
-        generatedfile.contents = try Dictionary.encode(data: model)
+        generatedfile.setContents(try Dictionary.encode(data: model))
         self.generatedfile = generatedfile
     }
 

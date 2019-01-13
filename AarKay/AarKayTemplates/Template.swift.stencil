@@ -44,7 +44,7 @@ public class {{name}}: {% if base %}{{base}}{% else %}NSObject, Templatable{% en
     public static func inputSerializer(
         components: FileComponents,
         contents: String
-        ) -> InputSerializable {
+    ) -> InputSerializable {
         return {{inputSerializer}}InputSerializer(components: components, contents: contents)
     }
     {% endif %}

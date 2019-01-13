@@ -20,7 +20,7 @@ public class {{ cookiecutter.name }}: NSObject, Templatable {
         self.datafile = datafile
         self.model = try contents.decode(type: {{ cookiecutter.name }}Model.self)
         var generatedfile = generatedfile
-        generatedfile.contents = try Dictionary.encode(data: model)
+        generatedfile.setContents(try Dictionary.encode(data: model))
         self.generatedfile = generatedfile
     }
 
