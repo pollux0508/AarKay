@@ -113,7 +113,19 @@ class AarKayProvider: AarKayService {
                 ) }
                 switch filesResult {
                 case .success(let files):
-                    result = result + files.map { Result<Renderedfile, AnyError>.success($0) }
+                    result = result + files.map {
+                        var rFile = $0
+                        if let ext = $0.ext,
+                            let dirs = context?["dirs"] as? [String: String],
+                            let dir = dirs[ext] {
+                            if let directory = $0.directory {
+                                rFile.setDirectory(dir + "/" + directory)
+                            } else {
+                                rFile.setDirectory(dir)
+                            }
+                        }
+                        return Result<Renderedfile, AnyError>.success(rFile)
+                    }
                 case .failure(let error):
                     result.append(.failure(error))
                 }

@@ -8,10 +8,10 @@
 import Foundation
 
 public struct Renderedfile {
-    public let name: String
-    public let ext: String?
-    public let directory: String?
-    public let override: Bool
+    public private(set) var name: String
+    public private(set) var ext: String?
+    public private(set) var directory: String?
+    public private(set) var override: Bool
     public let stringBlock: (String?) -> String
 
     public var nameWithExt: String {
@@ -34,5 +34,21 @@ public struct Renderedfile {
         self.directory = directory.nilIfEmpty()
         self.override = override
         self.stringBlock = stringBlock
+    }
+    
+    public mutating func setName(_ name: String) {
+        self.name = name.failIfEmpty()
+    }
+    
+    public mutating func setExt(_ ext: String?) {
+        self.ext = ext.nilIfEmpty()
+    }
+    
+    public mutating func setDirectory(_ directory: String?) {
+        self.directory = directory.nilIfEmpty()
+    }
+    
+    public mutating func setOverride(_ override: Bool) {
+        self.override = override
     }
 }
