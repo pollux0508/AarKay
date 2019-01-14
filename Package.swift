@@ -23,7 +23,7 @@ let package = Package(
         .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/antitypical/Result.git", .upToNextMajor(from: "4.0.0")),
         /* ------------------------------------------------------ */
-        /* >>> CLI ---------------------------------------------- */
+        /* >>> AarKay ------------------------------------------- */
         /* ------------------------------------------------------ */
         .package(url: "https://github.com/jdhealy/PrettyColors.git", .exact("5.0.1")),
         .package(url: "https://github.com/scottrhoyt/SwiftyTextTable.git", .exact("0.8.0")),
@@ -45,43 +45,79 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "AarKay",
-            dependencies: ["AarKayKit", "PrettyColors", "SwiftyTextTable", "Willow"]
+            dependencies: [
+                "AarKayKit",
+                "PrettyColors",
+                "SwiftyTextTable",
+                "Willow"
+            ]
         ),
         .target(
             name: "AarKayKit",
-            dependencies: ["StencilSwiftKit", "Result", "Yams"]
+            dependencies: [
+                "StencilSwiftKit",
+                "Result",
+                "Yams"
+            ]
         ),
         .target(
             name: "AarKayPlugin",
-            dependencies: ["AarKayKit"]
+            dependencies: [
+                "AarKayKit"
+            ]
         ),
         .target(
             name: "AarKayCLI",
-            dependencies: ["AarKay", "AarKayPlugin"]
+            dependencies: [
+                "AarKay",
+                "AarKayPlugin"
+            ]
         ),
         .target(
             name: "AarKayRunner",
-            dependencies: ["AarKayRunnerKit"]
+            dependencies: [
+                "AarKayRunnerKit"
+            ]
         ),
         .target(
             name: "AarKayRunnerKit",
-            dependencies: ["Commandant", "ReactiveTask", "Curry"]
+            dependencies: [
+                "Commandant",
+                "ReactiveTask",
+                "Curry"
+            ]
         ),
         .testTarget(
             name: "AarKayTests",
-            dependencies: ["AarKay", "Quick", "Nimble"]
+            dependencies: [
+                "AarKay",
+                "Quick",
+                "Nimble"
+            ]
         ),
         .testTarget(
             name: "AarKayPluginTests",
-            dependencies: ["AarKayPlugin", "Quick", "Nimble"]
+            dependencies: [
+                "AarKayPlugin",
+                "Quick",
+                "Nimble"
+            ]
         ),
         .testTarget(
             name: "AarKayKitTests",
-            dependencies: ["AarKayKit", "Quick", "Nimble"]
+            dependencies: [
+                "AarKayKit",
+                "Quick",
+                "Nimble"
+            ]
         ),
         .testTarget(
             name: "AarKayRunnerKitTests",
-            dependencies: ["AarKayRunnerKit", "Quick", "Nimble"]
+            dependencies: [
+                "AarKayRunnerKit",
+                "Quick",
+                "Nimble"
+            ]
         ),
     ],
     swiftLanguageVersions: [.v4, .v4_2]
