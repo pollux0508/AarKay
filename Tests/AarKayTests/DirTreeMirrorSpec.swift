@@ -20,20 +20,20 @@ class DirTreeMirrorSpec: QuickSpec {
         let destinationDir = "DirTreeMirror"
         let destinationUrl = fixturesUrl.appendingPathComponent(destinationDir)
         let fileManager = FileManager.default
-        
+
         let dirTreeMirror = DirTreeMirror(
             sourceUrl: sourceUrl,
             destinationUrl: destinationUrl,
             fileManager: fileManager
         )
-        
+
         let paths = [
             "Folder1/File.txt",
             "Folder2/Folder1/File.txt",
             "Folder3/Folder1/File.txt",
             "Folder3/Folder2/Folder1/File.txt",
         ]
-        
+
         beforeEach {
             try? fileManager.removeItem(at: fixturesUrl)
             expect(fileManager.fileExists(atPath: fixturesUrl.path)) == false
@@ -52,13 +52,13 @@ class DirTreeMirrorSpec: QuickSpec {
                 expect(fileManager.fileExists(atPath: url.path)) == true
             }
         }
-        
+
         afterEach {
             expect(fileManager.fileExists(atPath: fixturesUrl.path)) == true
             try? fileManager.removeItem(at: fixturesUrl)
             expect(fileManager.fileExists(atPath: fixturesUrl.path)) == false
         }
-        
+
         describe("DirTreeMirror") {
             it("should work") {
                 let tree = try! dirTreeMirror.bootstrap()

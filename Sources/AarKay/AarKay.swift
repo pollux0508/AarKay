@@ -53,15 +53,11 @@ public class AarKay {
 
     /// Bootstrap files generation process.
     public func bootstrap() {
-        /// Wait for all logs to be printed on console before terminating the program.
-        defer { AarKayLogger.waitForCompletion() }
-
         /// Log the url and AarkayFiles url.
         AarKayLogger.logTable(url: self.url, datafilesUrl: self.aarkayFilesUrl)
 
         /// Log if the AarKayFiles directory is empty.
         guard FileManager.default.fileExists(atPath: self.aarkayFilesUrl.path) else {
-            // FIXME: - A better message on how to get started will help the user who is coming for the first time.
             AarKayLogger.logNoDatafiles(); return
         }
 
@@ -101,16 +97,16 @@ public class AarKay {
         return try YamlInputSerializer.load(contents) as? [String: Any]
     }
 
-    func bootstrapPlugin(sourceUrl: URL, globalContext: [String: Any]? = nil) {
+    private func bootstrapPlugin(sourceUrl: URL, globalContext: [String: Any]? = nil) {
         let plugin = sourceUrl.lastPathComponent
-        
+
         /// Create directory tree mirror with source as the AarKayFiles url and destination as the project url.
         let dirTreeMirror = DirTreeMirror(
             sourceUrl: sourceUrl,
             destinationUrl: url,
             fileManager: fileManager
         )
-        
+
         do {
             try dirTreeMirror.bootstrap()
                 .forEach { (sourceUrl: URL, destinationUrl: URL) in
@@ -120,12 +116,12 @@ public class AarKay {
                         sourceUrl: sourceUrl,
                         destinationUrl: destinationUrl
                     )
-            }
+                }
         } catch {
             AarKayLogger.logError(error)
         }
     }
-    
+
     private func bootstrap(
         plugin: String,
         globalContext: [String: Any]?,

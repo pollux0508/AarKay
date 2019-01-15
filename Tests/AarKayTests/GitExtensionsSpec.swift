@@ -15,7 +15,7 @@ class GitExtensionsSpec: QuickSpec {
         let fileManager = FileManager.default
         let fixturesUrl = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("fixtures")
-        
+
         beforeEach {
             try? fileManager.removeItem(at: fixturesUrl)
             expect(fileManager.fileExists(atPath: fixturesUrl.path)) == false
@@ -26,7 +26,7 @@ class GitExtensionsSpec: QuickSpec {
             )
             expect(fileManager.fileExists(atPath: fixturesUrl.path)) == true
         }
-        
+
         describe("Git Extensions") {
             context("empty directory") {
                 it("should not be dirty") {
@@ -35,7 +35,7 @@ class GitExtensionsSpec: QuickSpec {
                     expect(isDirty!) == false
                 }
             }
-            
+
             context("non empty directory") {
                 it("should be dirty") {
                     let fileUrl = fixturesUrl.appendingPathComponent("Folder/File.txt")
@@ -54,7 +54,7 @@ class GitExtensionsSpec: QuickSpec {
                     expect(isDirty!) == true
                 }
             }
-            
+
             context("git clean directory") {
                 it("should not be dirty") {
                     let fileUrl = fixturesUrl.appendingPathComponent("Folder/File.txt")
@@ -78,7 +78,7 @@ class GitExtensionsSpec: QuickSpec {
                     expect(isDirty!) == false
                 }
             }
-            
+
             context("git untracked directory") {
                 it("should be dirty") {
                     let fileUrl = fixturesUrl.appendingPathComponent("Folder/File.txt")
@@ -102,7 +102,7 @@ class GitExtensionsSpec: QuickSpec {
                     expect(isDirty!) == true
                 }
             }
-            
+
             context("git staged directory") {
                 it("should be dirty") {
                     let fileUrl = fixturesUrl.appendingPathComponent("Folder/File.txt")

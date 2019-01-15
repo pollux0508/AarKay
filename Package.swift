@@ -27,7 +27,6 @@ let package = Package(
         /* ------------------------------------------------------ */
         .package(url: "https://github.com/jdhealy/PrettyColors.git", .exact("5.0.1")),
         .package(url: "https://github.com/scottrhoyt/SwiftyTextTable.git", .exact("0.8.0")),
-        .package(url: "https://github.com/RahulKatariya/Willow.git", .upToNextMajor(from: "5.0.0")),
         /* ------------------------------------------------------ */
         /* >>> Runner ------------------------------------------- */
         /* ------------------------------------------------------ */
@@ -49,7 +48,6 @@ let package = Package(
                 "AarKayKit",
                 "PrettyColors",
                 "SwiftyTextTable",
-                "Willow"
             ]
         ),
         .target(
@@ -57,26 +55,26 @@ let package = Package(
             dependencies: [
                 "StencilSwiftKit",
                 "Result",
-                "Yams"
+                "Yams",
             ]
         ),
         .target(
             name: "AarKayPlugin",
             dependencies: [
-                "AarKayKit"
+                "AarKayKit",
             ]
         ),
         .target(
             name: "AarKayCLI",
             dependencies: [
                 "AarKay",
-                "AarKayPlugin"
+                "AarKayPlugin",
             ]
         ),
         .target(
             name: "AarKayRunner",
             dependencies: [
-                "AarKayRunnerKit"
+                "AarKayRunnerKit",
             ]
         ),
         .target(
@@ -84,7 +82,7 @@ let package = Package(
             dependencies: [
                 "Commandant",
                 "ReactiveTask",
-                "Curry"
+                "Curry",
             ]
         ),
         .testTarget(
@@ -92,7 +90,7 @@ let package = Package(
             dependencies: [
                 "AarKay",
                 "Quick",
-                "Nimble"
+                "Nimble",
             ]
         ),
         .testTarget(
@@ -100,7 +98,7 @@ let package = Package(
             dependencies: [
                 "AarKayPlugin",
                 "Quick",
-                "Nimble"
+                "Nimble",
             ]
         ),
         .testTarget(
@@ -108,7 +106,7 @@ let package = Package(
             dependencies: [
                 "AarKayKit",
                 "Quick",
-                "Nimble"
+                "Nimble",
             ]
         ),
         .testTarget(
@@ -116,7 +114,7 @@ let package = Package(
             dependencies: [
                 "AarKayRunnerKit",
                 "Quick",
-                "Nimble"
+                "Nimble",
             ]
         ),
     ],
