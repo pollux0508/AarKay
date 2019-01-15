@@ -6,6 +6,7 @@
 //
 
 import AarKayKit
+import AarKayRunnerKit
 import Foundation
 
 /// Represents an AarKay Project.
@@ -31,8 +32,8 @@ public class AarKay {
 
     /// The global template files url relative to the project url.
     lazy var aarkayGlobalTemplatesUrl: URL = {
-        URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
-            .appendingPathComponent("AarKay/AarKayTemplates", isDirectory: true)
+        AarKayPaths.aarkayPath(global: true)
+            .appendingPathComponent("AarKayTemplates", isDirectory: true)
     }()
 
     /// Constructs an `AarKay` project.

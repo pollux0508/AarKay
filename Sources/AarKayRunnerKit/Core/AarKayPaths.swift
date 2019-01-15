@@ -8,26 +8,14 @@
 import Foundation
 
 public class AarKayPaths {
-    /// Creates the url representing the global directory for `AarKay`
-    ///
-    /// - Returns: The created url.
-    public static func globalDirectory() -> URL {
-        return URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
-    }
-
-    /// Creates the url reperenting the local directory for `AarKay`.
-    ///
-    /// - Returns: The created url.
-    public static func localDirectory() -> URL {
-        return URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true)
-    }
-
     /// Decides whether to use global directory or the local directory depending on the global flag.
     ///
     /// - Parameter global: Setting global to true will return the global directory otherwise local directory.
     /// - Returns: The created url.
     public static func directoryPath(global: Bool = false) -> URL {
-        return global ? self.globalDirectory() : self.localDirectory()
+        return global ?
+            URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true) :
+            URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true)
     }
 
     /// Creates the url for the root directory of `AarKay`.

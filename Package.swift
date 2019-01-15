@@ -46,6 +46,7 @@ let package = Package(
             name: "AarKay",
             dependencies: [
                 "AarKayKit",
+                "AarKayRunnerKit",
                 "PrettyColors",
                 "SwiftyTextTable",
             ]
