@@ -26,7 +26,7 @@ import Foundation
 ///     +-----------------------+                   +-----------------------+
 ///
 /// - note: It only mirrors an existing directory tree with another directory and doesn't create the actual files in the mirrored directory.
-public class DirTreeMirror {
+class DirTreeMirror {
     /// The source url.
     let sourceUrl: URL
 

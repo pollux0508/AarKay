@@ -12,7 +12,7 @@ import Foundation
 /// Represents an AarKay Project.
 public class AarKay {
     /// The project url.
-    public let url: URL
+    let url: URL
 
     /// The options.
     let options: AarKayOptions

@@ -8,24 +8,24 @@
 import Foundation
 
 /// Describes a provider of git extensions.
-public protocol GitExtensionsProvider {}
+protocol GitExtensionsProvider {}
 
 extension GitExtensionsProvider {
     /// A proxy which hosts git extensions for `self`.
-    public var git: Git<Self> {
+    var git: Git<Self> {
         return Git(self)
     }
 
     /// A proxy which hosts static git extensions for the type of `self`.
-    public static var git: Git<Self>.Type {
+    static var git: Git<Self>.Type {
         return Git<Self>.self
     }
 }
 
 /// A proxy which hosts reactive extensions of `Base`.
-public struct Git<Base> {
+struct Git<Base> {
     /// The `Base` instance the extensions would be invoked with.
-    public let base: Base
+    let base: Base
 
     /// Construct a proxy
     ///
