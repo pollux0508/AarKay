@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// Represents a recursive directory tree mirror with respect to the source directory.
+/// Represents a recursive directory tree soft mirror with respect to the source directory.
 ///
 ///     +-----------------------+                   +-----------------------+
 ///     | - DirOnDisk/*         |                   | - MirrorDir/*         |
@@ -52,7 +52,7 @@ public class DirTreeMirror {
         self.fileManager = fileManager
     }
 
-    /// Mirrors the destination directory with respect to the source directory.
+    /// Soft mirrors the destination directory with respect to the source directory.
     ///
     /// - Parameter filter: A filter to be applied on source url subpaths.
     /// - Returns: An array of tuple with source url and destination url.

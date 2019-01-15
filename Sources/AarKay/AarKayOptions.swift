@@ -24,8 +24,6 @@ public struct AarKayOptions {
     ///   - force: The force flag when set to false will not overwrite your files with the generated files if the directory is dirty. It ensures that the directory is empty or it's a clean git repository. `false` by default.
     ///   - verbose: The flag to print verbose logging to console. `false` by default.
     ///   - dryrun: The flag when set to true will only print and not write files to disk. `false` by default.
-    ///
-    /// - note: Setting force to true in your production project is not recommended as it may lead to loss of exisiting work.
     public init(
         force: Bool = false,
         verbose: Bool = false,
