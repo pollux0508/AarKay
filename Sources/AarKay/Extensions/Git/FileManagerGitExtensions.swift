@@ -27,7 +27,7 @@ extension Git where Base == FileManager {
             url: url
         )
         // Return false if the directory is not a git repository
-        guard status == 0 else { return false }
+        guard status == 0 else { return true }
 
         return BashProcess.run(
             command: "git diff --quiet HEAD",
