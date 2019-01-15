@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// Represents a recursive directory tree shallow mirror with respect to another directory.
+/// Represents a recursive directory tree mirror with respect to the source directory.
 ///
 ///     +-----------------------+                   +-----------------------+
 ///     | - DirOnDisk/*         |                   | - MirrorDir/*         |
@@ -42,7 +42,7 @@ public class DirTreeMirror {
     ///   - sourceUrl: The url of source directory.
     ///   - destinationUrl: The url of destination directory.
     ///   - fileManager: The file manager.
-    public init(
+    init(
         sourceUrl: URL,
         destinationUrl: URL,
         fileManager: FileManager = FileManager.default
@@ -52,14 +52,14 @@ public class DirTreeMirror {
         self.fileManager = fileManager
     }
 
-    /// Starts the mirroring of the source directory with the destination directory and executes a block with each source path and its respected mirror path.
+    /// Mirrors the destination directory with respect to the source directory.
     ///
-    /// - Parameter fileBlock: The block to execute with source url and its mirror.
-    /// - Throws: An error if reading subpathsOfDirectory returns nil.
-    public func bootstrap(fileBlock: (URL, URL) -> Void) throws {
+    /// - Parameter filter: A filter to be applied on source url subpaths.
+    /// - Returns: An array of tuple with source url and destination url.
+    /// - Throws: FileManager related errors.
+    func bootstrap() throws -> [(URL, URL)] {
         let subpaths = try fileManager.subpathsOfDirectory(atPath: sourceUrl.path)
-        let subUrls: [URL] = subpaths
-            .filter { return !$0.hasPrefix(".") }
+        let mirrorUrls: [(URL, URL)] = subpaths
             .map {
                 return URL(
                     fileURLWithPath: $0,
@@ -67,11 +67,14 @@ public class DirTreeMirror {
                     relativeTo: sourceUrl
                 )
             }
-        subUrls.forEach {
-            let newUrl = URL(fileURLWithPath: $0.relativePath, isDirectory: $0.hasDirectoryPath, relativeTo: destinationUrl)
-            let directoryUrl = newUrl.hasDirectoryPath ? newUrl : newUrl.deletingLastPathComponent()
-            try! FileManager.default.createDirectory(at: directoryUrl, withIntermediateDirectories: true, attributes: nil)
-            if !$0.hasDirectoryPath { fileBlock($0, newUrl) }
+            .filter { return !$0.lastPathComponent.hasPrefix(".") && !$0.hasDirectoryPath }
+            .map {
+                return ($0, URL(
+                    fileURLWithPath: $0.relativePath,
+                    isDirectory: $0.hasDirectoryPath,
+                    relativeTo: destinationUrl
+                ))
         }
+        return mirrorUrls
     }
 }

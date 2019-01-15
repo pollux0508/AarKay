@@ -83,29 +83,7 @@ public class AarKay {
                 options: .skipsHiddenFiles
             )
 
-            urls.forEach {
-                let plugin = $0.lastPathComponent
-
-                /// Create directory tree mirror with source as the AarKayFiles url and destination as the project url.
-                let dirTreeMirror = DirTreeMirror(
-                    sourceUrl: $0,
-                    destinationUrl: url,
-                    fileManager: fileManager
-                )
-
-                do {
-                    try dirTreeMirror.bootstrap { (sourceUrl: URL, destinationUrl: URL) in
-                        self.bootstrap(
-                            plugin: plugin,
-                            globalContext: globalContext,
-                            sourceUrl: sourceUrl,
-                            destinationUrl: destinationUrl
-                        )
-                    }
-                } catch {
-                    AarKayLogger.logError(error)
-                }
-            }
+            urls.forEach { bootstrapPlugin(sourceUrl: $0, globalContext: globalContext) }
         } catch {
             AarKayLogger.logError(error)
         }
@@ -123,6 +101,31 @@ public class AarKay {
         return try YamlInputSerializer.load(contents) as? [String: Any]
     }
 
+    func bootstrapPlugin(sourceUrl: URL, globalContext: [String: Any]? = nil) {
+        let plugin = sourceUrl.lastPathComponent
+        
+        /// Create directory tree mirror with source as the AarKayFiles url and destination as the project url.
+        let dirTreeMirror = DirTreeMirror(
+            sourceUrl: sourceUrl,
+            destinationUrl: url,
+            fileManager: fileManager
+        )
+        
+        do {
+            try dirTreeMirror.bootstrap()
+                .forEach { (sourceUrl: URL, destinationUrl: URL) in
+                    self.bootstrap(
+                        plugin: plugin,
+                        globalContext: globalContext,
+                        sourceUrl: sourceUrl,
+                        destinationUrl: destinationUrl
+                    )
+            }
+        } catch {
+            AarKayLogger.logError(error)
+        }
+    }
+    
     private func bootstrap(
         plugin: String,
         globalContext: [String: Any]?,
