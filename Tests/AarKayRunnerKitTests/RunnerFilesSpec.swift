@@ -1,5 +1,5 @@
 //
-//  PackageSwiftSpec.swift
+//  RunnerFilesSpec.swift
 //  AarKayRunnerKitTests
 //
 //  Created by RahulKatariya on 16/01/19.
@@ -10,14 +10,9 @@ import Nimble
 import Quick
 @testable import AarKayRunnerKit
 
-class PackageSwiftSpec: QuickSpec {
+class RunnerFilesSpec: QuickSpec {
     override func spec() {
         describe("PackageSwift") {
-            it("should fail with empty dependencies") {
-                let packageSwift = try? RunnerFiles.packageSwift(deps: [])
-                expect(packageSwift).to(beNil())
-            }
-
             it("should work with AarKay dependency") {
                 let actual = """
                 // swift-tools-version:4.2
@@ -45,7 +40,7 @@ class PackageSwiftSpec: QuickSpec {
                 """
                 expect { () -> Void in
                     let dep = try Dependency(string: "https://github.com/RahulKatariya/AarKay.git, 1.0.0")
-                    let packageSwift = try RunnerFiles.packageSwift(deps: [dep])
+                    let packageSwift = RunnerFiles.packageSwift(deps: [dep])
                     expect(packageSwift).toNot(beNil())
                     print(packageSwift)
                     expect(packageSwift) == actual
@@ -82,7 +77,7 @@ class PackageSwiftSpec: QuickSpec {
                 expect { () -> Void in
                     let dep = try Dependency(string: "https://github.com/RahulKatariya/AarKay.git, 1.0.0")
                     let dep2 = try Dependency(string: "./../aarkay-plugin-test, ~> 1.0.0")
-                    let packageSwift = try RunnerFiles.packageSwift(deps: [dep, dep2])
+                    let packageSwift = RunnerFiles.packageSwift(deps: [dep, dep2])
                     expect(packageSwift).toNot(beNil())
                     print(packageSwift)
                     expect(packageSwift) == actual

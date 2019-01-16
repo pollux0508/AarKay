@@ -26,14 +26,14 @@ struct InstallCommand: CommandProtocol {
     var function: String = "Install all the plugins from `AarKayFile`."
 
     func run(_ options: Options) -> Result<(), AarKayError> {
-        let runnerUrl = AarKayPaths.runnerPath(global: options.global)
+        let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
 
         guard FileManager.default.fileExists(atPath: runnerUrl.path) else {
             return .failure(.missingProject(runnerUrl.deletingLastPathComponent().path))
         }
 
         do {
-            try Bootstrapper.updatePackageSwift(global: options.global)
+            try Bootstrapper.default.updatePackageSwift(global: options.global)
         } catch {
             return .failure(.bootstap(error))
         }

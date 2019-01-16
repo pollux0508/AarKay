@@ -28,17 +28,17 @@ struct InitCommand: CommandProtocol {
     var function: String = "Initialize AarKay and install all the plugins from `AarKayFile`."
 
     func run(_ options: Options) -> Result<(), AarKayError> {
-        let url = AarKayPaths.directoryPath(global: options.global)
-        let runnerUrl = AarKayPaths.runnerPath(global: options.global)
+        let url = AarKayPaths.default.directoryPath(global: options.global)
+        let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
         if FileManager.default.fileExists(atPath: runnerUrl.path) && !options.force {
             return .failure(.projectAlreadyExists(url.path))
         } else {
             do {
-                try Bootstrapper.bootstrap(global: options.global, force: options.force)
+                try Bootstrapper.default.bootstrap(global: options.global, force: options.force)
             } catch {
                 return .failure(.bootstap(error))
             }
-            let runnerUrl = AarKayPaths.runnerPath(global: options.global)
+            let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
             println("Setting up \(url.path). This might take a few minutes...")
             return Tasks.install(at: runnerUrl.path)
         }

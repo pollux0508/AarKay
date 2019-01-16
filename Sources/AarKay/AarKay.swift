@@ -32,7 +32,7 @@ public class AarKay {
 
     /// The global template files url relative to the project url.
     lazy var aarkayGlobalTemplatesUrl: URL = {
-        AarKayPaths.aarkayPath(global: true)
+        AarKayPaths.default.aarkayPath(global: true)
             .appendingPathComponent("AarKayTemplates", isDirectory: true)
     }()
 

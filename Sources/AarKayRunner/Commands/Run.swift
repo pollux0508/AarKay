@@ -32,12 +32,12 @@ struct RunCommand: CommandProtocol {
     var function: String = "Generate respective files from the datafiles inside AarKayData"
 
     func run(_ options: Options) -> Result<(), AarKayError> {
-        var runnerUrl = AarKayPaths.runnerPath()
-        var cliUrl: URL = AarKayPaths.cliPath()
+        var runnerUrl = AarKayPaths.default.runnerPath()
+        var cliUrl: URL = AarKayPaths.default.cliPath()
 
         if !FileManager.default.fileExists(atPath: runnerUrl.path) || options.global {
-            runnerUrl = AarKayPaths.runnerPath(global: true)
-            cliUrl = AarKayPaths.cliPath(global: true)
+            runnerUrl = AarKayPaths.default.runnerPath(global: true)
+            cliUrl = AarKayPaths.default.cliPath(global: true)
         }
 
         guard FileManager.default.fileExists(atPath: runnerUrl.path),
