@@ -9,20 +9,20 @@ PROD_INSTALL_PATH = $(PREFIX)/bin/$(SHORT_NAME)
 DEV_INSTALL_PATH = $(PREFIX)/bin/$(SHORT_NAME)d
 BUILD_PATH = .build/release/$(TOOL_NAME)
 
-.PHONY: build dev install release uninstall
+.PHONY: build clean dev install release test uninstall
 
-install: build
+install: test
 	set -e
 	mkdir -p $(PREFIX)/bin
 	cp -f $(BUILD_PATH) $(PROD_INSTALL_PATH)
 
-dev: build
+dev: test
 	set -e
 	mkdir -p $(PREFIX)/bin
 	rm -f $(DEV_INSTALL_PATH)
 	cp -f $(BUILD_PATH) $(DEV_INSTALL_PATH)
 
-release: build 
+release: test
 	set -e
 	rm -f AarKay-${version}.zip
 	rm -rf bin && mkdir -p bin
@@ -31,9 +31,17 @@ release: build
 	shasum -a 256 -b AarKay-${version}.zip | awk '{print $$1}'
 	rm -rf bin 
 
-build:
+clean:
 	set -e
-	swift build --disable-sandbox -Xswiftc -static-stdlib -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12" -c release
+	swift package clean
+
+build: clean
+	set -e
+	swift build --disable-sandbox -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12" -Xswiftc -static-stdlib -c release
+
+test: build
+	set -e
+	swift test -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12"
 
 uninstall:
 	set -e
