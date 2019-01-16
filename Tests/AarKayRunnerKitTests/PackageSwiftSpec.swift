@@ -11,14 +11,13 @@ import Quick
 @testable import AarKayRunnerKit
 
 class PackageSwiftSpec: QuickSpec {
-    
     override func spec() {
         describe("PackageSwift") {
             it("should fail with empty dependencies") {
                 let packageSwift = try? RunnerFiles.packageSwift(deps: [])
                 expect(packageSwift).to(beNil())
             }
-            
+
             it("should work with AarKay dependency") {
                 let actual = """
                 // swift-tools-version:4.2
@@ -52,7 +51,7 @@ class PackageSwiftSpec: QuickSpec {
                     expect(packageSwift) == actual
                 }.toNot(throwError())
             }
-            
+
             it("should work with AarKay and file dependency") {
                 let actual = """
                 // swift-tools-version:4.2
@@ -91,5 +90,4 @@ class PackageSwiftSpec: QuickSpec {
             }
         }
     }
-    
 }

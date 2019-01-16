@@ -28,7 +28,7 @@ class ArgModelSpec: QuickSpec {
                     expect(argModel.isOptionalOrWrapped) == false
                 }.toNot(throwError())
             }
-            
+
             it("should work with optional type") {
                 expect { () -> Void in
                     let argString = "name|String?"
@@ -43,7 +43,7 @@ class ArgModelSpec: QuickSpec {
                     expect(argModel.isOptionalOrWrapped) == true
                 }.toNot(throwError())
             }
-            
+
             it("should work with default value") {
                 expect { () -> Void in
                     let argString = "name|String!|Rahul"
@@ -58,7 +58,7 @@ class ArgModelSpec: QuickSpec {
                     expect(argModel.isOptionalOrWrapped) == true
                 }.toNot(throwError())
             }
-            
+
             it("should work with array type") {
                 expect { () -> Void in
                     let argString = "name|[String]"
@@ -73,7 +73,7 @@ class ArgModelSpec: QuickSpec {
                     expect(argModel.isOptionalOrWrapped) == false
                 }.toNot(throwError())
             }
-            
+
             it("should work with optional array type") {
                 expect { () -> Void in
                     let argString = "name|[String]?"
@@ -88,7 +88,7 @@ class ArgModelSpec: QuickSpec {
                     expect(argModel.isOptionalOrWrapped) == true
                 }.toNot(throwError())
             }
-            
+
             it("should work with optional dictionary type") {
                 expect { () -> Void in
                     let argString = "\"name|[String: String]\""
@@ -103,7 +103,7 @@ class ArgModelSpec: QuickSpec {
                     expect(argModel.isOptionalOrWrapped) == false
                 }.toNot(throwError())
             }
-            
+
             it("should work with optional dictionary type") {
                 expect { () -> Void in
                     let argString = "\"name|[String: String]?\""
@@ -118,7 +118,7 @@ class ArgModelSpec: QuickSpec {
                     expect(argModel.isOptionalOrWrapped) == true
                 }.toNot(throwError())
             }
-            
+
             it("should work with array dictionary type") {
                 expect { () -> Void in
                     let argString = "\"name|[[String: String]]\""
@@ -133,7 +133,7 @@ class ArgModelSpec: QuickSpec {
                     expect(argModel.isOptionalOrWrapped) == false
                 }.toNot(throwError())
             }
-            
+
             it("should work with 2d array type") {
                 expect { () -> Void in
                     let argString = "\"name|[[String]]?\""
@@ -146,7 +146,7 @@ class ArgModelSpec: QuickSpec {
                     expect(argModel.isWrapped) == false
                     expect(argModel.isOptional) == true
                     expect(argModel.isOptionalOrWrapped) == true
-                    }.toNot(throwError())
+                }.toNot(throwError())
             }
         }
     }

@@ -26,7 +26,7 @@ class GitExtensionsSpec: QuickSpec {
             )
             expect(fileManager.fileExists(atPath: fixturesUrl.path)) == true
         }
-        
+
         afterEach {
             try? fileManager.removeItem(at: fixturesUrl)
             expect(fileManager.fileExists(atPath: fixturesUrl.path)) == false

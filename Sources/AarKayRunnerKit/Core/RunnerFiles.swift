@@ -36,9 +36,9 @@ class RunnerFiles {
         let hasAarKay = deps.map {
             $0.url.deletingPathExtension().absoluteString
         }.contains("https://github.com/RahulKatariya/AarKay")
-        
+
         guard hasAarKay else { throw AarKayError.parsingError }
-        
+
         let packages = deps.reduce("") { (result, item) -> String in
             return result + """
             \n        \(item.packageDescription())
