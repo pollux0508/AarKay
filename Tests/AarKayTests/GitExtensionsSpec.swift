@@ -26,6 +26,11 @@ class GitExtensionsSpec: QuickSpec {
             )
             expect(fileManager.fileExists(atPath: fixturesUrl.path)) == true
         }
+        
+        afterEach {
+            try? fileManager.removeItem(at: fixturesUrl)
+            expect(fileManager.fileExists(atPath: fixturesUrl.path)) == false
+        }
 
         describe("Git Extensions") {
             context("empty directory") {
@@ -69,7 +74,7 @@ class GitExtensionsSpec: QuickSpec {
                         attributes: nil
                     )
                     let status = BashProcess.run(
-                        command: "git init && git add . && git commit -m \"Initial Commit\"",
+                        command: "git init && git add -A . && git commit -m \"Initial Commit\"",
                         url: fixturesUrl
                     )
                     expect(status) == 0
@@ -117,7 +122,7 @@ class GitExtensionsSpec: QuickSpec {
                         attributes: nil
                     )
                     let status = BashProcess.run(
-                        command: "git init && git add .",
+                        command: "git init && git add -A  .",
                         url: fixturesUrl
                     )
                     expect(status) == 0
