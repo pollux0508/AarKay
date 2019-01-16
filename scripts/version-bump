@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e
+echo "public let AarKayVersion = \"$1\"" > Sources/AarKayRunnerKit/Core/AarKayVersion.swift
+git commit -am "Release v$1 🚀"
+git tag v$1
