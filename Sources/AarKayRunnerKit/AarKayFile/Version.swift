@@ -7,11 +7,19 @@
 
 import Foundation
 
+/// Type that encapuslates semvar version specification
 struct Version {
+    /// The major version.
     let major: Int
+    /// The minor version.
     let minor: Int
+    /// The patch version.
     let patch: Int
 
+    /// Constructs a version from a string
+    ///
+    /// - Parameter string: The version string.
+    /// - Throws: Parsing error.
     init(string: String) throws {
         let components = string
             .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -27,6 +35,7 @@ struct Version {
         self.patch = patch
     }
 
+    /// - Returns: The string description of the version.
     func description() -> String {
         return "\(self.major).\(self.minor).\(self.patch)"
     }

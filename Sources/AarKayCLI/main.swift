@@ -10,6 +10,7 @@ let url = URL(fileURLWithPath: #file)
 /// Bootstap aarkay in the url and options provided.
 let options = AarKayOptions(
     force: CommandLine.arguments.contains("--force"),
-    verbose: CommandLine.arguments.contains("--verbose")
+    verbose: CommandLine.arguments.contains("--verbose"),
+    dryrun: CommandLine.arguments.contains("--dryrun")
 )
 AarKay(url: url, options: options).bootstrap()

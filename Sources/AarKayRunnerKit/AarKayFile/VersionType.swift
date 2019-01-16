@@ -7,13 +7,23 @@
 
 import Foundation
 
+/// Type that encapuslates the type of version with respect to Package.swift version spec.
 enum VersionType {
+    /// Represents the exact version (1.0.0).
     case exact(String)
+    /// Represents the upToNextMajor version (> 1.0.0).
     case upToNextMajor(String)
+    /// Represents the upToNextMinor version (~> 1.0.0).
     case upToNextMinor(String)
+    /// Represents the git branch (b-master).
     case branch(String)
+    /// Represents the git commit (r-32472hd2348dsdf).
     case revision(String)
 
+    /// Initializes the type of version.
+    ///
+    /// - Parameter string: The string representing the version
+    /// - Throws: Parsing errors.
     init(string: String) throws {
         let str = string.trimmingCharacters(in: .whitespacesAndNewlines)
         if str.hasPrefix("b-") {
@@ -44,6 +54,7 @@ enum VersionType {
         }
     }
 
+    /// - Returns: The description of the type of version to be used in Package.swift
     func description() -> String {
         switch self {
         case .exact(let version): return ".exact(\"\(version)\")"
