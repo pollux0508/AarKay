@@ -46,7 +46,7 @@ class Tasks {
         )
         let result = task.run()
         guard result.error == nil else { return result }
-        return self.build(at: path)
+        return build(at: path)
     }
 
     /// Resolves the `AarKayRunner` swift packages with respect to Package.resolved.
@@ -65,7 +65,7 @@ class Tasks {
         )
         let result = task.run()
         guard result.error == nil else { return result }
-        return self.build(at: path)
+        return build(at: path)
     }
 
     /// Executes the path as the shell command.

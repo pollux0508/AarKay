@@ -24,11 +24,11 @@ public struct NameTypeValue {
 
     public func toDictionary() throws -> [String: Any] {
         var dictionary: [String: Any] = [:]
-        for (name, type, value) in zip(self.names, self.types, self.values) {
+        for (name, type, value) in zip(names, types, values) {
             let strippedType = isOptional(type: type) ? String(type.dropLast()) : type
             if let value = TypeValueTransformer(type: strippedType, value: value)?.value {
                 dictionary[name] = value
-            } else if !self.isOptional(type: type) {
+            } else if !isOptional(type: type) {
                 throw NameTypeValueError.invalidTransformation
             }
         }

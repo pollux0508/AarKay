@@ -55,17 +55,17 @@ public class AarKay {
     /// Bootstrap files generation process.
     public func bootstrap() {
         /// Log the url and AarkayFiles url.
-        AarKayLogger.logTable(url: self.url, datafilesUrl: self.aarkayFilesUrl)
+        AarKayLogger.logTable(url: url, datafilesUrl: aarkayFilesUrl)
 
         /// Log if the AarKayFiles directory is empty.
-        guard FileManager.default.fileExists(atPath: self.aarkayFilesUrl.path) else {
+        guard FileManager.default.fileExists(atPath: aarkayFilesUrl.path) else {
             AarKayLogger.logNoDatafiles(); return
         }
 
         do {
             /// Skip checking whether directory is dirty if force is set to true
-            if !self.options.force {
-                if try self.fileManager.git.isDirty(url: self.url) {
+            if !options.force {
+                if try fileManager.git.isDirty(url: url) {
                     AarKayLogger.logDirtyRepo(); return
                 }
             }
@@ -171,7 +171,7 @@ public class AarKay {
             let contents = try String(contentsOf: sourceUrl)
 
             var templateUrls: [URL]!
-            if self.aarkayTemplatesUrl.path == self.aarkayGlobalTemplatesUrl.path {
+            if aarkayTemplatesUrl.path == aarkayGlobalTemplatesUrl.path {
                 templateUrls = [aarkayTemplatesUrl]
             } else {
                 templateUrls = [aarkayGlobalTemplatesUrl, aarkayTemplatesUrl]
@@ -221,29 +221,29 @@ public class AarKay {
         url.appendPathComponent(renderedfile.nameWithExt)
         let stringBlock = renderedfile.stringBlock
         let override = renderedfile.override
-        if self.fileManager.fileExists(atPath: url.path) {
+        if fileManager.fileExists(atPath: url.path) {
             if !override {
-                if self.options.verbose {
+                if options.verbose {
                     AarKayLogger.logFileSkipped(at: url)
                 }
             } else {
                 let currentString = try String(contentsOf: url)
                 let string = stringBlock(currentString)
                 if string != currentString {
-                    if !self.options.dryrun {
+                    if !options.dryrun {
                         try string.write(toFile: url.path, atomically: true, encoding: .utf8)
                     }
                     AarKayLogger.logFileModified(at: url)
                 } else {
-                    if self.options.verbose {
+                    if options.verbose {
                         AarKayLogger.logFileSkipped(at: url)
                     }
                 }
             }
         } else {
             let string = stringBlock(nil)
-            if !self.options.dryrun {
-                try self.fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
+            if !options.dryrun {
+                try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
                 try string.write(toFile: url.path, atomically: true, encoding: .utf8)
             }
             AarKayLogger.logFileAdded(at: url)

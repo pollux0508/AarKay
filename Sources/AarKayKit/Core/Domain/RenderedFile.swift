@@ -16,9 +16,9 @@ public struct Renderedfile {
 
     public var nameWithExt: String {
         if let ext = self.ext {
-            return self.name + "." + ext
+            return name + "." + ext
         } else {
-            return self.name
+            return name
         }
     }
 

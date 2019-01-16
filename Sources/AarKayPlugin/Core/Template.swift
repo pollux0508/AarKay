@@ -54,19 +54,19 @@ public class TemplateModel: Codable {
 
     public var requiredProperties: [ArgModel]? {
         /// <aarkay requiredProperties>
-        return self.properties.filter { !$0.isOptionalOrWrapped }
+        return properties.filter { !$0.isOptionalOrWrapped }
         /// </aarkay>
     }
 
     public var requiredBaseProperties: [ArgModel]? {
         /// <aarkay requiredBaseProperties>
-        return self.baseProperties.filter { !$0.isOptionalOrWrapped }
+        return baseProperties.filter { !$0.isOptionalOrWrapped }
         /// </aarkay>
     }
 
     public var requiredAllProperties: [ArgModel]? {
         /// <aarkay requiredAllProperties>
-        return (self.baseProperties + self.properties).filter { !$0.isOptionalOrWrapped }
+        return (baseProperties + properties).filter { !$0.isOptionalOrWrapped }
         /// </aarkay>
     }
 
@@ -144,15 +144,15 @@ extension Template {
             let backPath = Array(repeating: "../", count: components.count).joined()
             templatesDir = backPath + templatesDir
         }
-        self.templateFiles(
+        templateFiles(
             generatedFile: rk_generatedfile(),
             templatesDir: templatesDir,
-            model: self.model,
+            model: model,
             all: &all
         )
-        try self.modelFiles(
+        try modelFiles(
             generatedFile: rk_generatedfile(),
-            model: self.model,
+            model: model,
             all: &all
         )
         return all

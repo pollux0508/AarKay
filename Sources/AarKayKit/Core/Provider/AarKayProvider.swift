@@ -45,7 +45,7 @@ class AarKayProvider: AarKayService {
             }
         }
         if let templateClass = templateClass {
-            return self.templateGeneratedfiles(
+            return templateGeneratedfiles(
                 datafile: datafile,
                 generatedfiles: files,
                 templateClass: templateClass

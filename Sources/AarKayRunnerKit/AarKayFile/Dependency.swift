@@ -30,9 +30,9 @@ public struct Dependency {
 
     /// - Returns: Returns the package dependency description for Package.swift.
     public func packageDescription() -> String {
-        var path = self.url.absoluteString
+        var path = url.absoluteString
         if path.hasPrefix("./") { path = "./." + path }
-        return ".package(url: \"\(path)\", \(self.version.description())),"
+        return ".package(url: \"\(path)\", \(version.description())),"
     }
 
     /// - Returns: Returns the name of the target.

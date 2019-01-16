@@ -16,29 +16,29 @@ public class ArgModel: Codable {
 
     public var isOptional: Bool {
         /// <aarkay isOptional>
-        return self.type.hasSuffix("?")
+        return type.hasSuffix("?")
         /// </aarkay>
     }
 
     public var isWrapped: Bool {
         /// <aarkay isWrapped>
-        return self.type.hasSuffix("!")
+        return type.hasSuffix("!")
         /// </aarkay>
     }
 
     public var isOptionalOrWrapped: Bool {
         /// <aarkay isOptionalOrWrapped>
-        return self.isOptional || self.isWrapped
+        return isOptional || isWrapped
         /// </aarkay>
     }
 
     public var isArray: Bool {
         /// <aarkay isArray>
-        if self.swiftType.hasPrefix("[[") && self.swiftType.hasSuffix("]]") {
+        if swiftType.hasPrefix("[[") && swiftType.hasSuffix("]]") {
             return true
-        } else if self.swiftType.hasPrefix("[") &&
-            self.swiftType.hasSuffix("]") &&
-            !self.swiftType.contains(":") {
+        } else if swiftType.hasPrefix("[") &&
+            swiftType.hasSuffix("]") &&
+            !swiftType.contains(":") {
             return true
         } else {
             return false
@@ -48,7 +48,7 @@ public class ArgModel: Codable {
 
     public var swiftType: String {
         /// <aarkay swiftType>
-        return self.isOptionalOrWrapped ? String(self.type.dropLast()) : self.type
+        return isOptionalOrWrapped ? String(type.dropLast()) : type
         /// </aarkay>
     }
 

@@ -37,6 +37,6 @@ struct Version {
 
     /// - Returns: The string description of the version.
     func description() -> String {
-        return "\(self.major).\(self.minor).\(self.patch)"
+        return "\(major).\(minor).\(patch)"
     }
 }

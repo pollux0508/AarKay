@@ -1,4 +1,4 @@
---self insert
+--self init-only
 --trimwhitespace always
 --comments ignore
 --commas always
@@ -11,7 +11,4 @@
 --wraparguments beforefirst
 --stripunusedargs closure-only
 --importgrouping testable-bottom
-
---enable blankLinesAtEndOfScope,blankLinesAtStartOfScope,blankLinesBetweenScopes,blankLinesAroundMark,braces,consecutiveBlankLines,consecutiveSpaces,duplicateImports,emptyBraces,linebreakAtEndOfFile,numberFormatting,redundantBackticks,redundantLet,redundantLetError,redundantNilInit,redundantParens,redundantPattern,redundantRawValues,redundantReturn,redundantVoidReturnType,redundantInit,semicolons,spaceAroundBraces,spaceAroundBrackets,spaceAroundComments,spaceAroundGenerics,spaceAroundOperators,spaceAroundParens,spaceInsideBraces,spaceInsideBrackets,spaceInsideComments,spaceInsideGenerics,spaceInsideParens,specifiers,strongOutlets,trailingSpace
-
 --disable andOperator,unusedArguments

@@ -20,7 +20,7 @@ public class TypeValueTransformer {
     ]
 
     public static func register(transformer: StringTransformable.Type) {
-        self.transformers[String(describing: transformer)] = transformer
+        transformers[String(describing: transformer)] = transformer
     }
 
     let value: Any?

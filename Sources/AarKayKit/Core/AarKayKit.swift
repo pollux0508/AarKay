@@ -56,9 +56,9 @@ extension AarKayKit {
 extension AarKayKit {
     func bootstrap() throws -> [Result<Renderedfile, AnyError>] {
         // 1.
-        let templateClass = self.aarkayService.templateClass(
-            plugin: self.datafile.plugin,
-            template: self.datafile.template
+        let templateClass = aarkayService.templateClass(
+            plugin: datafile.plugin,
+            template: datafile.template
         )
 
         var inputSerializer: InputSerializable!
@@ -70,13 +70,13 @@ extension AarKayKit {
             inputSerializer = YamlInputSerializer()
             templatesUrl = globalTemplates
         } else {
-            throw AarKayError.templateNotFound(self.datafile.template)
+            throw AarKayError.templateNotFound(datafile.template)
         }
 
         var context: Any!
         do {
             context = try inputSerializer
-                .context(contents: self.datafile.contents)
+                .context(contents: datafile.contents)
         } catch {
             throw AnyError(error)
         }
@@ -84,11 +84,11 @@ extension AarKayKit {
         // 2.
         var fileName: String?
         var contextArray: [[String: Any]]
-        if self.datafile.name.rk.isCollection {
+        if datafile.name.rk.isCollection {
             fileName = nil
             contextArray = context as? [[String: Any]] ?? [[:]]
         } else {
-            fileName = self.datafile.name
+            fileName = datafile.name
             contextArray = [context] as? [[String: Any]] ?? [[:]]
         }
 
@@ -101,10 +101,10 @@ extension AarKayKit {
         )
 
         // 4.
-        return self.aarkayService.renderedFiles(
+        return aarkayService.renderedFiles(
             urls: templatesUrl,
             generatedfiles: generatedFiles,
-            context: self.datafile.globalContext
+            context: datafile.globalContext
         )
     }
 }

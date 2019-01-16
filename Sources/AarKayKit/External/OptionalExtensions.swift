@@ -22,7 +22,7 @@ extension Optional where Wrapped == String {
 
 extension String {
     public func failIfEmpty(file: StaticString = #file, line: UInt = #line) -> String {
-        guard !self.trimmingCharacters(in: .whitespaces).isEmpty else {
+        guard !trimmingCharacters(in: .whitespaces).isEmpty else {
             assertionFailure("String should not be empty", file: file, line: line)
             return ""
         }

@@ -32,10 +32,10 @@ public struct Bootstrapper {
                 try FileManager.default.removeItem(at: packageResolvedUrl)
             }
         }
-        try self.createCLISwift(global: global, force: force)
-        try self.createAarKayFile(global: global)
-        try self.updatePackageSwift(global: global)
-        try self.createSwiftVersion(global: global, force: force)
+        try createCLISwift(global: global, force: force)
+        try createAarKayFile(global: global)
+        try updatePackageSwift(global: global)
+        try createSwiftVersion(global: global, force: force)
     }
 
     /// Creates CLI main.swift file
@@ -68,7 +68,7 @@ public struct Bootstrapper {
     private func createAarKayFile(global: Bool) throws {
         let url = aarkayPaths.aarkayFile(global: global)
         if !FileManager.default.fileExists(atPath: url.path) {
-            try self.write(string: RunnerFiles.aarkayFile, url: url, force: false)
+            try write(string: RunnerFiles.aarkayFile, url: url, force: false)
         }
     }
 

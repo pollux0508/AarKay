@@ -24,7 +24,7 @@ public struct AarKayPaths {
     /// - Parameter global: Setting global to true will return the global directory otherwise local directory.
     /// - Returns: The created url.
     public func directoryPath(global: Bool = false) -> URL {
-        return global ? self.globalUrl : self.localUrl
+        return global ? globalUrl : localUrl
     }
 
     /// Creates the url for the root directory of `AarKay`.
@@ -32,7 +32,7 @@ public struct AarKayPaths {
     /// - Parameter global: Decides whether to construct url relative to global directory or local directory.
     /// - Returns: The created url.
     public func aarkayPath(global: Bool = false) -> URL {
-        return self.directoryPath(global: global).appendingPathComponent("AarKay", isDirectory: true)
+        return directoryPath(global: global).appendingPathComponent("AarKay", isDirectory: true)
     }
 
     /// Creates the url for the runner directory of `AarKay`.
@@ -40,7 +40,7 @@ public struct AarKayPaths {
     /// - Parameter global: Decides whether to construct url relative to global directory or local directory.
     /// - Returns: The created url.
     public func runnerPath(global: Bool = false) -> URL {
-        return self.aarkayPath(global: global).appendingPathComponent("AarKayRunner", isDirectory: true)
+        return aarkayPath(global: global).appendingPathComponent("AarKayRunner", isDirectory: true)
     }
 
     /// Creates the url for the build path of `AarKayRunner`.
@@ -48,7 +48,7 @@ public struct AarKayPaths {
     /// - Parameter global: Decides whether to construct url relative to global directory or local directory.
     /// - Returns: The created url.
     public func buildPath(global: Bool = false) -> URL {
-        return self.runnerPath(global: global).appendingPathComponent(".build", isDirectory: true)
+        return runnerPath(global: global).appendingPathComponent(".build", isDirectory: true)
     }
 
     /// Creates the url for the `AarKayRunner` executable.
@@ -56,7 +56,7 @@ public struct AarKayPaths {
     /// - Parameter global: Decides whether to construct url relative to global directory or local directory.
     /// - Returns: The created url.
     public func cliPath(global: Bool = false) -> URL {
-        return self.buildPath(global: global).appendingPathComponent("debug/aarkay-cli")
+        return buildPath(global: global).appendingPathComponent("debug/aarkay-cli")
     }
 
     /// Creates the url for the `main.swift` file of `AarKayRunner`.
@@ -64,7 +64,7 @@ public struct AarKayPaths {
     /// - Parameter global: Decides whether to construct url relative to global directory or local directory.
     /// - Returns: The created url.
     public func mainSwift(global: Bool = false) -> URL {
-        return self.runnerPath(global: global).appendingPathComponent("Sources/AarKayCLI/main.swift")
+        return runnerPath(global: global).appendingPathComponent("Sources/AarKayCLI/main.swift")
     }
 
     /// Creates the url of `Package.swift` file of `AarKayRunner`.
@@ -72,7 +72,7 @@ public struct AarKayPaths {
     /// - Parameter global: Decides whether to construct url relative to global directory or local directory.
     /// - Returns: The created url.
     public func packageSwift(global: Bool = false) -> URL {
-        return self.runnerPath(global: global).appendingPathComponent("Package.swift")
+        return runnerPath(global: global).appendingPathComponent("Package.swift")
     }
 
     /// Creates the url of `Package.resolved` file of `AarKayRunner`.
@@ -80,7 +80,7 @@ public struct AarKayPaths {
     /// - Parameter global: Decides whether to construct url relative to global directory or local directory.
     /// - Returns: The created url.
     public func packageResolved(global: Bool = false) -> URL {
-        return self.runnerPath(global: global).appendingPathComponent("Package.resolved")
+        return runnerPath(global: global).appendingPathComponent("Package.resolved")
     }
 
     /// Creates the url of `.swift-version` file of `AarKayRunner`.
@@ -88,7 +88,7 @@ public struct AarKayPaths {
     /// - Parameter global: Decides whether to construct url relative to global directory or local directory.
     /// - Returns: The created url.
     public func swiftVersion(global: Bool = false) -> URL {
-        return self.runnerPath(global: global).appendingPathComponent(".swift-version")
+        return runnerPath(global: global).appendingPathComponent(".swift-version")
     }
 
     /// Creates the url of `AarKayFile` file of `AarKayRunner`. This file is used to add user plugins.
@@ -96,6 +96,6 @@ public struct AarKayPaths {
     /// - Parameter global: Decides whether to construct url relative to global directory or local directory.
     /// - Returns: The created url.
     public func aarkayFile(global: Bool = false) -> URL {
-        return self.aarkayPath(global: global).appendingPathComponent("AarKayFile")
+        return aarkayPath(global: global).appendingPathComponent("AarKayFile")
     }
 }

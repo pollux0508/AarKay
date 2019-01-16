@@ -16,7 +16,7 @@ extension String {
             return nil
         }
 
-        let matches = regex.matches(in: self, options: [], range: NSRange(location: 0, length: self.count))
+        let matches = regex.matches(in: self, options: [], range: NSRange(location: 0, length: count))
         guard matches.count > 0 else { return nil }
         var results = [[Range<String.Index>]]()
         matches.forEach {

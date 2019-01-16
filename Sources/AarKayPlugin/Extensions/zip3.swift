@@ -62,9 +62,9 @@ extension Zip3Sequence: Sequence {
 
     public func makeIterator() -> Iterator {
         return Iterator(
-            self._sequence1.makeIterator(),
-            self._sequence2.makeIterator(),
-            self._sequence3.makeIterator()
+            _sequence1.makeIterator(),
+            _sequence2.makeIterator(),
+            _sequence3.makeIterator()
         )
     }
 }
