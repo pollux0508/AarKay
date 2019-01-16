@@ -6,6 +6,6 @@
 
 Installation
 
-- Add https://github.com/{{ cookiecutter.github }}/aarkay-plugin-{{ cookiecutter.name|lower}} to your `~/AarKay/AarKayFile`
+- Add `https://github.com/{{ cookiecutter.github }}/aarkay-plugin-{{ cookiecutter.name|lower}}, b-master` to your `AarKayFile`
 - Run `aarkay update`.
 - That's it, You can start using the {{ cookiecutter.name }}.

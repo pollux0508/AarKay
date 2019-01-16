@@ -6,6 +6,6 @@ PLUGINSUMMARY
 
 Installation
 
-- Add https://github.com/PLUGINGITHUB/aarkay-plugin-PLUGINLOWERNAME to your `~/AarKay/AarKayFile`
+- Add `https://github.com/PLUGINGITHUB/aarkay-plugin-PLUGINLOWERNAME, b-master` to your `AarKayFile`
 - Run `aarkay update`.
 - That's it, You can start using the PLUGINNAME.
