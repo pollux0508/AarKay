@@ -32,7 +32,13 @@ class RunnerFiles {
     """
 
     /// The package description string for `AarKayRunner`
-    static func packageSwift(deps: [Dependency]) -> String {
+    static func packageSwift(deps: [Dependency]) throws -> String {
+        let hasAarKay = deps.map {
+            $0.url.deletingPathExtension().absoluteString
+        }.contains("https://github.com/RahulKatariya/AarKay")
+        
+        guard hasAarKay else { throw AarKayError.parsingError }
+        
         let packages = deps.reduce("") { (result, item) -> String in
             return result + """
             \n        \(item.packageDescription())
