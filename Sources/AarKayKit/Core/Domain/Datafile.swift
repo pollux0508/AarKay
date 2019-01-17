@@ -10,7 +10,7 @@ import Foundation
 public enum Template {
     case name(String)
     case nameStringExt(String, String, String)
-    
+
     public func name() -> String {
         switch self {
         case .name(let name): return name
