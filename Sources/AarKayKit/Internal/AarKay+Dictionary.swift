@@ -11,7 +11,7 @@ extension Dictionary: AarKayExtensionsProvider where Key == String, Value == Any
 
 extension AarKay where Base == Dictionary<String, Any> {
     func fileName() -> String? {
-        return base["_fn"] as? String ?? base["name"] as? String
+        return base["_fn"] as? String
     }
 
     func dirName() -> String? {

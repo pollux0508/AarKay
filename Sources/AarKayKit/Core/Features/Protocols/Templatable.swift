@@ -8,40 +8,18 @@
 import Foundation
 
 public protocol Templatable: class {
-    var generatedfile: Generatedfile { get set }
+    var datafile: Datafile { get set }
 
-    init?(datafile: Datafile, generatedfile: Generatedfile) throws
-    func generatedfiles() throws -> [Generatedfile]
+    init(datafile: Datafile) throws
+    func datafiles() throws -> [Datafile]
 
-    func rk_filename() -> String
-    func rk_directory() -> String?
-    static func resource() -> String
+    static func templates() -> [String]
     static func inputSerializer() -> InputSerializable
 }
 
 extension Templatable {
-    public func rk_filename() -> String {
-        return generatedfile.name
-    }
-
-    public func rk_directory() -> String? {
-        return generatedfile.directory
-    }
-
-    public func rk_generatedfile() -> Generatedfile {
-        let generatedfile = Generatedfile(
-            plugin: self.generatedfile.plugin,
-            name: rk_filename(),
-            directory: rk_directory(),
-            contents: self.generatedfile.contents,
-            override: self.generatedfile.override,
-            template: self.generatedfile.template
-        )
-        return generatedfile
-    }
-
-    public func generatedfiles() -> [Generatedfile] {
-        return [rk_generatedfile()]
+    public func datafiles() -> [Datafile] {
+        return [datafile]
     }
 
     public static func inputSerializer() -> InputSerializable {

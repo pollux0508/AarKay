@@ -51,4 +51,26 @@ extension AarKay where Base == [URL] {
         )
         return environment
     }
+
+    func templatesDirectory() -> [URL] {
+        return base.map {
+            var url = $0
+            while url.lastPathComponent != "Sources" {
+                url = url.deletingLastPathComponent()
+            }
+            url = url
+                .deletingLastPathComponent()
+                .appendingPathComponent(
+                    "AarKay/AarKayTemplates", isDirectory: true
+                )
+            if url.path.hasPrefix("/tmp") {
+                print("[OLD]", url.absoluteString)
+                let pathComponents = Array(url.pathComponents.dropFirst().dropFirst())
+                let newPath = "/" + pathComponents.joined(separator: "/")
+                url = URL(fileURLWithPath: newPath, isDirectory: true)
+                print("[NEW]", url.absoluteString)
+            }
+            return url
+        }
+    }
 }

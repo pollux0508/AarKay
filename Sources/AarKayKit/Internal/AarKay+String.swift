@@ -18,26 +18,6 @@ extension AarKay where Base == String {
             .first!
     }
 
-    func templatesDirectory() -> URL {
-        var url = URL(string: base)!
-        while url.lastPathComponent != "Sources" {
-            url = url.deletingLastPathComponent()
-        }
-        url = url
-            .deletingLastPathComponent()
-            .appendingPathComponent(
-                "AarKay/AarKayTemplates", isDirectory: true
-            )
-        if url.path.hasPrefix("/tmp") {
-            print("[OLD]", url.absoluteString)
-            let pathComponents = Array(url.pathComponents.dropFirst().dropFirst())
-            let newPath = "/" + pathComponents.joined(separator: "/")
-            url = URL(fileURLWithPath: newPath, isDirectory: true)
-            print("[NEW]", url.absoluteString)
-        }
-        return url
-    }
-
     var isCollection: Bool {
         return base.hasPrefix("[") && base.hasSuffix("]")
     }

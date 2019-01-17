@@ -41,25 +41,24 @@ templates:
       {% if isTemplate %}
 
       public class {{name}}: {% if base %}{{base}}{% else %}NSObject, Templatable{% endif %} {
-          private let datafile: Datafile
-          private var model: {{name}}Model
           {% if not base %}
-          public var generatedfile: Generatedfile
+          public var datafile: Datafile
           {% endif %}
+          private var model: {{name}}Model
 
-          public required init?(datafile: Datafile, generatedfile: Generatedfile) throws {
-              guard let contents = generatedfile.contents else { return nil }
+          public required init(datafile: Datafile) throws {
               self.datafile = datafile
-              self.model = try contents.decode(type: {{name}}Model.self)
-              {% if base %}try super.init(datafile: datafile, generatedfile: generatedfile){% endif %}
-              var generatedfile = generatedfile
-              generatedfile.setContents(try Dictionary.encode(data: model))
-              self.generatedfile = generatedfile
+              self.model = try self.datafile.dencode(type: {{name}}Model.self)
+              {% if base %}try super.init(datafile: datafile){% endif %}
           }
           {% if not base %}
 
-          public static func resource() -> String {
-              return #file
+          public static func templates() -> [String] {
+              var templates: [String] = []
+              templates.append(#file)
+              /// <aarkay templates{{name}}>
+              /// </aarkay>
+              return templates
           }
           {% endif %}
           

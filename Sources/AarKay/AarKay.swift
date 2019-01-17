@@ -188,12 +188,12 @@ public class AarKay {
                 globalTemplates: templateUrls
             )
 
-            try renderedfiles.forEach { renderedfile in
-                switch renderedfile {
+            try renderedfiles.forEach { generatedFile in
+                switch generatedFile {
                 case .success(let value):
                     /// Create the file at the mirrored destination url with the generated contents.
                     try createFile(
-                        renderedfile: value,
+                        generatedFile: value,
                         at: destinationUrl.deletingLastPathComponent()
                     )
                 case .failure(let error):
@@ -208,19 +208,19 @@ public class AarKay {
     /// Reads the current file at url and merges the contents of `RenderedFile` to it.
     ///
     /// - Parameters:
-    ///   - renderedfile: The rendered file.
+    ///   - generatedFile: The rendered file.
     ///   - url: The destination url.
     /// - Throws: FileManager operation errors.
-    private func createFile(renderedfile: Renderedfile, at url: URL) throws {
+    private func createFile(generatedFile: GeneratedFile, at url: URL) throws {
         var url = url
-        if let directory = renderedfile.directory {
+        if let directory = generatedFile.directory {
             url = url
                 .appendingPathComponent(directory, isDirectory: true)
                 .standardized
         }
-        url.appendPathComponent(renderedfile.nameWithExt)
-        let stringBlock = renderedfile.stringBlock
-        let override = renderedfile.override
+        url.appendPathComponent(generatedFile.nameWithExt)
+        let stringContents = generatedFile.contents
+        let override = generatedFile.override
         if fileManager.fileExists(atPath: url.path) {
             if !override {
                 if options.verbose {
@@ -228,7 +228,7 @@ public class AarKay {
                 }
             } else {
                 let currentString = try String(contentsOf: url)
-                let string = stringBlock(currentString)
+                let string = generatedFile.merge(currentString)
                 if string != currentString {
                     if !options.dryrun {
                         try string.write(toFile: url.path, atomically: true, encoding: .utf8)
@@ -241,10 +241,9 @@ public class AarKay {
                 }
             }
         } else {
-            let string = stringBlock(nil)
             if !options.dryrun {
                 try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
-                try string.write(toFile: url.path, atomically: true, encoding: .utf8)
+                try stringContents.write(toFile: url.path, atomically: true, encoding: .utf8)
             }
             AarKayLogger.logFileAdded(at: url)
         }

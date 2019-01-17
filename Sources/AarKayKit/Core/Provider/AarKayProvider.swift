@@ -8,7 +8,7 @@
 import Foundation
 import Result
 
-class AarKayProvider: AarKayService {
+struct AarKayProvider: AarKayService {
     func templateClass(
         plugin: String,
         template: String
@@ -22,122 +22,174 @@ class AarKayProvider: AarKayService {
         }
     }
 
-    func generatedfiles(
-        datafile: Datafile,
-        fileName: String?,
-        contextArray: [[String: Any]],
-        templateClass: Templatable.Type?
-    ) -> [Result<Generatedfile, AnyError>] {
-        let files = contextArray.map { context in
-            Result<Generatedfile, AnyError> {
-                guard let fileName: String = fileName ?? context.rk.fileName() else {
-                    throw AarKayError.missingFileName(datafile.plugin, datafile.template, context)
-                }
-                let generatedfile = Generatedfile(
-                    plugin: datafile.plugin,
-                    name: fileName.rk.standardized,
-                    directory: context.rk.dirName(),
-                    contents: context,
-                    override: context.rk.override() ?? true,
-                    template: datafile.template
-                )
-                return generatedfile
-            }
-        }
-        if let templateClass = templateClass {
-            return templateGeneratedfiles(
-                datafile: datafile,
-                generatedfiles: files,
-                templateClass: templateClass
+    func serialize(
+        plugin: String,
+        name: String,
+        template: String,
+        contents: String,
+        globalContext: [String: Any]?,
+        using serializer: InputSerializable
+    ) throws -> [Result<Datafile, AnyError>] {
+        let context = try serializer.context(contents: contents)
+        if name.rk.isCollection {
+            let contextArray = context as? [[String: Any]] ?? [[:]]
+            return datafiles(
+                plugin: plugin,
+                contextArray: contextArray,
+                template: template,
+                globalContext: globalContext
             )
         } else {
-            return files
+            let context = context as? [String: Any] ?? [:]
+            let df = datafile(
+                fileName: name,
+                context: context,
+                template: template,
+                globalContext: globalContext
+            )
+            return [Result<Datafile, AnyError>.success(df)]
         }
     }
 
-    func templateGeneratedfiles(
+    func templateDatafiles(
         datafile: Datafile,
-        generatedfiles: [Result<Generatedfile, AnyError>],
         templateClass: Templatable.Type
-    ) -> [Result<Generatedfile, AnyError>] {
-        return generatedfiles.reduce([Result<Generatedfile, AnyError>]()) { original, generatedfile in
-            switch generatedfile {
-            case .success(let value):
-                let results = templateGeneratedfiles(
-                    datafile: datafile,
-                    generatedfile: value,
-                    templateClass: templateClass
-                )
-                return original + results
-            case .failure(let failure):
-                return original + [.failure(failure)]
-            }
+    ) -> [Result<Datafile, AnyError>] {
+        let result = Result<[Datafile], AnyError> {
+            let templatable = try templateClass.init(
+                datafile: datafile
+            )
+            let datafiles = try templatable.datafiles()
+            return datafiles
+        }
+        switch result {
+        case .success(let files):
+            return files.map { Result<Datafile, AnyError>.success($0) }
+        case .failure(let error):
+            return [Result<Datafile, AnyError>.failure(error)]
         }
     }
 
-    func templateGeneratedfiles(
-        datafile: Datafile,
-        generatedfile: Generatedfile,
-        templateClass: Templatable.Type
-    ) -> [Result<Generatedfile, AnyError>] {
-        do {
-            if let templatable = try templateClass.init(
-                datafile: datafile,
-                generatedfile: generatedfile
-            ) {
-                do {
-                    return try templatable.generatedfiles().map { .success($0) }
-                } catch {
-                    return [Result.failure(AnyError(error))]
-                }
-            } else {
-                let error = AarKayError.modelDecodingFailure(
-                    generatedfile.name, generatedfile.template + "Model"
-                )
-                return [Result.failure(AnyError(error))]
-            }
-        } catch {
-            return [Result.failure(AnyError(error))]
-        }
-    }
-
-    func renderedFiles(
+    func generatedFiles(
         urls: [URL],
-        generatedfiles: [Result<Generatedfile, AnyError>],
-        context: [String: Any]?
-    ) -> [Result<Renderedfile, AnyError>] {
-        let renderedFiles: [Result<Renderedfile, AnyError>] = generatedfiles.reduce(
-            [Result<Renderedfile, AnyError>]()
-        ) { (initial, next) -> [Result<Renderedfile, AnyError>] in
-            var result: [Result<Renderedfile, AnyError>] = []
-            switch next {
-            case .success(let file):
-                let filesResult = Result { try AarKayTemplates.default.render(
-                    urls: urls, generatedfile: file, context: context
-                ) }
-                switch filesResult {
-                case .success(let files):
-                    result = result + files.map {
-                        var rFile = $0
-                        if let ext = $0.ext,
-                            let dirs = context?["dirs"] as? [String: String],
-                            let dir = dirs[ext] {
-                            if let directory = $0.directory {
-                                rFile.setDirectory(dir + "/" + directory)
-                            } else {
-                                rFile.setDirectory(dir)
-                            }
-                        }
-                        return Result<Renderedfile, AnyError>.success(rFile)
+        datafiles: [Result<Datafile, AnyError>],
+        globalContext: [String: Any]?
+    ) -> [Result<GeneratedFile, AnyError>] {
+        return datafiles.map { result -> Result<[GeneratedFile], AnyError> in
+            switch result {
+            case .success(let value):
+                return Result {
+                    let files = try generatedFiles(
+                        urls: urls, datafile: value, globalContext: globalContext
+                    )
+                    guard files.count == 1 else {
+                        throw AnyError(
+                            AarKayError.multipleTemplatesFound(value.template.name())
+                        )
                     }
-                case .failure(let error):
-                    result.append(.failure(error))
+                    return files
                 }
             case .failure(let error):
-                result.append(.failure(error))
+                return .failure(error)
             }
-            return initial + result
+        }.reduce(
+            [Result<GeneratedFile, AnyError>]()
+        ) { (initial, next) -> [Result<GeneratedFile, AnyError>] in
+            var results = initial
+            switch next {
+            case .failure(let error):
+                results.append(.failure(error))
+            case .success(let files):
+                results = results + files.map { .success($0) }
+            }
+            return results
         }
-        return renderedFiles
     }
+}
+
+// MARK: - Private Helpers
+
+extension AarKayProvider {
+    private func datafile(
+        fileName: String,
+        context: [String: Any],
+        template: String,
+        globalContext: [String: Any]?
+    ) -> Datafile {
+        let fileName = context.rk.fileName() ?? fileName
+        return Datafile(
+            fileName: fileName.rk.standardized,
+            directory: context.rk.dirName(),
+            context: context,
+            override: context.rk.override(),
+            template: .name(template),
+            globalContext: globalContext
+        )
+    }
+
+    private func datafiles(
+        plugin: String,
+        contextArray: [[String: Any]],
+        template: String,
+        globalContext: [String: Any]?
+    ) -> [Result<Datafile, AnyError>] {
+        return contextArray.map { context -> Result<Datafile, AnyError> in
+            Result<Datafile, AnyError> {
+                guard let fileName = context.rk.fileName() ?? context["name"] as? String else {
+                    throw AarKayError.missingFileName(plugin, template)
+                }
+                return datafile(
+                    fileName: fileName,
+                    context: context,
+                    template: template,
+                    globalContext: globalContext
+                )
+            }
+        }
+    }
+
+    private func generatedFiles(
+        urls: [URL],
+        datafile: Datafile,
+        globalContext: [String: Any]?
+    ) throws -> [GeneratedFile] {
+        switch datafile.template {
+        case .name(let name):
+            let templates = try AarKayTemplates.default.renderTemplate(
+                urls: urls,
+                name: name,
+                context: datafile.globalContext + datafile.context
+            )
+            return templates.map {
+                generatedFile(
+                    datafile: datafile,
+                    stringContents: $0.0,
+                    pathExtension: $0.1
+                )
+            }
+        case .nameStringExt(_, let string, let ext):
+            let file = generatedFile(
+                datafile: datafile,
+                stringContents: string,
+                pathExtension: ext
+            )
+            return [file]
+        }
+    }
+
+    private func generatedFile(
+        datafile: Datafile,
+        stringContents: String,
+        pathExtension: String?
+    ) -> GeneratedFile {
+        let file = GeneratedFile(
+            name: datafile.fileName,
+            ext: pathExtension,
+            directory: datafile.directory,
+            override: datafile.override,
+            contents: stringContents
+        )
+        return file
+    }
+
 }

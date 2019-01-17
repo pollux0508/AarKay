@@ -18,55 +18,7 @@ class AarKayTemplates {
 
     private var environmentCache = Dictionary<String, Cache>()
 
-    func render(
-        urls: [URL],
-        generatedfile: Generatedfile,
-        context: [String: Any]?
-    ) throws -> [Renderedfile] {
-        if let templateString = generatedfile.templateString {
-            let file = renderedFile(
-                generatedfile: generatedfile,
-                stringContents: templateString,
-                pathExtension: generatedfile.ext
-            )
-            return [file]
-        } else {
-            let templates = try AarKayTemplates.default.renderTemplate(
-                urls: urls,
-                name: generatedfile.template,
-                context: context + generatedfile.contents
-            )
-            return templates.map {
-                renderedFile(
-                    generatedfile: generatedfile,
-                    stringContents: $0.0,
-                    pathExtension: $0.1
-                )
-            }
-        }
-    }
-
-    private func renderedFile(
-        generatedfile: Generatedfile,
-        stringContents: String,
-        pathExtension: String?
-    ) -> Renderedfile {
-        let file = Renderedfile(
-            name: generatedfile.name,
-            ext: pathExtension,
-            directory: generatedfile.directory,
-            override: generatedfile.override
-        ) {
-            if let currentString = $0 {
-                return currentString.rk.merge(templateString: stringContents)
-            } else {
-                return stringContents
-            }
-        }
-        return file
-    }
-
-    private func renderTemplate(
+    func renderTemplate(
         urls: [URL],
         name: String,
         context: [String: Any]? = nil
@@ -99,7 +51,8 @@ class AarKayTemplates {
         if let cache = environmentCache[cacheKey] { return cache }
         let env = urls.rk.environment()
         let files = FileManager.default.subFiles(atUrls: urls) ?? []
-        let fcs = files.filter { !$0.lastPathComponent.hasPrefix(".") }
+        let fcs = files
+            .filter { !$0.lastPathComponent.hasPrefix(".") }
             .reduce(Dictionary<String, [URL]>()) { initial, item in
                 guard let name = item.lastPathComponent.components(separatedBy: ".").first else { return initial }
                 var initial = initial

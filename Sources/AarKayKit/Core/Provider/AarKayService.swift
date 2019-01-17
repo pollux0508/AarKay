@@ -14,16 +14,23 @@ protocol AarKayService {
         template: String
     ) -> Templatable.Type?
 
-    func generatedfiles(
-        datafile: Datafile,
-        fileName: String?,
-        contextArray: [[String: Any]],
-        templateClass: Templatable.Type?
-    ) -> [Result<Generatedfile, AnyError>]
+    func serialize(
+        plugin: String,
+        name: String,
+        template: String,
+        contents: String,
+        globalContext: [String: Any]?,
+        using serializer: InputSerializable
+    ) throws -> [Result<Datafile, AnyError>]
 
-    func renderedFiles(
+    func templateDatafiles(
+        datafile: Datafile,
+        templateClass: Templatable.Type
+    ) -> [Result<Datafile, AnyError>]
+
+    func generatedFiles(
         urls: [URL],
-        generatedfiles: [Result<Generatedfile, AnyError>],
-        context: [String: Any]?
-    ) -> [Result<Renderedfile, AnyError>]
+        datafiles: [Result<Datafile, AnyError>],
+        globalContext: [String: Any]?
+    ) -> [Result<GeneratedFile, AnyError>]
 }

@@ -10,21 +10,20 @@ import AarKayKit
 import Foundation
 
 public class Template: NSObject, Templatable {
-    private let datafile: Datafile
+    public var datafile: Datafile
     private var model: TemplateModel
-    public var generatedfile: Generatedfile
 
-    public required init?(datafile: Datafile, generatedfile: Generatedfile) throws {
-        guard let contents = generatedfile.contents else { return nil }
+    public required init(datafile: Datafile) throws {
         self.datafile = datafile
-        self.model = try contents.decode(type: TemplateModel.self)
-        var generatedfile = generatedfile
-        generatedfile.setContents(try Dictionary.encode(data: model))
-        self.generatedfile = generatedfile
+        self.model = try self.datafile.dencode(type: TemplateModel.self)
     }
 
-    public static func resource() -> String {
-        return #file
+    public static func templates() -> [String] {
+        var templates: [String] = []
+        templates.append(#file)
+        /// <aarkay templatesTemplate>
+        /// </aarkay>
+        return templates
     }
 }
 
@@ -136,8 +135,8 @@ public class TemplateModel: Codable {
 // MARK: - AarKayEnd
 
 extension Template {
-    public func generatedfiles() throws -> [Generatedfile] {
-        var all = [Generatedfile]()
+    public func datafiles() throws -> [Datafile] {
+        var all = [Datafile]()
         var templatesDir = "AarKay/AarKayTemplates"
         if let directory = datafile.directory {
             let components = directory.components(separatedBy: "/")
@@ -145,13 +144,13 @@ extension Template {
             templatesDir = backPath + templatesDir
         }
         templateFiles(
-            generatedFile: rk_generatedfile(),
+            datafile: datafile,
             templatesDir: templatesDir,
             model: model,
             all: &all
         )
         try modelFiles(
-            generatedFile: rk_generatedfile(),
+            datafile: datafile,
             model: model,
             all: &all
         )
@@ -159,10 +158,10 @@ extension Template {
     }
 
     func templateFiles(
-        generatedFile: Generatedfile,
+        datafile: Datafile,
         templatesDir: String,
         model: TemplateModel,
-        all: inout [Generatedfile]
+        all: inout [Datafile]
     ) {
         let templateFilename = model.name
 
@@ -175,15 +174,12 @@ extension Template {
             let templateString = $0.string.replacingOccurrences(
                 of: "{{self.name}}", with: model.name
             )
-            var gfile = generatedFile
+            var gfile = datafile
             gfile.setDirectory(templatesDir)
-            gfile.setTemplateString(templateString)
-            gfile.setName(fileName)
-            if let ext = $0.ext.nilIfEmpty() {
-                gfile.setExt("\(ext).stencil")
-            } else {
-                gfile.setExt("stencil")
-            }
+            let ext: String = $0.ext.nilIfEmpty() != nil ? "\($0.ext!).stencil" : "stencil"
+            let templateName = datafile.template.name()
+            gfile.setTemplate(.nameStringExt(templateName, templateString, ext))
+            gfile.setFileName(fileName)
             all.append(gfile)
         }
 
@@ -205,7 +201,7 @@ extension Template {
                 }
             }
             templateFiles(
-                generatedFile: generatedFile,
+                datafile: datafile,
                 templatesDir: templatesDir,
                 model: sub,
                 all: &all
@@ -214,25 +210,25 @@ extension Template {
     }
 
     func modelFiles(
-        generatedFile: Generatedfile,
+        datafile: Datafile,
         model: TemplateModel,
-        all: inout [Generatedfile]
+        all: inout [Datafile]
     ) throws {
-        var gFile = generatedFile
-        gFile.setName(model.name)
-        all.append(gFile)
+        var dFile = datafile
+        dFile.setFileName(model.name)
+        all.append(dFile)
 
         guard let subs = model.subs else { return }
         try subs.forEach { sub in
             sub.base = (model.properties.isEmpty) ? model.base : model.name
             sub.baseProperties = model.baseProperties + model.properties
-            let subDir = generatedFile.directory != nil ?
-                generatedFile.directory! + "/" + model.name :
+            let subDir = datafile.directory != nil ?
+                datafile.directory! + "/" + model.name :
                 model.name
-            var subFile = generatedFile
+            var subFile = datafile
             subFile.setDirectory(subDir)
-            subFile.setContents(try Dictionary.encode(data: sub))
-            try modelFiles(generatedFile: subFile, model: sub, all: &all)
+            try subFile.setContext(sub)
+            try modelFiles(datafile: subFile, model: sub, all: &all)
         }
     }
 }
