@@ -81,9 +81,8 @@ public struct Bootstrapper {
         let aarkayFileUrl = aarkayPaths.aarkayFile(global: global)
         let aarkayFileContents = try String(contentsOf: aarkayFileUrl)
         let deps: [Dependency] = try AarKayFile(contents: aarkayFileContents).dependencies
-        let hasAarKay = deps.map {
-            $0.url.deletingPathExtension().absoluteString
-        }.contains("https://github.com/RahulKatariya/AarKay")
+        let targetDescriptions = deps.map { $0.targetDescription() }
+        let hasAarKay = targetDescriptions.contains("\"AarKay\",")
         guard hasAarKay else { throw AarKayError.parsingError }
         let contents = RunnerFiles.packageSwift(deps: deps)
         let url = aarkayPaths.packageSwift(global: global)

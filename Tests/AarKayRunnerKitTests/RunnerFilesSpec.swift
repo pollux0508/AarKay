@@ -42,7 +42,6 @@ class RunnerFilesSpec: QuickSpec {
                     let dep = try Dependency(string: "https://github.com/RahulKatariya/AarKay.git, 1.0.0")
                     let packageSwift = RunnerFiles.packageSwift(deps: [dep])
                     expect(packageSwift).toNot(beNil())
-                    print(packageSwift)
                     expect(packageSwift) == actual
                 }.toNot(throwError())
             }
@@ -79,7 +78,6 @@ class RunnerFilesSpec: QuickSpec {
                     let dep2 = try Dependency(string: "./../aarkay-plugin-test, ~> 1.0.0")
                     let packageSwift = RunnerFiles.packageSwift(deps: [dep, dep2])
                     expect(packageSwift).toNot(beNil())
-                    print(packageSwift)
                     expect(packageSwift) == actual
                 }.toNot(throwError())
             }
