@@ -11,21 +11,20 @@ import AarKayPlugin
 import Foundation
 
 public class PLUGINNAME: NSObject, Templatable {
-    private let datafile: Datafile
+    public var datafile: Datafile
     private var model: PLUGINNAMEModel
-    public var generatedfile: Generatedfile
 
-    public required init?(datafile: Datafile, generatedfile: Generatedfile) throws {
-        guard let contents = generatedfile.contents else { return nil }
+    public required init(datafile: Datafile) throws {
         self.datafile = datafile
-        self.model = try contents.decode(type: PLUGINNAMEModel.self)
-        var generatedfile = generatedfile
-        generatedfile.setContents(try Dictionary.encode(data: model))
-        self.generatedfile = generatedfile
+        self.model = try self.datafile.dencode(type: PLUGINNAMEModel.self)
     }
 
-    public static func resource() -> String {
-        return #file
+    public static func templates() -> [String] {
+        var templates: [String] = []
+        templates.append(#file)
+        /// <aarkay templatesPLUGINNAME>
+        /// </aarkay>
+        return templates
     }
 }
 
