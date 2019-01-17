@@ -1,0 +1,26 @@
+name: AarKay
+kit: AarKayRunnerKit
+defaultCommand: run
+commands:
+  - name: Init
+    desc: Initialize AarKay and install all the plugins from `AarKayFile`.
+    switches:
+      - global|g|Uses global version of `aarkay`.
+      - force|f|Resets aarkay and starts over.
+  - name: Install
+    desc: Install all the plugins from `AarKayFile`.
+    switches:
+      - global|g|Uses global version of `aarkay`.
+  - name: Run
+    desc: Generate respective files from the datafiles inside AarKayData.
+    switches:
+      - global|g|Uses global version of `aarkay`.
+      - verbose|f|Adds verbose logging.
+      - force|f|Will not check if the directory has any uncomitted changes.
+      - dryrun|f|Will only create files and will not write them to disk.
+  - name: Update
+    desc: Update all the plugins from `AarKayFile`.
+    switches:
+      - global|g|Uses global version of `aarkay`.
+  - name: Version
+    desc: Display the current version of aarkay.

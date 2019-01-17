@@ -80,7 +80,7 @@ public struct Datafile {
             with: encodedData,
             options: .allowFragments
         ) as? [String: Any] else {
-                throw AarKayError.modelDecodingFailure(fileName)
+            throw AarKayError.modelDecodingFailure(fileName)
         }
         if let context = context {
             setContext(collection + context)

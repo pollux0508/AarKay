@@ -1,10 +1,3 @@
-//
-//  Run.swift
-//  AarKayRunner
-//
-//  Created by Rahul Katariya on 03/03/18.
-//
-
 import AarKayRunnerKit
 import Commandant
 import Curry
@@ -19,19 +12,22 @@ struct RunCommand: CommandProtocol {
         let force: Bool
         let dryrun: Bool
 
-        public static func evaluate(_ mode: CommandMode) -> Result<Options, CommandantError<AarKayError>> {
+        public static func evaluate(
+            _ mode: CommandMode
+        ) -> Result<Options, CommandantError<AarKayError>> {
             return curry(self.init)
                 <*> mode <| Switch(flag: "g", key: "global", usage: "Uses global version of `aarkay`.")
-                <*> mode <| Switch(flag: "v", key: "verbose", usage: "Adds verbose logging.")
+                <*> mode <| Switch(flag: "f", key: "verbose", usage: "Adds verbose logging.")
                 <*> mode <| Switch(flag: "f", key: "force", usage: "Will not check if the directory has any uncomitted changes.")
-                <*> mode <| Switch(flag: "n", key: "dryrun", usage: "Will only create files and will not write them to disk.")
+                <*> mode <| Switch(flag: "f", key: "dryrun", usage: "Will only create files and will not write them to disk.")
         }
     }
 
     var verb: String = "run"
-    var function: String = "Generate respective files from the datafiles inside AarKayData"
+    var function: String = "Generate respective files from the datafiles inside AarKayData."
 
     func run(_ options: Options) -> Result<(), AarKayError> {
+        /// <aarkay Run>
         var runnerUrl = AarKayPaths.default.runnerPath()
         var cliUrl: URL = AarKayPaths.default.cliPath()
 
@@ -50,5 +46,6 @@ struct RunCommand: CommandProtocol {
         if options.force { arguments.append("--force") }
         if options.dryrun { arguments.append("--dryrun") }
         return Tasks.execute(at: cliUrl.path, arguments: arguments)
+        /// </aarkay>
     }
 }

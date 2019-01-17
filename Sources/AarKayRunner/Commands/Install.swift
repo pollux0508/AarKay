@@ -1,10 +1,3 @@
-//
-//  Install.swift
-//  AarKayRunner
-//
-//  Created by Rahul Katariya on 04/03/18.
-//
-
 import AarKayRunnerKit
 import Commandant
 import Curry
@@ -16,7 +9,9 @@ struct InstallCommand: CommandProtocol {
     struct Options: OptionsProtocol {
         let global: Bool
 
-        public static func evaluate(_ mode: CommandMode) -> Result<Options, CommandantError<AarKayError>> {
+        public static func evaluate(
+            _ mode: CommandMode
+        ) -> Result<Options, CommandantError<AarKayError>> {
             return curry(self.init)
                 <*> mode <| Switch(flag: "g", key: "global", usage: "Uses global version of `aarkay`.")
         }
@@ -26,6 +21,7 @@ struct InstallCommand: CommandProtocol {
     var function: String = "Install all the plugins from `AarKayFile`."
 
     func run(_ options: Options) -> Result<(), AarKayError> {
+        /// <aarkay Install>
         let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
 
         guard FileManager.default.fileExists(atPath: runnerUrl.path) else {
@@ -35,9 +31,10 @@ struct InstallCommand: CommandProtocol {
         do {
             try Bootstrapper.default.updatePackageSwift(global: options.global)
         } catch {
-            return .failure(.bootstap(error))
+            return .failure(.bootstrap(error))
         }
         println("Installing plugins at \(runnerUrl.path). This might take a few minutes...")
         return Tasks.install(at: runnerUrl.path)
+        /// </aarkay>
     }
 }
