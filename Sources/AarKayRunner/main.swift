@@ -12,7 +12,7 @@ registry.register(UpdateCommand())
 registry.register(VersionCommand())
 registry.register(HelpCommand(registry: registry))
 
-/// Setting the default command to `run` instead of `help`.
+/// Setting the default command to `run`.
 registry.main(defaultVerb: "run") { error in
     fputs(error.description + "\n", stderr)
 }

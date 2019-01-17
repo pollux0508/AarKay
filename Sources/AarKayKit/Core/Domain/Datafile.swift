@@ -67,15 +67,26 @@ public struct Datafile {
         self.context = context
     }
 
-    public mutating func setContext<T: Encodable>(_ contents: T) throws {
-        let encodedData = try JSONEncoder().encode(contents)
+    public mutating func addContext(_ context: [String: Any]) {
+        setContext(self.context + context)
+    }
+
+    public mutating func setContext<T: Encodable>(
+        _ model: T,
+        with context: [String: Any]? = nil
+    ) throws {
+        let encodedData = try JSONEncoder().encode(model)
         guard let collection = try JSONSerialization.jsonObject(
             with: encodedData,
             options: .allowFragments
         ) as? [String: Any] else {
-            throw AarKayError.modelDecodingFailure(fileName)
+                throw AarKayError.modelDecodingFailure(fileName)
         }
-        setContext(collection)
+        if let context = context {
+            setContext(collection + context)
+        } else {
+            setContext(collection)
+        }
     }
 
     public mutating func setOverride(_ override: Bool) {
