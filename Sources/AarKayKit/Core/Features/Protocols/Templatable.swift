@@ -18,7 +18,7 @@ public protocol Templatable: class {
 }
 
 extension Templatable {
-    public func datafiles() -> [Datafile] {
+    public func datafiles() throws -> [Datafile] {
         return [datafile]
     }
 
