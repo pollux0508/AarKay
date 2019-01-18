@@ -30,7 +30,7 @@ extension Git where Base == FileManager {
         guard status == 0 else { return true }
 
         return BashProcess.run(
-            command: "git diff --quiet HEAD",
+            command: "[[ -z $(git status --porcelain) ]]",
             url: url
         ) == 0 ? false : true
     }
