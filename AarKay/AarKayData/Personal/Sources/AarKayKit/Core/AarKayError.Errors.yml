@@ -1,0 +1,29 @@
+name: AarKay|
+_skip: true
+errors:
+  - name: missingFileName|
+    args:
+      - plugin|String
+      - template|String
+    desc: |
+      "Couldn't resolve filename in \(plugin).\(template)"
+  - name: modelDecodingFailure|
+    args:
+      - name|String
+    desc: |
+      "Couldn't decode \(name)"
+  - name: templateNotFound|
+    args:
+      - name|String
+    desc: |
+      "\(name) could not be found"
+  - name: multipleTemplatesFound|
+    args:
+      - name|String
+    desc: |
+      "More than one template with name - \(name) exists"
+  - name: invalidTemplate|
+    args:
+      - name|String
+    desc: |
+      "\(name) components count should not be more than 3"

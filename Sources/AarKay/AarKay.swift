@@ -219,13 +219,16 @@ public class AarKay {
                 .standardized
         }
         url.appendPathComponent(generatedFile.nameWithExt)
-        guard !generatedFile.skip && options.verbose else {
-            AarKayLogger.logFileSkipped(at: url); return
+        guard !generatedFile.skip else {
+            if options.verbose {
+                AarKayLogger.logFileSkipped(at: url)
+            }
+            return
         }
         if fileManager.fileExists(atPath: url.path) {
             if !generatedFile.override {
                 if options.verbose {
-                    AarKayLogger.logFileUnchanged(at: url)
+                    AarKayLogger.logFileSkipped(at: url); return
                 }
             } else {
                 let currentString = try String(contentsOf: url)
