@@ -12,6 +12,7 @@ public struct GeneratedFile {
     public let ext: String?
     public let directory: String?
     public let override: Bool
+    public let skip: Bool
     public let contents: String
 
     public var nameWithExt: String {
@@ -27,12 +28,14 @@ public struct GeneratedFile {
         ext: String?,
         directory: String?,
         override: Bool,
+        skip: Bool,
         contents: String
     ) {
         self.name = name.failIfEmpty()
         self.ext = ext.nilIfEmpty()
         self.directory = directory.nilIfEmpty()
         self.override = override
+        self.skip = skip
         self.contents = contents
     }
 

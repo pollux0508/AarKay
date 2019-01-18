@@ -72,8 +72,15 @@ class AarKayLogger {
 
     /// Logs for a file not changed.
     ///
+    /// - Parameter url: The url of the unchanged file.
+    static func logFileUnchanged(at url: URL) {
+        print("   <-> \(url.relativeString)")
+    }
+    
+    /// Logs for a file skipped.
+    ///
     /// - Parameter url: The url of the skipped file.
     static func logFileSkipped(at url: URL) {
-        print("   <-> \(url.relativeString)")
+        print("   <x> \(url.relativeString)")
     }
 }

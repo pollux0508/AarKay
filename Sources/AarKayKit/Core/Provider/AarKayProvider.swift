@@ -122,6 +122,7 @@ extension AarKayProvider {
             directory: context.rk.dirName(),
             context: context,
             override: context.rk.override(),
+            skip: context.rk.skip(),
             template: .name(template),
             globalContext: globalContext
         )
@@ -187,6 +188,7 @@ extension AarKayProvider {
             ext: pathExtension,
             directory: datafile.directory,
             override: datafile.override,
+            skip: datafile.skip,
             contents: stringContents
         )
         return file

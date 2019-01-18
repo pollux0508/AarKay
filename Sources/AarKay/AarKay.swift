@@ -219,12 +219,13 @@ public class AarKay {
                 .standardized
         }
         url.appendPathComponent(generatedFile.nameWithExt)
-        let stringContents = generatedFile.contents
-        let override = generatedFile.override
+        guard !generatedFile.skip && options.verbose else {
+            AarKayLogger.logFileSkipped(at: url); return
+        }
         if fileManager.fileExists(atPath: url.path) {
-            if !override {
+            if !generatedFile.override {
                 if options.verbose {
-                    AarKayLogger.logFileSkipped(at: url)
+                    AarKayLogger.logFileUnchanged(at: url)
                 }
             } else {
                 let currentString = try String(contentsOf: url)
@@ -236,14 +237,14 @@ public class AarKay {
                     AarKayLogger.logFileModified(at: url)
                 } else {
                     if options.verbose {
-                        AarKayLogger.logFileSkipped(at: url)
+                        AarKayLogger.logFileUnchanged(at: url)
                     }
                 }
             }
         } else {
             if !options.dryrun {
                 try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
-                try stringContents.write(toFile: url.path, atomically: true, encoding: .utf8)
+                try generatedFile.contents.write(toFile: url.path, atomically: true, encoding: .utf8)
             }
             AarKayLogger.logFileAdded(at: url)
         }

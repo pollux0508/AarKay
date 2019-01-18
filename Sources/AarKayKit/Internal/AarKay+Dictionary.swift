@@ -21,4 +21,8 @@ extension AarKay where Base == Dictionary<String, Any> {
     func override() -> Bool? {
         return base["_or"] as? Bool
     }
+    
+    func skip() -> Bool? {
+        return base["_skip"] as? Bool
+    }
 }

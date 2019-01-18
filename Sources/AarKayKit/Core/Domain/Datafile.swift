@@ -24,6 +24,7 @@ public struct Datafile {
     public private(set) var directory: String?
     public private(set) var context: [String: Any]
     public private(set) var override: Bool
+    public private(set) var skip: Bool
     public private(set) var template: Template
     public private(set) var globalContext: [String: Any]?
 
@@ -32,6 +33,7 @@ public struct Datafile {
         directory: String?,
         context: [String: Any],
         override: Bool?,
+        skip: Bool?,
         template: Template,
         globalContext: [String: Any]?
     ) {
@@ -39,6 +41,7 @@ public struct Datafile {
         self.fileName = fileName.failIfEmpty()
         self.context = context
         self.override = override ?? true
+        self.skip = skip ?? false
         self.template = template
         self.globalContext = globalContext
     }
@@ -91,6 +94,10 @@ public struct Datafile {
 
     public mutating func setOverride(_ override: Bool) {
         self.override = override
+    }
+
+    public mutating func setSkip(_ skip: Bool) {
+        self.skip = skip
     }
 
     public mutating func setTemplate(_ template: Template) {
