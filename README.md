@@ -42,8 +42,7 @@ There are plenty of tutorials for different uses of AarKay:
 Plugins allows you to
 
 - Process and Modify [Datafile](https://github.com/RahulKatariya/AarKay/blob/master/guides/Datafile.md) data before it is applied to the [Template](https://github.com/RahulKatariya/AarKay/blob/master/guides/Templatefile.md).
-- Modify Generatedfile name and directory.
-- Generates multiple files of any type with the same data.
+- Generate multiple files of any type with the same data.
 
 ### Available Plugins
 
