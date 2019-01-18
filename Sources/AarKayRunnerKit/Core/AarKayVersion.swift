@@ -1,10 +1,1 @@
-//
-//  Version.swift
-//  AarKayRunnerKit
-//
-//  Created by RahulKatariya on 06/01/19.
-//
-
-import Foundation
-
-public let AarKayVersion = "0.3.1"
+public let AarKayVersion = "0.4.0"
