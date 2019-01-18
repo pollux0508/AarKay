@@ -17,9 +17,9 @@ struct RunCommand: CommandProtocol {
         ) -> Result<Options, CommandantError<AarKayError>> {
             return curry(self.init)
                 <*> mode <| Switch(flag: "g", key: "global", usage: "Uses global version of `aarkay`.")
-                <*> mode <| Switch(flag: "f", key: "verbose", usage: "Adds verbose logging.")
+                <*> mode <| Switch(flag: "v", key: "verbose", usage: "Adds verbose logging.")
                 <*> mode <| Switch(flag: "f", key: "force", usage: "Will not check if the directory has any uncomitted changes.")
-                <*> mode <| Switch(flag: "f", key: "dryrun", usage: "Will only create files and will not write them to disk.")
+                <*> mode <| Switch(flag: "n", key: "dryrun", usage: "Will only create files and will not write them to disk.")
         }
     }
 
