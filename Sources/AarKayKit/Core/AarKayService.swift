@@ -9,11 +9,16 @@ import Foundation
 import Result
 
 protocol AarKayService {
+    var datafileService: DatafileService { get }
+    var generatedfileService: GeneratedfileService { get }
+
     func templateClass(
         plugin: String,
         template: String
     ) -> Templatable.Type?
+}
 
+protocol DatafileService {
     func serialize(
         plugin: String,
         name: String,
@@ -27,10 +32,12 @@ protocol AarKayService {
         datafile: Datafile,
         templateClass: Templatable.Type
     ) -> [Result<Datafile, AnyError>]
+}
 
+protocol GeneratedfileService {
     func generatedFiles(
         urls: [URL],
         datafiles: [Result<Datafile, AnyError>],
         globalContext: [String: Any]?
-    ) -> [Result<GeneratedFile, AnyError>]
+    ) -> [Result<Generatedfile, AnyError>]
 }

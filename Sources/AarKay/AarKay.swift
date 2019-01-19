@@ -170,13 +170,6 @@ public class AarKay {
             /// Read the contents of the Datafile.
             let contents = try String(contentsOf: sourceUrl)
 
-            var templateUrls: [URL]!
-            if aarkayTemplatesUrl.path == aarkayGlobalTemplatesUrl.path {
-                templateUrls = [aarkayTemplatesUrl]
-            } else {
-                templateUrls = [aarkayGlobalTemplatesUrl, aarkayTemplatesUrl]
-            }
-
             /// Returns all generated files result.
             let renderedfiles = try AarKayKit.bootstrap(
                 plugin: plugin,
@@ -185,7 +178,7 @@ public class AarKay {
                 directory: directory,
                 template: template,
                 contents: contents,
-                globalTemplates: templateUrls
+                globalTemplates: [aarkayGlobalTemplatesUrl, aarkayTemplatesUrl]
             )
 
             try renderedfiles.forEach { generatedFile in
@@ -211,7 +204,7 @@ public class AarKay {
     ///   - generatedFile: The rendered file.
     ///   - url: The destination url.
     /// - Throws: FileManager operation errors.
-    private func createFile(generatedFile: GeneratedFile, at url: URL) throws {
+    private func createFile(generatedFile: Generatedfile, at url: URL) throws {
         var url = url
         if let directory = generatedFile.directory {
             url = url

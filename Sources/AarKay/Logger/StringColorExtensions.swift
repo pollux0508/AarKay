@@ -34,7 +34,7 @@ extension String {
 
     /// Wraps self with magenta color
     var magenta: String { return PrettyColor.magenta.colored(self) }
-    
+
     /// Wraps self with cyan color
     var cyan: String { return PrettyColor.cyan.colored(self) }
 }

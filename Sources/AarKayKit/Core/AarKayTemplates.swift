@@ -23,38 +23,35 @@ class AarKayTemplates {
         name: String,
         context: [String: Any]? = nil
     ) throws -> [(String, String?)] {
-        let cache = self.cache(urls: urls)
+        let cache = try self.cache(urls: urls)
         guard let templateUrls = cache.files[name] else { throw AarKayError.templateNotFound(name) }
         var result: [(String, String?)] = []
         try templateUrls.forEach { templateUrl in
-            if let (templateName, ext) = try templateUrl.rk.template() {
-                let rendered = try cache.environment.renderTemplate(
-                    name: templateName, context: context
-                )
-                result.append((rendered, ext))
-            } else {
-                let rendered = try cache.environment.renderTemplate(
-                    name: name, context: context
-                )
-                result.append((rendered, nil))
-            }
+            let (name, ext) = try templateUrl.rk.template()
+            let rendered = try cache.environment.renderTemplate(
+                name: name, context: context
+            )
+            result.append((rendered, ext))
         }
         return result
     }
 
-    private func cache(urls: [URL]) -> Cache {
+    private func cache(urls: [URL]) throws -> Cache {
         let cacheKey: String = urls.reduce(
             "", { (initial: String, next: URL) -> String in
                 initial + next.path
             }
         )
         if let cache = environmentCache[cacheKey] { return cache }
-        let env = urls.rk.environment()
-        let files = FileManager.default.subFiles(atUrls: urls) ?? []
+        let env = try urls.rk.environment()
+        let files = try FileManager.default.subFiles(at: urls)
         let fcs = files
             .filter { !$0.lastPathComponent.hasPrefix(".") }
             .reduce(Dictionary<String, [URL]>()) { initial, item in
-                guard let name = item.lastPathComponent.components(separatedBy: ".").first else { return initial }
+                guard let name = item
+                    .lastPathComponent
+                    .components(separatedBy: ".")
+                    .first else { return initial }
                 var initial = initial
                 if let value = initial[name] {
                     initial[name] = value + [item]

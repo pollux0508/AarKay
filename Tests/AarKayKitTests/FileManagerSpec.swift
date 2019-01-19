@@ -1,31 +1,20 @@
 //
-//  DirTreeMirrorSpec.swift
-//  AarKayTests
+//  FileManagerSpec.swift
+//  AarKayKitTests
 //
-//  Created by RahulKatariya on 15/01/19.
+//  Created by RahulKatariya on 19/01/19.
 //
 
 import Foundation
 import Nimble
 import Quick
-@testable import AarKay
+@testable import AarKayKit
 
-class DirTreeMirrorSpec: QuickSpec {
+class FileManagerSpec: QuickSpec {
     override func spec() {
+        let fileManager = FileManager.default
         let fixturesUrl = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("AarKay")
-
-        let sourceDir = "DirTree"
-        let sourceUrl = fixturesUrl.appendingPathComponent(sourceDir)
-        let destinationDir = "DirTreeMirror"
-        let destinationUrl = fixturesUrl.appendingPathComponent(destinationDir)
-        let fileManager = FileManager.default
-
-        let dirTreeMirror = DirTreeMirror(
-            sourceUrl: sourceUrl,
-            destinationUrl: destinationUrl,
-            fileManager: fileManager
-        )
 
         let paths = [
             "Folder1/File.txt",
@@ -38,7 +27,7 @@ class DirTreeMirrorSpec: QuickSpec {
             try? fileManager.removeItem(at: fixturesUrl)
             expect(fileManager.fileExists(atPath: fixturesUrl.path)) == false
             paths.forEach {
-                let url = sourceUrl.appendingPathComponent($0)
+                let url = fixturesUrl.appendingPathComponent($0)
                 try? fileManager.createDirectory(
                     at: url.deletingLastPathComponent(),
                     withIntermediateDirectories: true,
@@ -59,17 +48,23 @@ class DirTreeMirrorSpec: QuickSpec {
             expect(fileManager.fileExists(atPath: fixturesUrl.path)) == false
         }
 
-        describe("DirTreeMirror") {
-            it("should work") {
-                let tree = try! dirTreeMirror.bootstrap()
-                    .sorted { $0.0.relativePath < $1.0.relativePath }
-                expect(tree.count) == paths.count
-                for (idx, item) in tree.enumerated() {
-                    expect(item.0.baseURL!.lastPathComponent) == sourceDir
-                    expect(item.0.relativePath) == paths[idx]
-                    expect(item.1.baseURL!.lastPathComponent) == destinationDir
-                    expect(item.1.relativePath) == paths[idx]
-                }
+        describe("Temproray Directory") {
+            it("should have 8 folders") {
+                let url = URL(fileURLWithPath: NSTemporaryDirectory())
+                    .appendingPathComponent("AarKay")
+                expect { () -> Void in
+                    let files = try FileManager.default.subDirectories(at: [url])
+                    expect(files.count) == 8
+                }.toNot(throwError())
+            }
+
+            it("should have 4 files") {
+                let url = URL(fileURLWithPath: NSTemporaryDirectory())
+                    .appendingPathComponent("AarKay")
+                expect { () -> Void in
+                    let files = try FileManager.default.subFiles(at: [url])
+                    expect(files.count) == 4
+                }.toNot(throwError())
             }
         }
     }

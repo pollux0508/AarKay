@@ -13,6 +13,7 @@ enum AarKayError: Error {
     case templateNotFound(String)
     case multipleTemplatesFound(String)
     case invalidTemplate(String)
+    case unknownError
 }
 
 extension AarKayError: LocalizedError {
@@ -28,6 +29,21 @@ extension AarKayError: LocalizedError {
             return "More than one template with name - \(name) exists"
         case .invalidTemplate(let name):
             return "\(name) components count should not be more than 3"
+        case .unknownError:
+            return "Unknown Error occurred."
         }
+    }
+}
+
+// MARK: - AarKayEnd
+
+extension AarKayError {
+    public static func internalError(
+        _ message: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> AarKayError {
+        assertionFailure("\(file):\(line) - \(message)")
+        return AarKayError.unknownError
     }
 }

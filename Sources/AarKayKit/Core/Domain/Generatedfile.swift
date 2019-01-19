@@ -1,5 +1,5 @@
 //
-//  GeneratedFile.swift
+//  Generatedfile.swift
 //  AarKayKit
 //
 //  Created by RahulKatariya on 24/08/18.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct GeneratedFile {
+public struct Generatedfile {
     public let name: String
     public let ext: String?
     public let directory: String?

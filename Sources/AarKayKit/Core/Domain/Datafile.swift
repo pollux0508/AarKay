@@ -32,16 +32,16 @@ public struct Datafile {
         fileName: String,
         directory: String?,
         context: [String: Any],
-        override: Bool?,
-        skip: Bool?,
+        override: Bool,
+        skip: Bool,
         template: Template,
         globalContext: [String: Any]?
     ) {
         self.directory = directory.nilIfEmpty()
         self.fileName = fileName.failIfEmpty()
         self.context = context
-        self.override = override ?? true
-        self.skip = skip ?? false
+        self.override = override
+        self.skip = skip
         self.template = template
         self.globalContext = globalContext
     }

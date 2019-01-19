@@ -11,17 +11,6 @@ import Yams
 extension String: AarKayExtensionsProvider {}
 
 extension AarKay where Base == String {
-    var standardized: String {
-        return base.replacingOccurrences(of: ".", with: ":")
-            .replacingOccurrences(of: "dot:", with: ".")
-            .components(separatedBy: ":")
-            .first!
-    }
-
-    var isCollection: Bool {
-        return base.hasPrefix("[") && base.hasSuffix("]")
-    }
-
     func merge(templateString: String) -> String {
         var string = templateString
         let blockRegexPattern = "\\n(.*)<aarkay (.*)>([\\s\\S]*?)\\n(.*)<\\/aarkay>(.*)\\n"

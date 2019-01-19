@@ -13,11 +13,11 @@ import StencilSwiftKit
 extension URL: AarKayExtensionsProvider {}
 
 extension AarKay where Base == URL {
-    func environment() -> Environment {
-        return [base].rk.environment()
+    func environment() throws -> Environment {
+        return try [base].rk.environment()
     }
 
-    func template() throws -> (String, String?)? {
+    func template() throws -> (String, String?) {
         let name = base.lastPathComponent
         let fc = name.components(separatedBy: ".")
         guard fc.count > 1 && fc.count <= 3 else { throw AarKayError.invalidTemplate(name) }
@@ -30,16 +30,8 @@ extension AarKay where Base == URL {
 extension Array: AarKayExtensionsProvider where Element == URL {}
 
 extension AarKay where Base == [URL] {
-    func environment() -> Environment {
-        let directories = base.reduce(
-            base, { (initial: [URL], next: URL) -> [URL] in
-                if let subDirs = FileManager.default.subDirectories(atUrl: next) {
-                    return initial + subDirs
-                } else {
-                    return initial
-                }
-            }
-        )
+    func environment() throws -> Environment {
+        let directories = try FileManager.default.subDirectories(at: base)
         let paths = directories.map { Path($0.path) }
         let aarkayFilesLoader = FileSystemLoader(paths: paths)
         let ext = Extension()
