@@ -181,12 +181,12 @@ public class AarKay {
                 globalTemplates: [aarkayGlobalTemplatesUrl, aarkayTemplatesUrl]
             )
 
-            try renderedfiles.forEach { generatedFile in
-                switch generatedFile {
+            try renderedfiles.forEach { generatedfile in
+                switch generatedfile {
                 case .success(let value):
                     /// Create the file at the mirrored destination url with the generated contents.
                     try createFile(
-                        generatedFile: value,
+                        generatedfile: value,
                         at: destinationUrl.deletingLastPathComponent()
                     )
                 case .failure(let error):
@@ -201,31 +201,31 @@ public class AarKay {
     /// Reads the current file at url and merges the contents of `RenderedFile` to it.
     ///
     /// - Parameters:
-    ///   - generatedFile: The rendered file.
+    ///   - generatedfile: The rendered file.
     ///   - url: The destination url.
     /// - Throws: FileManager operation errors.
-    private func createFile(generatedFile: Generatedfile, at url: URL) throws {
+    private func createFile(generatedfile: Generatedfile, at url: URL) throws {
         var url = url
-        if let directory = generatedFile.directory {
+        if let directory = generatedfile.directory {
             url = url
                 .appendingPathComponent(directory, isDirectory: true)
                 .standardized
         }
-        url.appendPathComponent(generatedFile.nameWithExt)
-        guard !generatedFile.skip else {
+        url.appendPathComponent(generatedfile.nameWithExt)
+        guard !generatedfile.skip else {
             if options.verbose {
                 AarKayLogger.logFileSkipped(at: url)
             }
             return
         }
         if fileManager.fileExists(atPath: url.path) {
-            if !generatedFile.override {
+            if !generatedfile.override {
                 if options.verbose {
                     AarKayLogger.logFileSkipped(at: url); return
                 }
             } else {
                 let currentString = try String(contentsOf: url)
-                let string = generatedFile.merge(currentString)
+                let string = generatedfile.merge(currentString)
                 if string != currentString {
                     if !options.dryrun {
                         try string.write(toFile: url.path, atomically: true, encoding: .utf8)
@@ -240,7 +240,7 @@ public class AarKay {
         } else {
             if !options.dryrun {
                 try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
-                try generatedFile.contents.write(toFile: url.path, atomically: true, encoding: .utf8)
+                try generatedfile.contents.write(toFile: url.path, atomically: true, encoding: .utf8)
             }
             AarKayLogger.logFileAdded(at: url)
         }

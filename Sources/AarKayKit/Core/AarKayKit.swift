@@ -70,7 +70,7 @@ extension AarKayKit {
                 using: YamlInputSerializer()
             )
 
-            return aarkayService.generatedfileService.generatedFiles(
+            return aarkayService.generatedfileService.generatedfiles(
                 urls: globalTempaltes,
                 datafiles: datafiles,
                 globalContext: globalContext
@@ -109,13 +109,41 @@ extension AarKayKit {
                 return results
             }
 
-        let templateUrls = templateClass.templates()
-            .map { URL(fileURLWithPath: $0) }
-            .rk.templatesDirectory()
-        return aarkayService.generatedfileService.generatedFiles(
-            urls: templateUrls,
+        return aarkayService.generatedfileService.generatedfiles(
+            urls: try templatesDirectory(urls: templateClass.templates()),
             datafiles: templateDatafiles,
             globalContext: globalContext
         )
+    }
+}
+
+// MARK: - Private Helpers
+extension AarKayKit {
+    fileprivate func templatesDirectory(urls: [String]) throws -> [URL] {
+        return try urls.map {
+            var url = URL(fileURLWithPath: $0)
+            while url.lastPathComponent != "Sources" {
+                if url.lastPathComponent == "/" {
+                    throw AarKayError.internalError(
+                        "Failed to fetch Templates directory for \($0)"
+                    )
+                }
+                url = url.deletingLastPathComponent()
+            }
+            url = url
+                .deletingLastPathComponent()
+                .appendingPathComponent(
+                    "AarKay/AarKayTemplates",
+                    isDirectory: true
+            )
+            if url.path.hasPrefix("/tmp") {
+                print("[OLD]", url.absoluteString)
+                let pathComponents = Array(url.pathComponents.dropFirst().dropFirst())
+                let newPath = "/" + pathComponents.joined(separator: "/")
+                url = URL(fileURLWithPath: newPath, isDirectory: true)
+                print("[NEW]", url.absoluteString)
+            }
+            return url
+        }
     }
 }

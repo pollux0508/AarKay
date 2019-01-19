@@ -35,7 +35,7 @@ protocol DatafileService {
 }
 
 protocol GeneratedfileService {
-    func generatedFiles(
+    func generatedfiles(
         urls: [URL],
         datafiles: [Result<Datafile, AnyError>],
         globalContext: [String: Any]?

@@ -7,6 +7,8 @@
 
 import Foundation
 import Stencil
+import PathKit
+import StencilSwiftKit
 
 class AarKayTemplates {
     static let `default` = AarKayTemplates()
@@ -17,23 +19,13 @@ class AarKayTemplates {
     }
 
     private var environmentCache = Dictionary<String, Cache>()
-
-    func renderTemplate(
-        urls: [URL],
-        name: String,
-        context: [String: Any]? = nil
-    ) throws -> [(String, String?)] {
-        let cache = try self.cache(urls: urls)
-        guard let templateUrls = cache.files[name] else { throw AarKayError.templateNotFound(name) }
-        var result: [(String, String?)] = []
-        try templateUrls.forEach { templateUrl in
-            let (name, ext) = try templateUrl.rk.template()
-            let rendered = try cache.environment.renderTemplate(
-                name: name, context: context
-            )
-            result.append((rendered, ext))
+    
+    func templates(urls: [URL], name: String) throws -> ([URL], Environment) {
+        let cache = try AarKayTemplates.default.cache(urls: urls)
+        guard let templateUrls = cache.files[name] else {
+            throw AarKayError.templateNotFound(name)
         }
-        return result
+        return (templateUrls, cache.environment)
     }
 
     private func cache(urls: [URL]) throws -> Cache {
@@ -43,7 +35,7 @@ class AarKayTemplates {
             }
         )
         if let cache = environmentCache[cacheKey] { return cache }
-        let env = try urls.rk.environment()
+        let env = try environment(urls: urls)
         let files = try FileManager.default.subFiles(at: urls)
         let fcs = files
             .filter { !$0.lastPathComponent.hasPrefix(".") }
@@ -63,5 +55,19 @@ class AarKayTemplates {
         let cache = Cache(environment: env, files: fcs)
         environmentCache[cacheKey] = cache
         return cache
+    }
+    
+    private func environment(urls: [URL]) throws -> Environment {
+        let directories = try FileManager.default.subDirectories(at: urls)
+        let paths = directories.map { Path($0.path) }
+        let aarkayFilesLoader = FileSystemLoader(paths: paths)
+        let ext = Extension()
+        ext.registerStencilSwiftExtensions()
+        let environment = Environment(
+            loader: aarkayFilesLoader,
+            extensions: [ext],
+            templateClass: StencilSwiftTemplate.self
+        )
+        return environment
     }
 }
