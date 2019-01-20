@@ -32,7 +32,7 @@ struct InitCommand: CommandProtocol {
             do {
                 try Bootstrapper.default.bootstrap(global: options.global, force: options.force)
             } catch {
-                return .failure(.bootstrap(error))
+                return .failure(error)
             }
             let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
             println("Setting up at \(url.path). This might take a few minutes...")

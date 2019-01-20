@@ -1,4 +1,4 @@
-name: AarKay|
+name: AarKay|A Type encpasulating all errors
 _skip: true
 errors:
   - name: missingFileName|
@@ -27,6 +27,3 @@ errors:
       - name|String
     desc: |
       "\(name) components count should not be more than 3"
-  - name: unknownError|
-    desc: |
-      "An unknown error occurred."

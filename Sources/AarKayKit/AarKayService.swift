@@ -31,10 +31,12 @@ protocol DatafileService {
     func templateDatafiles(
         datafile: Datafile,
         templateClass: Templatable.Type
-    ) -> [Result<Datafile, AnyError>]
+    ) throws -> [Datafile]
 }
 
 protocol GeneratedfileService {
+    var aarkayTemplates: AarKayTemplates { get }
+    
     func generatedfiles(
         urls: [URL],
         datafiles: [Result<Datafile, AnyError>],

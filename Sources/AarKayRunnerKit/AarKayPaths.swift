@@ -10,7 +10,7 @@ import Foundation
 public struct AarKayPaths {
     /// The global location of AarKay
     let globalUrl: URL
-    /// The global location of AarKay
+    /// The local location of AarKay
     let localUrl: URL
 
     /// Initializes the default AarKayPaths with global location as home directory and local location as current directory.

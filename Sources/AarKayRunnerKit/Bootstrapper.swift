@@ -6,14 +6,21 @@
 //
 
 import Foundation
+import AarKayKit
 
 /// Type that encapsulates creation of all files required by `AarKayRunner`.
 public struct Bootstrapper {
     /// The AarKayPaths
     let aarkayPaths: AarKayPaths
 
-    /// Initializes the default Bootstrapper with aarkayPaths.
-    public static let `default` = Bootstrapper(aarkayPaths: AarKayPaths.default)
+    /// The `FileManager`
+    let fileManager: FileManager
+
+    /// Initializes the default Bootstrapper with aarkayPaths and fileManager.
+    public static let `default` = Bootstrapper(
+        aarkayPaths: AarKayPaths.default,
+        fileManager: FileManager.default
+    )
 
     /// Creates all files required to run `AarKay`.
     ///
@@ -24,17 +31,19 @@ public struct Bootstrapper {
     public func bootstrap(global: Bool = false, force: Bool = false) throws {
         if force {
             let buildUrl = aarkayPaths.buildPath(global: global)
-            if FileManager.default.fileExists(atPath: buildUrl.path) {
-                try FileManager.default.removeItem(at: buildUrl)
-            }
-            let packageResolvedUrl = aarkayPaths.packageResolved(global: global)
-            if FileManager.default.fileExists(atPath: packageResolvedUrl.path) {
-                try FileManager.default.removeItem(at: packageResolvedUrl)
+            if fileManager.fileExists(atPath: buildUrl.path) {
+                try Try {
+                    try self.fileManager.removeItem(at: buildUrl)
+                }.catchMapError { error in
+                    AarKayError.internalError(
+                        "Failed to remove build at \(buildUrl)", with: error
+                    )
+                }
             }
         }
         try createCLISwift(global: global, force: force)
         try createAarKayFile(global: global)
-        try updatePackageSwift(global: global)
+        try updatePackageSwift(global: global, force: force)
         try createSwiftVersion(global: global, force: force)
     }
 
@@ -67,7 +76,7 @@ public struct Bootstrapper {
     /// - Throws: File manager errors
     private func createAarKayFile(global: Bool) throws {
         let url = aarkayPaths.aarkayFile(global: global)
-        if !FileManager.default.fileExists(atPath: url.path) {
+        if !fileManager.fileExists(atPath: url.path) {
             try write(string: RunnerFiles.aarkayFile, url: url, force: false)
         }
     }
@@ -76,14 +85,26 @@ public struct Bootstrapper {
     ///
     /// - Parameters:
     ///   - global: Setting global to true will bootstrap the `AarKay` project inside home directory otherwise will setup in the local directory.
+    ///   - force: Setting force to true will delete the `packaged.resolved` before creating it.
     /// - Throws: File manager errors
-    public func updatePackageSwift(global: Bool) throws {
+    public func updatePackageSwift(global: Bool, force: Bool = false) throws {
+        if force {
+            let packageResolvedUrl = aarkayPaths.packageResolved(global: global)
+            if fileManager.fileExists(atPath: packageResolvedUrl.path) {
+                try Try {
+                    try self.fileManager.removeItem(at: packageResolvedUrl)
+                }.catchMapError { error in
+                    AarKayError.internalError(
+                        "Failed to remove Package.resolved at \(packageResolvedUrl)", with: error
+                    )
+                }
+            }
+        }
         let aarkayFileUrl = aarkayPaths.aarkayFile(global: global)
-        let aarkayFileContents = try String(contentsOf: aarkayFileUrl)
-        let deps: [Dependency] = try AarKayFile(contents: aarkayFileContents).dependencies
-        let targetDescriptions = deps.map { $0.targetDescription() }
-        let hasAarKay = targetDescriptions.contains("\"AarKay\",")
-        guard hasAarKay else { throw AarKayError.parsingError }
+        let deps: [Dependency] = try AarKayFile(
+            url: aarkayFileUrl,
+            fileManager: fileManager
+        ).dependencies
         let contents = RunnerFiles.packageSwift(deps: deps)
         let url = aarkayPaths.packageSwift(global: global)
         try write(string: contents, url: url, force: true)
@@ -98,15 +119,28 @@ public struct Bootstrapper {
     /// - Throws: File manager errors
     private func write(string: String, url: URL, force: Bool) throws {
         if force {
-            if FileManager.default.fileExists(atPath: url.path) {
-                try FileManager.default.removeItem(at: url)
+            if fileManager.fileExists(atPath: url.path) {
+                try Try {
+                    try self.fileManager.removeItem(at: url)
+                }.catchMapError { error in
+                    AarKayError.internalError(
+                        "Failed to remove file at \(url)", with: error
+                    )
+                }
             }
         }
-        try FileManager.default.createDirectory(
-            at: url.deletingLastPathComponent(),
-            withIntermediateDirectories: true,
-            attributes: nil
-        )
-        try string.write(to: url, atomically: true, encoding: .utf8)
+
+        try Try {
+            try self.fileManager.createDirectory(
+                at: url.deletingLastPathComponent(),
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+            try string.write(to: url, atomically: true, encoding: .utf8)
+        }.catchMapError { error in
+            AarKayError.internalError(
+                "Failed to write \(string) at \(url)", with: error
+            )
+        }
     }
 }

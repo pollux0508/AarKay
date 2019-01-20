@@ -17,9 +17,15 @@ struct DatafileProvider: DatafileService {
         globalContext: [String: Any]?,
         using serializer: InputSerializable
     ) throws -> [Result<Datafile, AnyError>] {
-        let context = try serializer.context(contents: contents)
+        let context = try Try {
+            try serializer.context(contents: contents)
+        }.catchMapError { _ in
+            AarKayError.unknownError
+        }
         if name.isCollection {
-            let contextArray = context as? [[String: Any]] ?? [[:]]
+            guard let contextArray = context as? [[String: Any]] else {
+                throw AarKayError.unknownError
+            }
             return datafiles(
                 plugin: plugin,
                 contextArray: contextArray,
@@ -27,7 +33,9 @@ struct DatafileProvider: DatafileService {
                 globalContext: globalContext
             )
         } else {
-            let context = context as? [String: Any] ?? [:]
+            guard let context = context as? [String: Any] else {
+                throw AarKayError.unknownError
+            }
             let df = datafile(
                 fileName: name,
                 context: context,
@@ -41,20 +49,12 @@ struct DatafileProvider: DatafileService {
     func templateDatafiles(
         datafile: Datafile,
         templateClass: Templatable.Type
-    ) -> [Result<Datafile, AnyError>] {
-        let result = Result<[Datafile], AnyError> {
-            let templatable = try templateClass.init(
-                datafile: datafile
-            )
-            let datafiles = try templatable.datafiles()
-            return datafiles
-        }
-        switch result {
-        case .success(let files):
-            return files.map { Result<Datafile, AnyError>.success($0) }
-        case .failure(let error):
-            return [Result<Datafile, AnyError>.failure(error)]
-        }
+    ) throws -> [Datafile] {
+        let templatable = try templateClass.init(
+            datafile: datafile
+        )
+        let datafiles = try templatable.datafiles()
+        return datafiles
     }
 }
 

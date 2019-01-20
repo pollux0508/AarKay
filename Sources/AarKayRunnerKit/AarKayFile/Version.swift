@@ -28,7 +28,9 @@ struct Version {
             let major = Int(components[0]),
             let minor = Int(components[1]),
             let patch = Int(components[2]) else {
-            throw AarKayError.parsingError
+                throw AarKayError.aarkayFileParsingFailed(
+                    reason: AarKayError.AarKayFileParsingReason.invalidDependency(string)
+                )
         }
         self.major = major
         self.minor = minor

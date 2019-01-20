@@ -100,7 +100,13 @@ public class AarKay {
 
     private func bootstrapPlugin(sourceUrl: URL, globalContext: [String: Any]? = nil) {
         let plugin = sourceUrl.lastPathComponent
-
+        
+        let aarkayKit = AarKayKit(
+            plugin: plugin,
+            globalContext: globalContext,
+            globalTemplates: [aarkayGlobalTemplatesUrl, aarkayTemplatesUrl]
+        )
+        
         /// Create directory tree mirror with source as the AarKayFiles url and destination as the project url.
         let dirTreeMirror = DirTreeMirror(
             sourceUrl: sourceUrl,
@@ -112,6 +118,7 @@ public class AarKay {
             try dirTreeMirror.bootstrap()
                 .forEach { (sourceUrl: URL, destinationUrl: URL) in
                     self.bootstrap(
+                        aarkayKit: aarkayKit,
                         plugin: plugin,
                         globalContext: globalContext,
                         sourceUrl: sourceUrl,
@@ -124,6 +131,7 @@ public class AarKay {
     }
 
     private func bootstrap(
+        aarkayKit: AarKayKit,
         plugin: String,
         globalContext: [String: Any]?,
         sourceUrl: URL,
@@ -171,14 +179,11 @@ public class AarKay {
             let contents = try String(contentsOf: sourceUrl)
 
             /// Returns all generated files result.
-            let renderedfiles = try AarKayKit.bootstrap(
-                plugin: plugin,
-                globalContext: globalContext,
-                fileName: name,
+            let renderedfiles = try aarkayKit.bootstrap(
+                name: name,
                 directory: directory,
                 template: template,
-                contents: contents,
-                globalTemplates: [aarkayGlobalTemplatesUrl, aarkayTemplatesUrl]
+                contents: contents
             )
 
             try renderedfiles.forEach { generatedfile in

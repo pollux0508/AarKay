@@ -37,21 +37,22 @@ extension FileManager {
             return isDir.boolValue
         } else {
             throw AarKayError.internalError(
-                "Failed to fetch isDirectory for \(url.absoluteString)"
+                "File doesn't exist at \(url.absoluteString)"
             )
         }
         #else
-        do {
-            guard let isDir = try url.resourceValues(forKeys: [.isDirectoryKey])
-                .isDirectory else {
+        return try Try {
+            let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
+            guard let isDir = resourceValues.isDirectory else {
                 throw AarKayError.internalError(
                     "Failed to fetch isDirectory for \(url.absoluteString)"
                 )
             }
             return isDir
-        } catch {
-            throw AarKayError.internalError(
-                "Failed to fetch resource value for \(url.absoluteString)"
+        }.catchMapError { error in
+            AarKayError.internalError(
+                "Failed to fetch resourceValues for \(url.absoluteString)",
+                with: error
             )
         }
         #endif
@@ -77,7 +78,7 @@ extension Array {
     fileprivate func reduce(
         initial: [Element]? = nil,
         block: (Element) throws -> [Element]
-    ) throws -> [Element] {
+    ) rethrows -> [Element] {
         return try reduce(
             initial ?? [Element]()
         ) { (initial: [Element], next: Element) -> [Element] in

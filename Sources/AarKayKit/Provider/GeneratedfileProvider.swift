@@ -9,24 +9,7 @@ import Foundation
 import Result
 
 struct GeneratedfileProvider: GeneratedfileService {
-    func templateDatafiles(
-        datafile: Datafile,
-        templateClass: Templatable.Type
-    ) -> [Result<Datafile, AnyError>] {
-        let result = Result<[Datafile], AnyError> {
-            let templatable = try templateClass.init(
-                datafile: datafile
-            )
-            let datafiles = try templatable.datafiles()
-            return datafiles
-        }
-        switch result {
-        case .success(let files):
-            return files.map { Result<Datafile, AnyError>.success($0) }
-        case .failure(let error):
-            return [Result<Datafile, AnyError>.failure(error)]
-        }
-    }
+    let aarkayTemplates: AarKayTemplates
 
     func generatedfiles(
         urls: [URL],
@@ -37,15 +20,9 @@ struct GeneratedfileProvider: GeneratedfileService {
             switch result {
             case .success(let value):
                 return Result {
-                    let files = try generatedfiles(
+                    return try generatedfiles(
                         urls: urls, datafile: value, globalContext: globalContext
                     )
-                    guard files.count == 1 else {
-                        throw AnyError(
-                            AarKayError.multipleTemplatesFound(value.template.name())
-                        )
-                    }
-                    return files
                 }
             case .failure(let error):
                 return .failure(error)
@@ -97,18 +74,22 @@ extension GeneratedfileProvider {
         template: String,
         context: [String: Any]? = nil
     ) throws -> [Generatedfile] {
-        let (templates, environment) = try AarKayTemplates.default
-            .templates(urls: urls, name: template)
+        let (templates, environment) = try aarkayTemplates
+            .templatesEnvironment(urls: urls, name: template)
         return try templates.map { templateUrl in
             let (name, ext) = try templateUrl.template()
-            let rendered = try environment.renderTemplate(
-                name: name, context: context
-            )
-            return generatedfile(
-                datafile: datafile,
-                stringContents: rendered,
-                pathExtension: ext
-            )
+            return try Try {
+                let rendered = try environment.renderTemplate(
+                    name: name, context: context
+                )
+                return self.generatedfile(
+                    datafile: datafile,
+                    stringContents: rendered,
+                    pathExtension: ext
+                )
+            }.catchMapError { _ in
+                AarKayError.templateNotFound(template)
+            }
         }
     }
 

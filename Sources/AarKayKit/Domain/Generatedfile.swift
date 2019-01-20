@@ -55,7 +55,7 @@ public struct Generatedfile {
                 }
             }
         }
-        
+
         let endRegexPattern = "\\n(.*) AarKayEnd"
         if let existingRange = string.range(of: endRegexPattern, options: [.regularExpression]) {
             string = String(string[..<existingRange.lowerBound])
@@ -65,5 +65,4 @@ public struct Generatedfile {
         }
         return string
     }
-
 }

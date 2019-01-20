@@ -8,16 +8,17 @@
 import Foundation
 
 /// Type that encapuslates the type of version with respect to Package.swift version spec.
+///
+/// - exact: Returned when the version string is exact.
+/// - upToNextMajor: Returend when the version has prefix '>'.
+/// - upToNextMinor: Returned when the version has prefix '~>' like (~> 1.0.0).
+/// - branch: Returned when the version has prefix 'b-' like (b-master).
+/// - revision: Returned when the version has prefix 'r-' like (r-32df72).
 enum VersionType {
-    /// Represents the exact version (1.0.0).
     case exact(String)
-    /// Represents the upToNextMajor version (> 1.0.0).
     case upToNextMajor(String)
-    /// Represents the upToNextMinor version (~> 1.0.0).
     case upToNextMinor(String)
-    /// Represents the git branch (b-master).
     case branch(String)
-    /// Represents the git commit (r-32472hd2348dsdf).
     case revision(String)
 
     /// Initializes the type of version.
@@ -29,12 +30,20 @@ enum VersionType {
         if str.hasPrefix("b-") {
             let startIndex = str.index(str.startIndex, offsetBy: 2)
             let version = String(str[startIndex...])
-            guard !version.isEmpty else { throw AarKayError.parsingError }
+            guard !version.isEmpty else {
+                throw AarKayError.aarkayFileParsingFailed(
+                    reason: AarKayError.AarKayFileParsingReason.invalidVersion(string)
+                )
+            }
             self = .branch(version)
         } else if str.hasPrefix("r-") {
             let startIndex = str.index(str.startIndex, offsetBy: 2)
             let version = String(str[startIndex...])
-            guard !version.isEmpty else { throw AarKayError.parsingError }
+            guard !version.isEmpty else {
+                throw AarKayError.aarkayFileParsingFailed(
+                    reason: AarKayError.AarKayFileParsingReason.invalidVersion(string)
+                )
+            }
             self = .revision(version)
         } else if str.hasPrefix("> ") {
             let startIndex = str.index(str.startIndex, offsetBy: 2)
@@ -50,7 +59,9 @@ enum VersionType {
             let version = try Version(string: str).description()
             self = .exact(version)
         } else {
-            throw AarKayError.parsingError
+            throw AarKayError.aarkayFileParsingFailed(
+                reason: AarKayError.AarKayFileParsingReason.invalidVersion(string)
+            )
         }
     }
 

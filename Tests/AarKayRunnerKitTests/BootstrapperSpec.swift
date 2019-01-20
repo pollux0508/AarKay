@@ -12,13 +12,19 @@ import Quick
 
 class BootstrapperSpec: QuickSpec {
     let fileManager = FileManager.default
+    let tempDir = URL(fileURLWithPath: NSTemporaryDirectory())
+        .appendingPathComponent("me.rahulkatariya.aarkay")
 
     override func spec() {
         let aarkayPaths = AarKayPaths(
-            globalUrl: URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("Global"),
-            localUrl: URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("Local")
+            globalUrl: tempDir.appendingPathComponent("Global"),
+            localUrl: tempDir.appendingPathComponent("Local")
         )
-        let bootstrapper = Bootstrapper(aarkayPaths: aarkayPaths)
+
+        let bootstrapper = Bootstrapper(
+            aarkayPaths: aarkayPaths,
+            fileManager: fileManager
+        )
 
         beforeEach {
             try? self.fileManager.removeItem(at: aarkayPaths.globalUrl)
@@ -51,7 +57,6 @@ class BootstrapperSpec: QuickSpec {
                     expect(self.fileManager.fileExists(atPath: url.path)) == false
                     expect { () -> Void in
                         try bootstrapper.bootstrap(global: global)
-                        try bootstrapper.updatePackageSwift(global: global)
                     }.toNot(throwError())
                     expect(self.fileManager.fileExists(atPath: url.path)) == true
                 }
@@ -74,7 +79,6 @@ class BootstrapperSpec: QuickSpec {
                 it("should reset all directories") {
                     expect(self.fileManager.fileExists(atPath: url.path)) == false
                     expect { () -> Void in
-                        try bootstrapper.bootstrap(global: global)
                         try bootstrapper.bootstrap(global: global, force: true)
                     }.toNot(throwError())
                     expect(self.fileManager.fileExists(atPath: url.path)) == true

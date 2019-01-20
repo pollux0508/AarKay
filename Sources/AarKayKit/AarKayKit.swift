@@ -10,52 +10,46 @@ import Result
 
 public struct AarKayKit {
     let plugin: String
-    let name: String
-    let directory: String?
-    let template: String
-    let contents: String
     let globalContext: [String: Any]?
     let globalTemplates: [URL]?
     let aarkayService: AarKayService
-}
-
-extension AarKayKit {
-    public static func bootstrap(
+    
+    public init(
         plugin: String,
         globalContext: [String: Any]?,
-        fileName: String,
-        directory: String?,
-        template: String,
-        contents: String,
         globalTemplates: Set<URL>?
-    ) throws -> [Result<Generatedfile, AnyError>] {
+    ) {
+        self.plugin = plugin
+        self.globalContext = globalContext
+        self.globalTemplates = globalTemplates != nil ? Array(globalTemplates!) : nil
         let aarkayService = AarKayProvider(
             datafileService: DatafileProvider(),
-            generatedfileService: GeneratedfileProvider()
+            generatedfileService: GeneratedfileProvider(
+                aarkayTemplates: AarKayTemplates.default
+            )
         )
-
-        let aarkayKit = AarKayKit(
-            plugin: plugin,
-            name: fileName,
-            directory: directory,
-            template: template,
-            contents: contents,
-            globalContext: globalContext,
-            globalTemplates: globalTemplates != nil ? Array(globalTemplates!) : nil,
-            aarkayService: aarkayService
-        )
-
-        return try aarkayKit.bootstrap()
+        self.aarkayService = aarkayService
     }
 }
 
 extension AarKayKit {
-    func bootstrap() throws -> [Result<Generatedfile, AnyError>] {
+    public func bootstrap(
+        name: String,
+        directory: String?,
+        template: String,
+        contents: String
+    ) throws -> [Result<Generatedfile, AnyError>] {
         if let templateClass = aarkayService.templateClass(
             plugin: plugin,
             template: template
         ) {
-            return try bootstrap(templateClass: templateClass)
+            return try bootstrap(
+                templateClass: templateClass,
+                name: name,
+                directory: directory,
+                template: template,
+                contents: contents
+            )
         } else {
             guard let globalTempaltes = globalTemplates else {
                 throw AarKayError.templateNotFound(template)
@@ -78,7 +72,15 @@ extension AarKayKit {
         }
     }
 
-    func bootstrap(templateClass: Templatable.Type) throws -> [Result<Generatedfile, AnyError>] {
+    func bootstrap(
+        templateClass: Templatable.Type,
+        name: String,
+        directory: String?,
+        template: String,
+        contents: String
+    ) throws -> [Result<Generatedfile, AnyError>] {
+        let templateUrls = try templatesDirectory(urls: templateClass.templates())
+        
         let datafiles = try aarkayService.datafileService.serialize(
             plugin: plugin,
             name: name,
@@ -92,12 +94,19 @@ extension AarKayKit {
             .map { result -> [Result<Datafile, AnyError>] in
                 switch result {
                 case .success(let value):
-                    let datafiles = aarkayService.datafileService
-                        .templateDatafiles(
-                            datafile: value,
-                            templateClass: templateClass
-                        )
-                    return datafiles
+                    let res = Result {
+                        return try aarkayService.datafileService
+                            .templateDatafiles(
+                                datafile: value,
+                                templateClass: templateClass
+                            )
+                    }
+                    switch res {
+                    case .success(let files):
+                        return files.map { .success($0) }
+                    case .failure(let error):
+                        return [.failure(error)]
+                    }
                 case .failure(let error):
                     return [.failure(error)]
                 }
@@ -110,7 +119,7 @@ extension AarKayKit {
             }
 
         return aarkayService.generatedfileService.generatedfiles(
-            urls: try templatesDirectory(urls: templateClass.templates()),
+            urls: templateUrls,
             datafiles: templateDatafiles,
             globalContext: globalContext
         )
@@ -118,6 +127,7 @@ extension AarKayKit {
 }
 
 // MARK: - Private Helpers
+
 extension AarKayKit {
     fileprivate func templatesDirectory(urls: [String]) throws -> [URL] {
         return try urls.map {
@@ -125,7 +135,7 @@ extension AarKayKit {
             while url.lastPathComponent != "Sources" {
                 if url.lastPathComponent == "/" {
                     throw AarKayError.internalError(
-                        "Failed to fetch Templates directory for \($0)"
+                        "Incorrect plugin structure at \($0)"
                     )
                 }
                 url = url.deletingLastPathComponent()
@@ -135,7 +145,7 @@ extension AarKayKit {
                 .appendingPathComponent(
                     "AarKay/AarKayTemplates",
                     isDirectory: true
-            )
+                )
             if url.path.hasPrefix("/tmp") {
                 print("[OLD]", url.absoluteString)
                 let pathComponents = Array(url.pathComponents.dropFirst().dropFirst())

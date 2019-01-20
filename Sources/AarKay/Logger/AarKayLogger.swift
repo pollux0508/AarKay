@@ -81,6 +81,6 @@ class AarKayLogger {
     ///
     /// - Parameter url: The url of the skipped file.
     static func logFileSkipped(at url: URL) {
-        print("   <x> \(url.relativeString)".cyan)
+        print("   <X> \(url.relativeString)".cyan)
     }
 }

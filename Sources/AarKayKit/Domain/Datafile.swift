@@ -53,6 +53,7 @@ public struct Datafile {
     }
 
     public func decode<T: Codable>(type: T.Type) throws -> T {
+        // FIXME: - Error
         let decodedData = try JSONSerialization.data(withJSONObject: context)
         let model = try JSONDecoder().decode(type, from: decodedData) as T
         return model
@@ -78,6 +79,7 @@ public struct Datafile {
         _ model: T,
         with context: [String: Any]? = nil
     ) throws {
+        // FIXME: - Error
         let encodedData = try JSONEncoder().encode(model)
         guard let collection = try JSONSerialization.jsonObject(
             with: encodedData,

@@ -45,7 +45,6 @@ let package = Package(
         .target(
             name: "AarKay",
             dependencies: [
-                "AarKayKit",
                 "AarKayRunnerKit",
                 "PrettyColors",
                 "SwiftyTextTable",
@@ -81,6 +80,7 @@ let package = Package(
         .target(
             name: "AarKayRunnerKit",
             dependencies: [
+                "AarKayKit",
                 "Commandant",
                 "ReactiveTask",
                 "Curry",

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AarKayKit
 
 /// Type that encapsulates a single dependency with respect to Package.swift.
 public struct Dependency {
@@ -22,10 +23,14 @@ public struct Dependency {
         let comps = string.components(separatedBy: ",")
         guard comps.count == 2,
             let url = URL(string: comps[0].trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw AarKayError.parsingError
+                throw AarKayError.aarkayFileParsingFailed(
+                    reason: AarKayError.AarKayFileParsingReason.invalidDependency(string)
+                )
         }
         self.url = url
-        try self.version = VersionType(string: comps[1].trimmingCharacters(in: .whitespacesAndNewlines))
+        self.version = try VersionType(
+            string: comps[1].trimmingCharacters(in: .whitespacesAndNewlines)
+        )
     }
 
     /// - Returns: Returns the package dependency description for Package.swift.

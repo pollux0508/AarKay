@@ -8,12 +8,14 @@ import Result
 struct UpdateCommand: CommandProtocol {
     struct Options: OptionsProtocol {
         let global: Bool
+        let force: Bool
 
         public static func evaluate(
             _ mode: CommandMode
         ) -> Result<Options, CommandantError<AarKayError>> {
             return curry(self.init)
                 <*> mode <| Switch(flag: "g", key: "global", usage: "Uses global version of `aarkay`.")
+                <*> mode <| Switch(flag: "f", key: "force", usage: "Resets the `Package.resolved`.")
         }
     }
 
@@ -29,9 +31,12 @@ struct UpdateCommand: CommandProtocol {
         }
 
         do {
-            try Bootstrapper.default.updatePackageSwift(global: options.global)
+            try Bootstrapper.default.updatePackageSwift(
+                global: options.global,
+                force: options.force
+            )
         } catch {
-            return .failure(.bootstrap(error))
+            return .failure(error)
         }
         println("Updating Plugins at \(runnerUrl.path). This might take a few minutes...")
         return Tasks.update(at: runnerUrl.path)

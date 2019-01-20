@@ -1,8 +1,5 @@
-//
-//  zip3.swift
-//  AarKayKit
-//
-//  Created by Rahul Katariya on 02/01/18.
+//  Attribution:
+//  http://proxpero.com/2018/01/02/zip3/
 //
 
 import Foundation

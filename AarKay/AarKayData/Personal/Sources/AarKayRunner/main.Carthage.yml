@@ -11,6 +11,7 @@ commands:
     desc: Install all the plugins from `AarKayFile`.
     switches:
       - global|g|Uses global version of `aarkay`.
+      - force|f|Resets the `Package.resolved`.
   - name: Run
     desc: Generate respective files from the datafiles inside AarKayData.
     switches:
@@ -22,5 +23,6 @@ commands:
     desc: Update all the plugins from `AarKayFile`.
     switches:
       - global|g|Uses global version of `aarkay`.
+      - force|f|Resets the `Package.resolved`.
   - name: Version
     desc: Display the current version of aarkay.

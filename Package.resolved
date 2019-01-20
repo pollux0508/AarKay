@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/Quick/Nimble.git",
         "state": {
           "branch": null,
-          "revision": "cd6dfb86f496fcd96ce0bc6da962cd936bf41903",
-          "version": "7.3.1"
+          "revision": "df937ffd185b3dd1a44e0c234121cf826b599eb4",
+          "version": "7.3.2"
         }
       },
       {
@@ -116,15 +116,6 @@
           "branch": null,
           "revision": "89728970c0a244c43f29c4155a1b1dc20b3c4633",
           "version": "0.8.0"
-        }
-      },
-      {
-        "package": "Willow",
-        "repositoryURL": "https://github.com/RahulKatariya/Willow.git",
-        "state": {
-          "branch": null,
-          "revision": "a4e7c86eae4c529fb2fc3c254645756986f7a4bf",
-          "version": "5.1.2"
         }
       },
       {
