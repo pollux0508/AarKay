@@ -25,43 +25,39 @@ enum VersionType {
     ///
     /// - Parameter string: The string representing the version
     /// - Throws: Parsing errors.
-    init(string: String) throws {
+    init?(string: String) {
         let str = string.trimmingCharacters(in: .whitespacesAndNewlines)
         if str.hasPrefix("b-") {
             let startIndex = str.index(str.startIndex, offsetBy: 2)
             let version = String(str[startIndex...])
-            guard !version.isEmpty else {
-                throw AarKayError.aarkayFileParsingFailed(
-                    reason: AarKayError.AarKayFileParsingReason.invalidVersion(string)
-                )
-            }
+            guard !version.isEmpty else { return nil }
             self = .branch(version)
         } else if str.hasPrefix("r-") {
             let startIndex = str.index(str.startIndex, offsetBy: 2)
             let version = String(str[startIndex...])
-            guard !version.isEmpty else {
-                throw AarKayError.aarkayFileParsingFailed(
-                    reason: AarKayError.AarKayFileParsingReason.invalidVersion(string)
-                )
-            }
+            guard !version.isEmpty else { return nil }
             self = .revision(version)
         } else if str.hasPrefix("> ") {
             let startIndex = str.index(str.startIndex, offsetBy: 2)
             let versionString = String(str[startIndex...])
-            let version = try Version(string: versionString).description()
+            guard let version = Version(string: versionString)?.description() else {
+                return nil
+            }
             self = .upToNextMajor(version)
         } else if str.hasPrefix("~> ") {
             let startIndex = str.index(str.startIndex, offsetBy: 3)
             let versionString = String(str[startIndex...])
-            let version = try Version(string: versionString).description()
+            guard let version = Version(string: versionString)?.description() else {
+                return nil
+            }
             self = .upToNextMinor(version)
         } else if str.components(separatedBy: ".").count == 3 {
-            let version = try Version(string: str).description()
+            guard let version = Version(string: str)?.description() else {
+                return nil
+            }
             self = .exact(version)
         } else {
-            throw AarKayError.aarkayFileParsingFailed(
-                reason: AarKayError.AarKayFileParsingReason.invalidVersion(string)
-            )
+            return nil
         }
     }
 

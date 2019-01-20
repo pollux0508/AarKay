@@ -9,10 +9,13 @@ import Foundation
 import Result
 
 struct GeneratedfileProvider: GeneratedfileService {
-    let aarkayTemplates: AarKayTemplates
+    
+    var aarkayTemplates: AarKayTemplates?
+    
+    init() {}
 
     func generatedfiles(
-        urls: [URL],
+        templatefiles: Templatefiles,
         datafiles: [Result<Datafile, AnyError>],
         globalContext: [String: Any]?
     ) -> [Result<Generatedfile, AnyError>] {
@@ -20,8 +23,10 @@ struct GeneratedfileProvider: GeneratedfileService {
             switch result {
             case .success(let value):
                 return Result {
-                    return try generatedfiles(
-                        urls: urls, datafile: value, globalContext: globalContext
+                    try generatedfiles(
+                        templatefiles: templatefiles,
+                        datafile: value,
+                        globalContext: globalContext
                     )
                 }
             case .failure(let error):
@@ -46,14 +51,14 @@ struct GeneratedfileProvider: GeneratedfileService {
 
 extension GeneratedfileProvider {
     private func generatedfiles(
-        urls: [URL],
+        templatefiles: Templatefiles,
         datafile: Datafile,
         globalContext: [String: Any]?
     ) throws -> [Generatedfile] {
         switch datafile.template {
         case .name(let name):
             return try generatedfiles(
-                urls: urls,
+                templatefiles: templatefiles,
                 datafile: datafile,
                 template: name,
                 context: datafile.globalContext + datafile.context
@@ -69,26 +74,33 @@ extension GeneratedfileProvider {
     }
 
     private func generatedfiles(
-        urls: [URL],
+        templatefiles: Templatefiles,
         datafile: Datafile,
         template: String,
         context: [String: Any]? = nil
     ) throws -> [Generatedfile] {
-        let (templates, environment) = try aarkayTemplates
-            .templatesEnvironment(urls: urls, name: template)
-        return try templates.map { templateUrl in
-            let (name, ext) = try templateUrl.template()
+        guard let templateUrls = templatefiles.files[template] else {
+            throw AarKayError.invalidTemplate(
+                AarKayError.InvalidTemplateReason.notFound
+            )
+        }
+        let files = try templateUrls.map {
+            try Templatefile(name: $0.lastPathComponent)
+        }
+        return try files.map { templateFile in
             return try Try {
-                let rendered = try environment.renderTemplate(
-                    name: name, context: context
+                let rendered = try self.aarkayTemplates!.renderTemplate(
+                    name: templateFile.name, context: context
                 )
                 return self.generatedfile(
                     datafile: datafile,
                     stringContents: rendered,
-                    pathExtension: ext
+                    pathExtension: templateFile.ext
                 )
             }.catchMapError { _ in
-                AarKayError.templateNotFound(template)
+                AarKayError.invalidTemplate(
+                    AarKayError.InvalidTemplateReason.notFound
+                )
             }
         }
     }
@@ -106,16 +118,5 @@ extension GeneratedfileProvider {
             skip: datafile.skip,
             contents: stringContents
         )
-    }
-}
-
-extension URL {
-    fileprivate func template() throws -> (String, String?) {
-        let name = lastPathComponent
-        let fc = name.components(separatedBy: ".")
-        guard fc.count > 1 && fc.count <= 3 else { throw AarKayError.invalidTemplate(name) }
-        let templateName = fc.joined(separator: ".")
-        let ext = fc.count == 3 ? fc[1] : nil
-        return (templateName, ext)
     }
 }

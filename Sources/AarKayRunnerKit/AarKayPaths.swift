@@ -15,8 +15,14 @@ public struct AarKayPaths {
 
     /// Initializes the default AarKayPaths with global location as home directory and local location as current directory.
     public static let `default` = AarKayPaths(
-        globalUrl: URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true),
-        localUrl: URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true)
+        globalUrl: URL(
+            fileURLWithPath: NSHomeDirectory(),
+            isDirectory: true
+        ),
+        localUrl: URL(
+            fileURLWithPath: FileManager.default.currentDirectoryPath,
+            isDirectory: true
+        )
     )
 
     /// Decides whether to use global directory or the local directory depending on the global flag.

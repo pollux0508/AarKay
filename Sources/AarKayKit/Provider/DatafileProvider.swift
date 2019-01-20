@@ -20,11 +20,15 @@ struct DatafileProvider: DatafileService {
         let context = try Try {
             try serializer.context(contents: contents)
         }.catchMapError { _ in
-            AarKayError.unknownError
+            AarKayError.invalidContents(
+                AarKayError.InvalidContentsReason.serializationFailed
+            )
         }
         if name.isCollection {
             guard let contextArray = context as? [[String: Any]] else {
-                throw AarKayError.unknownError
+                throw AarKayError.invalidContents(
+                    AarKayError.InvalidContentsReason.arrayExpected
+                )
             }
             return datafiles(
                 plugin: plugin,
@@ -34,7 +38,9 @@ struct DatafileProvider: DatafileService {
             )
         } else {
             guard let context = context as? [String: Any] else {
-                throw AarKayError.unknownError
+                throw AarKayError.invalidContents(
+                    AarKayError.InvalidContentsReason.objectExpected
+                )
             }
             let df = datafile(
                 fileName: name,
@@ -88,7 +94,9 @@ extension DatafileProvider {
         return contextArray.map { context -> Result<Datafile, AnyError> in
             Result<Datafile, AnyError> {
                 guard let fileName = context.fileName() ?? context.name() else {
-                    throw AarKayError.missingFileName(plugin, template)
+                    throw AarKayError.invalidContents(
+                        AarKayError.InvalidContentsReason.missingFileName
+                    )
                 }
                 return datafile(
                     fileName: fileName,

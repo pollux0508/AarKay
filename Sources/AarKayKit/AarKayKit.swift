@@ -8,24 +8,30 @@
 import Foundation
 import Result
 
-public struct AarKayKit {
+public class AarKayKit {
     let plugin: String
     let globalContext: [String: Any]?
     let globalTemplates: [URL]?
-    let aarkayService: AarKayService
-    
+    let fileManager: FileManager
+    var aarkayService: AarKayService
+
     public init(
         plugin: String,
         globalContext: [String: Any]?,
-        globalTemplates: Set<URL>?
+        globalTemplates: [URL]?,
+        fileManager: FileManager = FileManager.default
     ) {
         self.plugin = plugin
         self.globalContext = globalContext
-        self.globalTemplates = globalTemplates != nil ? Array(globalTemplates!) : nil
+        self.globalTemplates = globalTemplates
+        self.fileManager = fileManager
         let aarkayService = AarKayProvider(
             datafileService: DatafileProvider(),
             generatedfileService: GeneratedfileProvider(
-                aarkayTemplates: AarKayTemplates.default
+//                aarkayTemplates: AarKayTemplates(
+//                    templatefiles: Templatefiles,
+//                    fileManager: fileManager
+//                )
             )
         )
         self.aarkayService = aarkayService
@@ -52,8 +58,16 @@ extension AarKayKit {
             )
         } else {
             guard let globalTempaltes = globalTemplates else {
-                throw AarKayError.templateNotFound(template)
+                throw AarKayError.invalidTemplate(
+                    AarKayError.InvalidTemplateReason.notFound
+                )
             }
+            let templatesUrls = try templates(urls: globalTempaltes)
+            
+            let templatefiles = Templatefiles(
+                urls: globalTempaltes,
+                files: templatesUrls
+            )
 
             let datafiles = try aarkayService.datafileService.serialize(
                 plugin: plugin,
@@ -65,7 +79,7 @@ extension AarKayKit {
             )
 
             return aarkayService.generatedfileService.generatedfiles(
-                urls: globalTempaltes,
+                templatefiles: templatefiles,
                 datafiles: datafiles,
                 globalContext: globalContext
             )
@@ -79,7 +93,17 @@ extension AarKayKit {
         template: String,
         contents: String
     ) throws -> [Result<Generatedfile, AnyError>] {
-        let templateUrls = try templatesDirectory(urls: templateClass.templates())
+        let templatesDir = try templatesDirectory(urls: templateClass.templates())
+        let templatesUrls = try templates(urls: templatesDir)
+        let templatefiles = Templatefiles(
+            urls: templatesDir,
+            files: templatesUrls
+        )
+        
+        aarkayService.generatedfileService.aarkayTemplates = try AarKayTemplates(
+            templatefiles: templatefiles,
+            fileManager: fileManager
+        )
         
         let datafiles = try aarkayService.datafileService.serialize(
             plugin: plugin,
@@ -119,7 +143,7 @@ extension AarKayKit {
             }
 
         return aarkayService.generatedfileService.generatedfiles(
-            urls: templateUrls,
+            templatefiles: templatefiles,
             datafiles: templateDatafiles,
             globalContext: globalContext
         )
@@ -155,5 +179,22 @@ extension AarKayKit {
             }
             return url
         }
+    }
+    
+    fileprivate func templates(urls: [URL]) throws -> [String: [URL]] {
+        let templates = try fileManager.subFiles(at: urls)
+            .filter { !$0.lastPathComponent.hasPrefix(".") }
+            .reduce(Dictionary<String, [URL]>()) { initial, item in
+                let templateFile = try Templatefile(name: item.lastPathComponent)
+                guard initial[templateFile.template] == nil else {
+                    throw AarKayError.invalidTemplate(
+                        AarKayError.InvalidTemplateReason.mutipleFound
+                    )
+                }
+                var initial = initial
+                initial[templateFile.template] = [item]
+                return initial
+        }
+        return templates
     }
 }

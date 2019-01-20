@@ -53,9 +53,14 @@ public struct Datafile {
     }
 
     public func decode<T: Codable>(type: T.Type) throws -> T {
-        // FIXME: - Error
-        let decodedData = try JSONSerialization.data(withJSONObject: context)
-        let model = try JSONDecoder().decode(type, from: decodedData) as T
+        let model: T = try Try {
+            let decodedData = try JSONSerialization.data(withJSONObject: self.context)
+            return try JSONDecoder().decode(type, from: decodedData) as T
+        }.catchMapError { error in
+            AarKayError.invalidContents(
+                AarKayError.InvalidContentsReason.invalidModel
+            )
+        }
         return model
     }
 
@@ -79,18 +84,26 @@ public struct Datafile {
         _ model: T,
         with context: [String: Any]? = nil
     ) throws {
-        // FIXME: - Error
-        let encodedData = try JSONEncoder().encode(model)
-        guard let collection = try JSONSerialization.jsonObject(
-            with: encodedData,
-            options: .allowFragments
-        ) as? [String: Any] else {
-            throw AarKayError.modelDecodingFailure(fileName)
+        let object: Any? = try Try {
+            let encodedData = try JSONEncoder().encode(model)
+            return try JSONSerialization.jsonObject(
+                with: encodedData,
+                options: .allowFragments
+            )
+        }.catchMapError { error in
+            AarKayError.invalidContents(
+                AarKayError.InvalidContentsReason.invalidModel
+            )
+        }
+        guard let obj = object as? [String: Any] else {
+            throw AarKayError.internalError(
+                "Could not decode collection from encoded data"
+            )
         }
         if let context = context {
-            setContext(collection + context)
+            setContext(obj + context)
         } else {
-            setContext(collection)
+            setContext(obj)
         }
     }
 

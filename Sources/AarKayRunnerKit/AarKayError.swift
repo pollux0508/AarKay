@@ -3,12 +3,18 @@ import ReactiveTask
 
 /// A type encapsulating all errors related to `AarKay` commands.
 ///
-/// - unknownError: Returned when the program gets in an unexpected state.
+/// - unknownError: Returned when the program reaches an unexpected state.
 /// - projectAlreadyExists: Returned when init is tried on the project that already exists.
 /// - missingProject: Returned when the project doesn't exist.
 /// - aarkayFileParsingFailed: Returned when the AarKayFile parsing fails.
 /// - taskError: Returned when the task fails.
 public enum AarKayError: Error {
+    case unknownError(error: Error?)
+    case projectAlreadyExists(String)
+    case missingProject(String)
+    case aarkayFileParsingFailed(reason: AarKayFileParsingReason)
+    case taskError(TaskError)
+
     /// The underlying reason the aarkayfile parsing error occurred.
     ///
     /// - missingFile: Returned if AarKayFile doesn't exist at the URL.
@@ -21,12 +27,6 @@ public enum AarKayError: Error {
         case invalidVersion(String)
         case invalidDependency(String)
     }
-    
-    case unknownError
-    case projectAlreadyExists(String)
-    case missingProject(String)
-    case aarkayFileParsingFailed(reason: AarKayFileParsingReason)
-    case taskError(TaskError)
 }
 
 extension AarKayError {
@@ -39,14 +39,7 @@ extension AarKayError {
         /// <aarkay internalError>
         assertionFailure("\(file):\(line) - \(message). \(error.debugDescription)")
         /// </aarkay>
-        return AarKayError.unknownError
-    }
-}
-
-extension Error {
-    /// Returns the instance cast as an `AarKayError`.
-    public var asAarKayError: AarKayError? {
-        return self as? AarKayError
+        return AarKayError.unknownError(error: error)
     }
 }
 
@@ -55,6 +48,12 @@ extension Error {
 extension AarKayError: LocalizedError {
     public var errorDescription: String? {
         switch self {
+        case .unknownError(let error):
+            var desc = "An unknown error occurred."
+            if let err = error {
+                desc = desc + "- " + err.localizedDescription
+            }
+            return desc
         case .projectAlreadyExists(let path):
             return "Project already exists at \(path). Use `--force` to start over."
         case .missingProject(let path):
@@ -63,8 +62,6 @@ extension AarKayError: LocalizedError {
             return reason.localizedDescription
         case .taskError(let error):
             return error.description
-        case .unknownError:
-            return "An unknown error occurred."
         }
     }
 }

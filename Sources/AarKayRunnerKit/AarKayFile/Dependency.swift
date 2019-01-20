@@ -5,8 +5,8 @@
 //  Created by RahulKatariya on 06/01/19.
 //
 
-import Foundation
 import AarKayKit
+import Foundation
 
 /// Type that encapsulates a single dependency with respect to Package.swift.
 public struct Dependency {
@@ -23,14 +23,19 @@ public struct Dependency {
         let comps = string.components(separatedBy: ",")
         guard comps.count == 2,
             let url = URL(string: comps[0].trimmingCharacters(in: .whitespacesAndNewlines)) else {
-                throw AarKayError.aarkayFileParsingFailed(
-                    reason: AarKayError.AarKayFileParsingReason.invalidDependency(string)
-                )
+            throw AarKayError.aarkayFileParsingFailed(
+                reason: AarKayError.AarKayFileParsingReason.invalidDependency(string)
+            )
         }
         self.url = url
-        self.version = try VersionType(
+        guard let version = VersionType(
             string: comps[1].trimmingCharacters(in: .whitespacesAndNewlines)
-        )
+        ) else {
+            throw AarKayError.aarkayFileParsingFailed(
+                reason: AarKayError.AarKayFileParsingReason.invalidVersion(string)
+            )
+        }
+        self.version = version
     }
 
     /// - Returns: Returns the package dependency description for Package.swift.

@@ -9,8 +9,8 @@ import Foundation
 import Result
 
 struct AarKayProvider: AarKayService {
-    let datafileService: DatafileService
-    let generatedfileService: GeneratedfileService
+    var datafileService: DatafileService
+    var generatedfileService: GeneratedfileService
 
     func templateClass(
         plugin: String,

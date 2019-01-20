@@ -83,4 +83,19 @@ class AarKayLogger {
     static func logFileSkipped(at url: URL) {
         print("   <X> \(url.relativeString)".cyan)
     }
+
+    /// Logs for a file errored.
+    ///
+    /// - Parameters:
+    ///   - url: The url of the skipped file.
+    ///   - error: The `Error` object.
+    ///   - verbose: The verbose logging flag.
+    static func logFileErrored(
+        at url: URL,
+        error: Error,
+        verbose: Bool
+    ) {
+        print("   <!> \(url.absoluteString)".red)
+        if verbose { logError(error) }
+    }
 }

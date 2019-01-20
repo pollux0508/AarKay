@@ -143,7 +143,7 @@ extension Template {
             let backPath = Array(repeating: "../", count: components.count).joined()
             templatesDir = backPath + templatesDir
         }
-        templateFiles(
+        templatefiles(
             datafile: datafile,
             templatesDir: templatesDir,
             model: model,
@@ -157,7 +157,7 @@ extension Template {
         return all
     }
 
-    func templateFiles(
+    func templatefiles(
         datafile: Datafile,
         templatesDir: String,
         model: TemplateModel,
@@ -200,7 +200,7 @@ extension Template {
                     }
                 }
             }
-            templateFiles(
+            templatefiles(
                 datafile: datafile,
                 templatesDir: templatesDir,
                 model: sub,

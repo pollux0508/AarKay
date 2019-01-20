@@ -67,7 +67,9 @@ class DirTreeMirror {
                     relativeTo: sourceUrl
                 )
             }
-            .filter { return !$0.lastPathComponent.hasPrefix(".") && !$0.hasDirectoryPath }
+            .filter {
+                return !$0.lastPathComponent.hasPrefix(".") && !$0.hasDirectoryPath
+            }
             .map {
                 return (
                     $0, URL(

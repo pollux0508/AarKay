@@ -10,45 +10,12 @@ import PathKit
 import Stencil
 import StencilSwiftKit
 
-private struct TemplateCache {
-    let environment: Environment
-    let templates: [String: [URL]]
-}
-
 class AarKayTemplates {
-    static let `default` = AarKayTemplates(fileManager: FileManager.default)
-    private var cache = Dictionary<String, TemplateCache>()
+    let templatefiles: Templatefiles
+    let directories: [URL]
     let fileManager: FileManager
-
-    init(fileManager: FileManager) {
-        self.fileManager = fileManager
-    }
-
-    func templatesEnvironment(urls: [URL], name: String) throws -> ([URL], Environment) {
-        let cache = try templateCache(urls: urls)
-        guard let templateUrls = cache.templates[name] else {
-            throw AarKayError.templateNotFound(name)
-        }
-        return (templateUrls, cache.environment)
-    }
-
-    private func templateCache(urls: [URL]) throws -> TemplateCache {
-        let cacheKey: String = urls.reduce(
-            "|"
-        ) { (initial: String, next: URL) -> String in
-            initial + next.path + "|"
-        }
-        if let cache = self.cache[cacheKey] { return cache }
-        let cache = TemplateCache(
-            environment: try environment(urls: urls),
-            templates: try templates(urls: urls)
-        )
-        self.cache[cacheKey] = cache
-        return cache
-    }
-
-    private func environment(urls: [URL]) throws -> Environment {
-        let directories = try FileManager.default.subDirectories(at: urls)
+    
+    lazy var environment: Environment = {
         let paths = directories.map { Path($0.path) }
         let aarkayFilesLoader = FileSystemLoader(paths: paths)
         let ext = Extension()
@@ -59,25 +26,23 @@ class AarKayTemplates {
             templateClass: StencilSwiftTemplate.self
         )
         return environment
+    }()
+
+    init(
+        templatefiles: Templatefiles,
+        fileManager: FileManager
+    ) throws {
+        self.templatefiles = templatefiles
+        self.fileManager = fileManager
+        self.directories = try fileManager.subDirectories(at: templatefiles.urls)
     }
-    
-    private func templates(urls: [URL]) throws -> [String: [URL]] {
-        let templates = try FileManager.default.subFiles(at: urls)
-            .filter { !$0.lastPathComponent.hasPrefix(".") }
-            .reduce(Dictionary<String, [URL]>()) { initial, item in
-                let templateName = item.lastPathComponent
-                let components = templateName.components(separatedBy: ".")
-                guard components.count > 1 && components.count < 4 else {
-                    throw AarKayError.invalidTemplate(templateName)
-                }
-                let name = components[0]
-                guard initial[name] == nil else {
-                    throw AarKayError.multipleTemplatesFound(templateName)
-                }
-                var initial = initial
-                initial[name] = [item]
-                return initial
-        }
-        return templates
+
+    func renderTemplate(
+        name: String,
+        context: [String: Any]?
+    ) throws -> String {
+        return try environment.renderTemplate(
+            name: name, context: context
+        )
     }
 }

@@ -5,8 +5,8 @@
 //  Created by RahulKatariya on 04/01/19.
 //
 
-import Foundation
 import AarKayKit
+import Foundation
 
 /// Represents the plugin dependency file.
 public struct AarKayFile {

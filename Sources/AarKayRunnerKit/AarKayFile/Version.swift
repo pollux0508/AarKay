@@ -20,7 +20,7 @@ struct Version {
     ///
     /// - Parameter string: The version string.
     /// - Throws: Parsing error.
-    init(string: String) throws {
+    init?(string: String) {
         let components = string
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .components(separatedBy: ".")
@@ -28,9 +28,7 @@ struct Version {
             let major = Int(components[0]),
             let minor = Int(components[1]),
             let patch = Int(components[2]) else {
-                throw AarKayError.aarkayFileParsingFailed(
-                    reason: AarKayError.AarKayFileParsingReason.invalidDependency(string)
-                )
+            return nil
         }
         self.major = major
         self.minor = minor

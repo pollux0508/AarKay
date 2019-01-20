@@ -17,6 +17,9 @@ public class AarKay {
     /// The options.
     let options: AarKayOptions
 
+    /// The global.
+    let global: AarKayGlobal
+
     /// The file manager.
     let fileManager: FileManager
 
@@ -28,12 +31,6 @@ public class AarKay {
     /// The template files url relative to the project url.
     lazy var aarkayTemplatesUrl: URL = {
         url.appendingPathComponent("AarKay/AarKayTemplates", isDirectory: true)
-    }()
-
-    /// The global template files url relative to the project url.
-    lazy var aarkayGlobalTemplatesUrl: URL = {
-        AarKayPaths.default.aarkayPath(global: true)
-            .appendingPathComponent("AarKayTemplates", isDirectory: true)
     }()
 
     /// Constructs an `AarKay` project.
@@ -50,6 +47,7 @@ public class AarKay {
         self.url = url
         self.options = options
         self.fileManager = fileManager
+        self.global = AarKayGlobal(url: url)
     }
 
     /// Bootstrap files generation process.
@@ -58,7 +56,7 @@ public class AarKay {
         AarKayLogger.logTable(url: url, datafilesUrl: aarkayFilesUrl)
 
         /// Log if the AarKayFiles directory is empty.
-        guard FileManager.default.fileExists(atPath: aarkayFilesUrl.path) else {
+        guard fileManager.fileExists(atPath: aarkayFilesUrl.path) else {
             AarKayLogger.logNoDatafiles(); return
         }
 
@@ -71,62 +69,84 @@ public class AarKay {
             }
 
             /// The global context to be applied to all files being generated.
-            let globalContext = try aarkayGlobalContext()
+            let globalContext = try global.context()
+            let globalTemplatesUrl = global.templatesUrl(
+                aarkayPaths: AarKayPaths.default
+            )
+            let templateUrls = [globalTemplatesUrl, aarkayTemplatesUrl]
+                .compactMap { $0 }
 
             /// First level of subdirectories in AarKayFiles directory are the names of the plugins.
-            let urls = try fileManager.contentsOfDirectory(
-                at: aarkayFilesUrl,
-                includingPropertiesForKeys: [.isDirectoryKey],
-                options: .skipsHiddenFiles
-            )
+            let urls = try Try {
+                try self.fileManager.contentsOfDirectory(
+                    at: self.aarkayFilesUrl,
+                    includingPropertiesForKeys: [.isDirectoryKey],
+                    options: .skipsHiddenFiles
+                )
+            }.catchMapError { error in
+                AarKayError.internalError(
+                    "Failed to fetch contents of directory at url - \(url.path)",
+                    with: error
+                )
+            }
 
-            urls.forEach { bootstrapPlugin(sourceUrl: $0, globalContext: globalContext) }
+            urls.forEach {
+                bootstrapPlugin(
+                    pluginUrl: $0,
+                    templateUrls: templateUrls,
+                    globalContext: globalContext
+                )
+            }
         } catch {
             AarKayLogger.logError(error)
         }
     }
 
-    /// Reads the global context url from the path "{PROJECT_ROOT}/AarKay/.aarkay" and serializes it into a dictionary using Yaml serialzer.
-    ///
-    /// - Returns: The dictionary from contents.
-    /// - Throws: An error if the url contents cannot be loaded.
-    private func aarkayGlobalContext() throws -> [String: Any]? {
-        let aarkayGlobalContextUrl = url.appendingPathComponent("AarKay/.aarkay")
-        guard let contents = try? String(contentsOf: aarkayGlobalContextUrl) else {
-            return nil
-        }
-        return try YamlInputSerializer.load(contents) as? [String: Any]
-    }
+    private func bootstrapPlugin(
+        pluginUrl: URL,
+        templateUrls: [URL],
+        globalContext: [String: Any]? = nil
+    ) {
+        let plugin = pluginUrl.lastPathComponent
 
-    private func bootstrapPlugin(sourceUrl: URL, globalContext: [String: Any]? = nil) {
-        let plugin = sourceUrl.lastPathComponent
-        
         let aarkayKit = AarKayKit(
             plugin: plugin,
             globalContext: globalContext,
-            globalTemplates: [aarkayGlobalTemplatesUrl, aarkayTemplatesUrl]
+            globalTemplates: templateUrls
         )
-        
+
         /// Create directory tree mirror with source as the AarKayFiles url and destination as the project url.
         let dirTreeMirror = DirTreeMirror(
-            sourceUrl: sourceUrl,
+            sourceUrl: pluginUrl,
             destinationUrl: url,
             fileManager: fileManager
         )
 
         do {
-            try dirTreeMirror.bootstrap()
-                .forEach { (sourceUrl: URL, destinationUrl: URL) in
-                    self.bootstrap(
-                        aarkayKit: aarkayKit,
-                        plugin: plugin,
-                        globalContext: globalContext,
-                        sourceUrl: sourceUrl,
-                        destinationUrl: destinationUrl
-                    )
-                }
+            let mirrorUrls = try Try {
+                try dirTreeMirror.bootstrap()
+            }.catchMapError { error in
+                AarKayError.internalError(
+                    "Failed to create directory tree mirror with source url - \(pluginUrl) and destination url - \(url)",
+                    with: error
+                )
+            }
+
+            mirrorUrls.forEach { (sourceUrl: URL, destinationUrl: URL) in
+                self.bootstrap(
+                    aarkayKit: aarkayKit,
+                    plugin: plugin,
+                    globalContext: globalContext,
+                    sourceUrl: sourceUrl,
+                    destinationUrl: destinationUrl
+                )
+            }
         } catch {
-            AarKayLogger.logError(error)
+            AarKayLogger.logFileErrored(
+                at: pluginUrl,
+                error: error,
+                verbose: options.verbose
+            )
         }
     }
 
@@ -166,7 +186,7 @@ public class AarKay {
         if components.count < 2 ||
             components.count > 4 ||
             (components.count == 4 && components[0] != "dot") {
-            AarKayLogger.logErrorMessage("Invalid Datafile name at \(sourceUrl.lastPathComponent)")
+            AarKayLogger.logErrorMessage("Invalid Datafile name at \(sourceUrl.absoluteString)")
             return
         }
 
@@ -195,11 +215,19 @@ public class AarKay {
                         at: destinationUrl.deletingLastPathComponent()
                     )
                 case .failure(let error):
-                    AarKayLogger.logError(error)
+                    AarKayLogger.logFileErrored(
+                        at: sourceUrl,
+                        error: error,
+                        verbose: options.verbose
+                    )
                 }
             }
         } catch {
-            AarKayLogger.logError(error)
+            AarKayLogger.logFileErrored(
+                at: sourceUrl,
+                error: error,
+                verbose: options.verbose
+            )
         }
     }
 
@@ -233,7 +261,16 @@ public class AarKay {
                 let string = generatedfile.merge(currentString)
                 if string != currentString {
                     if !options.dryrun {
-                        try string.write(toFile: url.path, atomically: true, encoding: .utf8)
+                        try Try { () -> Void in
+                            try string.write(
+                                to: url, atomically: true, encoding: .utf8
+                            )
+                        }.catchMapError { error in
+                            AarKayError.internalError(
+                                "Could not create file at url - \(url.path)",
+                                with: error
+                            )
+                        }
                     }
                     AarKayLogger.logFileModified(at: url)
                 } else {
@@ -244,8 +281,21 @@ public class AarKay {
             }
         } else {
             if !options.dryrun {
-                try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
-                try generatedfile.contents.write(toFile: url.path, atomically: true, encoding: .utf8)
+                try Try { () -> Void in
+                    try self.fileManager.createDirectory(
+                        at: url.deletingLastPathComponent(),
+                        withIntermediateDirectories: true,
+                        attributes: nil
+                    )
+                    try generatedfile.contents.write(
+                        to: url, atomically: true, encoding: .utf8
+                    )
+                }.catchMapError { error in
+                    AarKayError.internalError(
+                        "Could not create file at url - \(url.path)",
+                        with: error
+                    )
+                }
             }
             AarKayLogger.logFileAdded(at: url)
         }

@@ -9,8 +9,8 @@ import Foundation
 import Result
 
 protocol AarKayService {
-    var datafileService: DatafileService { get }
-    var generatedfileService: GeneratedfileService { get }
+    var datafileService: DatafileService { get set }
+    var generatedfileService: GeneratedfileService { get set }
 
     func templateClass(
         plugin: String,
@@ -35,10 +35,10 @@ protocol DatafileService {
 }
 
 protocol GeneratedfileService {
-    var aarkayTemplates: AarKayTemplates { get }
-    
+    var aarkayTemplates: AarKayTemplates? { get set }
+
     func generatedfiles(
-        urls: [URL],
+        templatefiles: Templatefiles,
         datafiles: [Result<Datafile, AnyError>],
         globalContext: [String: Any]?
     ) -> [Result<Generatedfile, AnyError>]
