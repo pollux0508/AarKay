@@ -9,9 +9,7 @@ import Foundation
 import Result
 
 public struct AarKayKit {
-    let plugin: String
-    let globalContext: [String: Any]?
-    let globalTemplates: [URL]?
+    let pluginfile: Pluginfile
     let fileManager: FileManager
     var aarkayService: AarKayService!
 
@@ -21,14 +19,20 @@ public struct AarKayKit {
         globalTemplates: [URL]?,
         fileManager: FileManager = FileManager.default
     ) throws {
-        self.plugin = plugin
-        self.globalContext = globalContext
-        self.globalTemplates = globalTemplates
         self.fileManager = fileManager
+        self.pluginfile = Pluginfile(
+            name: plugin,
+            globalContext: globalContext,
+            globalTemplates: globalTemplates
+        )
+        let pluginfileService = PluginfileProvider(pluginfile: pluginfile)
         self.aarkayService = AarKayProvider(
+            pluginfileService: pluginfileService,
             datafileService: DatafileProvider(),
             generatedfileService: GeneratedfileProvider(
-                templatesService: try templatefiles(plugin: plugin)
+                templatesService: try pluginfileService.templatefiles(
+                    fileManager: fileManager
+                )
             )
         )
     }
@@ -41,120 +45,65 @@ extension AarKayKit {
         template: String,
         contents: String
     ) throws -> [Result<Generatedfile, AnyError>] {
-        if let templateClass = aarkayService.templateClass(
-            plugin: plugin,
+        if let templateClass = aarkayService.datafileService.templateClass(
+            plugin: pluginfile.name,
             template: template
         ) {
-            return try bootstrap(
-                templateClass: templateClass,
-                name: name,
-                directory: directory,
-                template: template,
-                contents: contents
-            )
-        } else {
             let datafiles = try aarkayService.datafileService.serialize(
-                plugin: plugin,
+                plugin: pluginfile.name,
                 name: name,
                 template: template,
                 contents: contents,
-                globalContext: globalContext,
+                globalContext: pluginfile.globalContext,
+                using: templateClass.inputSerializer()
+            )
+
+            let templateDatafiles = datafiles
+                .map { result -> [Result<Datafile, AnyError>] in
+                    switch result {
+                    case .success(let value):
+                        let res = Result {
+                            return try aarkayService.datafileService
+                                .templateDatafiles(
+                                    datafile: value,
+                                    templateClass: templateClass
+                            )
+                        }
+                        switch res {
+                        case .success(let files):
+                            return files.map { .success($0) }
+                        case .failure(let error):
+                            return [.failure(error)]
+                        }
+                    case .failure(let error):
+                        return [.failure(error)]
+                    }
+                }.reduce(
+                    [Result<Datafile, AnyError>]()
+                ) { (initial, next) -> [Result<Datafile, AnyError>] in
+                    var results: [Result<Datafile, AnyError>] = initial
+                    next.forEach { results.append($0) }
+                    return results
+            }
+            
+            return aarkayService.generatedfileService.generatedfiles(
+                datafiles: templateDatafiles,
+                globalContext: pluginfile.globalContext
+            )
+        } else {
+            let datafiles = try aarkayService.datafileService.serialize(
+                plugin: pluginfile.name,
+                name: name,
+                template: template,
+                contents: contents,
+                globalContext: pluginfile.globalContext,
                 using: YamlInputSerializer()
             )
 
             return aarkayService.generatedfileService.generatedfiles(
                 datafiles: datafiles,
-                globalContext: globalContext
+                globalContext: pluginfile.globalContext
             )
         }
-    }
-
-    func bootstrap(
-        templateClass: Templatable.Type,
-        name: String,
-        directory: String?,
-        template: String,
-        contents: String
-    ) throws -> [Result<Generatedfile, AnyError>] {
-        let datafiles = try aarkayService.datafileService.serialize(
-            plugin: plugin,
-            name: name,
-            template: template,
-            contents: contents,
-            globalContext: globalContext,
-            using: templateClass.inputSerializer()
-        )
-
-        let templateDatafiles = datafiles
-            .map { result -> [Result<Datafile, AnyError>] in
-                switch result {
-                case .success(let value):
-                    let res = Result {
-                        return try aarkayService.datafileService
-                            .templateDatafiles(
-                                datafile: value,
-                                templateClass: templateClass
-                            )
-                    }
-                    switch res {
-                    case .success(let files):
-                        return files.map { .success($0) }
-                    case .failure(let error):
-                        return [.failure(error)]
-                    }
-                case .failure(let error):
-                    return [.failure(error)]
-                }
-            }.reduce(
-                [Result<Datafile, AnyError>]()
-            ) { (initial, next) -> [Result<Datafile, AnyError>] in
-                var results: [Result<Datafile, AnyError>] = initial
-                next.forEach { results.append($0) }
-                return results
-            }
-
-        return aarkayService.generatedfileService.generatedfiles(
-            datafiles: templateDatafiles,
-            globalContext: globalContext
-        )
-    }
-}
-
-// MARK: - Private Helpers
-
-extension AarKayKit {
-    private func templatefiles(plugin: String) throws -> TemplateService {
-        var templateServiceClass: TemplateService.Type = StencilProvider.self
-        var templatefiles: Templatefiles!
-        if let plugable = NSClassFromString("\(plugin).\(plugin)") as? Plugable.Type {
-            templatefiles = try Templatefiles(
-                plugin: plugin,
-                templatesDir: plugable.templates().map { URL(fileURLWithPath: $0) },
-                fileManager: fileManager
-            )
-            templateServiceClass = plugable.templateService()
-        } else if let plugable = NSClassFromString("aarkay_plugin_\(plugin.lowercased()).\(plugin)") as? Plugable.Type {
-            templatefiles = try Templatefiles(
-                plugin: plugin,
-                templatesDir: plugable.templates().map { URL(fileURLWithPath: $0) },
-                fileManager: fileManager
-            )
-            templateServiceClass = plugable.templateService()
-        } else {
-            guard let templates = globalTemplates else {
-                throw AarKayKitError.invalidTemplate(
-                    AarKayKitError.InvalidTemplateReason
-                        .templatesNil(name: plugin)
-                )
-            }
-            templatefiles = try Templatefiles(
-                plugin: plugin,
-                templatesDir: templates,
-                fileManager: fileManager
-            )
-        }
-        return try templateServiceClass.init(
-            templatefiles: templatefiles
-        )
     }
 }

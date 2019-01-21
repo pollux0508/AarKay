@@ -9,16 +9,22 @@ import Foundation
 import Result
 
 protocol AarKayService {
+    var pluginfileService: PluginfileService { get }
     var datafileService: DatafileService { get }
     var generatedfileService: GeneratedfileService { get }
+}
 
+protocol PluginfileService {
+    var pluginfile: Pluginfile { get }
+    func templatefiles(fileManager: FileManager) throws -> TemplateService
+}
+
+protocol DatafileService {
     func templateClass(
         plugin: String,
         template: String
     ) -> Templatable.Type?
-}
 
-protocol DatafileService {
     func serialize(
         plugin: String,
         name: String,

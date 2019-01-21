@@ -10,6 +10,20 @@ import Result
 import SharedKit
 
 struct DatafileProvider: DatafileService {
+
+    func templateClass(
+        plugin: String,
+        template: String
+    ) -> Templatable.Type? {
+        if let templateClass = NSClassFromString("\(plugin).\(template)") as? Templatable.Type {
+            return templateClass
+        } else if let templateClass = NSClassFromString("aarkay_plugin_\(plugin.lowercased()).\(template)") as? Templatable.Type {
+            return templateClass
+        } else {
+            return nil
+        }
+    }
+
     func serialize(
         plugin: String,
         name: String,
@@ -18,14 +32,7 @@ struct DatafileProvider: DatafileService {
         globalContext: [String: Any]?,
         using serializer: InputSerializable
     ) throws -> [Result<Datafile, AnyError>] {
-        let context = try Try {
-            try serializer.context(contents: contents)
-        }.catchMapError { _ in
-            AarKayKitError.invalidContents(
-                AarKayKitError.InvalidContentsReason
-                    .serializationFailed
-            )
-        }
+        let context = try serializer.context(contents: contents)
         if name.isCollection {
             guard let contextArray = context as? [[String: Any]] else {
                 throw AarKayKitError.invalidContents(

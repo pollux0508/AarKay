@@ -16,7 +16,7 @@ class StencilProvider: TemplateService {
 
     required init(
         templatefiles: Templatefiles
-    ) throws {
+    ) {
         self.templatefiles = templatefiles
         self.environment = {
             let paths = templatefiles.directories.map { Path($0.path) }

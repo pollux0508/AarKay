@@ -13,7 +13,7 @@ import Yams
 struct AarKayGlobal {
     /// The location of AarKay project.
     let url: URL
-    
+
     /// The FileManager.
     let fileManager: FileManager
 

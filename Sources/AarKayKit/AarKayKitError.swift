@@ -15,13 +15,11 @@ public enum AarKayKitError: Error {
 
     /// The underlying reason the invalid contents error occurred.
     ///
-    /// - serializationFailed: Returned when the data is in invalid format.
     /// - objectExpected: Returned when object is expected to decode single.
     /// - arrayExpected: Returned when array is expected to decode collection.
     /// - invalidModel: Returned when the data doesn't match the requirements of template.
     /// - missingFileName: Returned when there is no filename for generatedfile.
     public enum InvalidContentsReason {
-        case serializationFailed
         case objectExpected
         case arrayExpected
         case invalidModel(
@@ -83,12 +81,10 @@ extension AarKayKitError: LocalizedError {
 extension AarKayKitError.InvalidContentsReason: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .serializationFailed:
-            return "Invalid contents."
         case .arrayExpected:
-            return "Expected an array."
+            return "Collection datafile expect an array as an input."
         case .objectExpected:
-            return "Expected an object."
+            return "Single datafile expects an object as an input."
         case .invalidModel(let fileName, let template, let type, let context):
             return "The data for fileName - (\(fileName)) and template (\(template)) could not be serailzied to type - (\(type))\nContext :- \(context)"
         case .missingFileName:

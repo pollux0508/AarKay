@@ -57,7 +57,7 @@ public struct Datafile {
         let model: T = try Try {
             let decodedData = try JSONSerialization.data(withJSONObject: self.context)
             return try JSONDecoder().decode(type, from: decodedData) as T
-        }.catchMapError { error in
+        }.catch { error in
             AarKayKitError.invalidContents(
                 AarKayKitError.InvalidContentsReason
                     .invalidModel(
@@ -97,7 +97,7 @@ public struct Datafile {
                 with: encodedData,
                 options: .allowFragments
             )
-        }.catchMapError { error in
+        }.catch { error in
             AarKayKitError.invalidContents(
                 AarKayKitError.InvalidContentsReason
                     .invalidModel(

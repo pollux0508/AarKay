@@ -84,7 +84,7 @@ public class AarKay {
                     includingPropertiesForKeys: [.isDirectoryKey],
                     options: .skipsHiddenFiles
                 )
-            }.catchMapError { error in
+            }.catch { error in
                 AarKayError.internalError(
                     "Failed to fetch contents of directory at url - \(url.path)",
                     with: error
@@ -125,7 +125,7 @@ public class AarKay {
 
             let mirrorUrls = try Try {
                 try dirTreeMirror.bootstrap()
-            }.catchMapError { error in
+            }.catch { error in
                 AarKayError.internalError(
                     "Failed to create directory tree mirror with source url - \(pluginUrl) and destination url - \(url)",
                     with: error
@@ -257,26 +257,37 @@ public class AarKay {
                     AarKayLogger.logFileSkipped(at: url); return
                 }
             } else {
-                let currentString = try String(contentsOf: url)
-                let string = generatedfile.merge(currentString)
-                if string != currentString {
-                    if !options.dryrun {
-                        try Try { () -> Void in
-                            try string.write(
-                                to: url, atomically: true, encoding: .utf8
-                            )
-                        }.catchMapError { error in
-                            AarKayError.internalError(
-                                "Could not create file at url - \(url.path)",
-                                with: error
-                            )
+                do {
+                    let currentString = try Try {
+                        try String(contentsOf: url)
+                    }.catch { error in
+                        AarKayError.internalError(
+                            "Failed to read file at url - \(url)",
+                            with: error
+                        )
+                    }
+                    let string = try generatedfile.merge(currentString)
+                    if string != currentString {
+                        if !options.dryrun {
+                            try Try { () -> Void in
+                                try string.write(
+                                    to: url, atomically: true, encoding: .utf8
+                                )
+                            }.catch { error in
+                                AarKayError.internalError(
+                                    "Failed to create file at url - \(url.path)",
+                                    with: error
+                                )
+                            }
+                        }
+                        AarKayLogger.logFileModified(at: url)
+                    } else {
+                        if options.verbose {
+                            AarKayLogger.logFileUnchanged(at: url)
                         }
                     }
-                    AarKayLogger.logFileModified(at: url)
-                } else {
-                    if options.verbose {
-                        AarKayLogger.logFileUnchanged(at: url)
-                    }
+                } catch {
+                    AarKayLogger.logError(error)
                 }
             }
         } else {
@@ -290,7 +301,7 @@ public class AarKay {
                     try generatedfile.contents.write(
                         to: url, atomically: true, encoding: .utf8
                     )
-                }.catchMapError { error in
+                }.catch { error in
                     AarKayError.internalError(
                         "Could not create file at url - \(url.path)",
                         with: error

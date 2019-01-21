@@ -9,7 +9,7 @@
 import AarKayKit
 import Foundation
 
-class {{ cookiecutter.name }}: Pluggable {
+class {{ cookiecutter.name }}: Plugable {
     static func templates() -> [String] {
         return [#file]
     }

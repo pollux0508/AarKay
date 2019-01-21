@@ -13,7 +13,7 @@ import Foundation
 public class Template: NSObject, Templatable {
     public var datafile: Datafile
     private var model: TemplateModel
-    
+
     public required init(datafile: Datafile) throws {
         self.datafile = datafile
         self.model = try self.datafile.dencode(type: {{ cookiecutter.name }}Model.self)
@@ -22,20 +22,20 @@ public class Template: NSObject, Templatable {
 
 public class TemplateModel: Codable {
     public var name: String
-    
+
     private enum CodingKeys: String, CodingKey {
         case name
     }
-    
+
     public init(name: String) {
         self.name = name
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.name = try container.decode(String.self, forKey: .name)
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)

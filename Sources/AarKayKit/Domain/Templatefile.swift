@@ -12,7 +12,7 @@ struct Templatefile {
     let template: String
     let ext: String?
     let type: String
-    
+
     init(template: String) throws {
         let fc = template.components(separatedBy: ".")
         guard fc.count > 1 && fc.count <= 3 else {
@@ -28,7 +28,7 @@ struct Templatefile {
     }
 }
 
-public class Templatefiles {
+public struct Templatefiles {
     let plugin: String
     var directories: [URL]!
     let fileManager: FileManager
@@ -91,7 +91,7 @@ extension Templatefiles {
                 .appendingPathComponent(
                     "AarKay/AarKayTemplates",
                     isDirectory: true
-            )
+                )
             guard fileManager.fileExists(atPath: url.path) else {
                 throw AarKayKitError.internalError(
                     "Incorrect plugin structure at \(templateUrl)"
@@ -107,7 +107,7 @@ extension Templatefiles {
             return url
         }
     }
-    
+
     fileprivate func templates(urls: [URL]) throws -> [String: [Templatefile]] {
         let templatesfiles = try fileManager.subFiles(at: urls)
             .filter { !$0.lastPathComponent.hasPrefix(".") }

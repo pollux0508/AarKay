@@ -50,7 +50,7 @@ extension FileManager {
                 )
             }
             return isDir
-        }.catchMapError { error in
+        }.catch { error in
             AarKayKitError.internalError(
                 "Failed to fetch resourceValues for \(url.absoluteString)",
                 with: error

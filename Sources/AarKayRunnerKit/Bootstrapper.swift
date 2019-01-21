@@ -34,7 +34,7 @@ public struct Bootstrapper {
             if fileManager.fileExists(atPath: buildUrl.path) {
                 try Try {
                     try self.fileManager.removeItem(at: buildUrl)
-                }.catchMapError { error in
+                }.catch { error in
                     AarKayError.internalError(
                         "Failed to remove build at \(buildUrl)", with: error
                     )
@@ -93,7 +93,7 @@ public struct Bootstrapper {
             if fileManager.fileExists(atPath: packageResolvedUrl.path) {
                 try Try {
                     try self.fileManager.removeItem(at: packageResolvedUrl)
-                }.catchMapError { error in
+                }.catch { error in
                     AarKayError.internalError(
                         "Failed to remove Package.resolved at \(packageResolvedUrl)", with: error
                     )
@@ -122,7 +122,7 @@ public struct Bootstrapper {
             if fileManager.fileExists(atPath: url.path) {
                 try Try {
                     try self.fileManager.removeItem(at: url)
-                }.catchMapError { error in
+                }.catch { error in
                     AarKayError.internalError(
                         "Failed to remove file at \(url)", with: error
                     )
@@ -137,7 +137,7 @@ public struct Bootstrapper {
                 attributes: nil
             )
             try string.write(to: url, atomically: true, encoding: .utf8)
-        }.catchMapError { error in
+        }.catch { error in
             AarKayError.internalError(
                 "Failed to write \(string) at \(url)", with: error
             )

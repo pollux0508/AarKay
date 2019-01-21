@@ -84,7 +84,7 @@ extension GeneratedfileProvider {
                     stringContents: rendered,
                     pathExtension: templateFile.ext
                 )
-            }.catchMapError { _ in
+            }.catch { _ in
                 AarKayKitError.invalidTemplate(
                     AarKayKitError.InvalidTemplateReason
                         .notFound(name: template)
