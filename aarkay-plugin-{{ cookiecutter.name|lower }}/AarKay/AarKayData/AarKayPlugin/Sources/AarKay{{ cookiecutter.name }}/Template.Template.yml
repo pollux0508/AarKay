@@ -1,0 +1,4 @@
+name: Template
+isTemplate: true
+properties:
+  - name|String

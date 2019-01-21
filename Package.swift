@@ -10,6 +10,7 @@ let package = Package(
         .library(name: "AarKayKit", targets: ["AarKayKit"]),
         .library(name: "AarKayPlugin", targets: ["AarKayPlugin"]),
         .library(name: "AarKayRunnerKit", targets: ["AarKayRunnerKit"]),
+        .library(name: "SharedKit", targets: ["SharedKit"]),
         .executable(name: "AarKayCLI", targets: ["AarKayCLI"]),
         .executable(name: "AarKayRunner", targets: ["AarKayRunner"]),
     ],
@@ -45,6 +46,7 @@ let package = Package(
         .target(
             name: "AarKay",
             dependencies: [
+                "AarKayKit",
                 "AarKayRunnerKit",
                 "PrettyColors",
                 "SwiftyTextTable",
@@ -53,6 +55,7 @@ let package = Package(
         .target(
             name: "AarKayKit",
             dependencies: [
+                "SharedKit",
                 "StencilSwiftKit",
                 "Result",
                 "Yams",
@@ -80,11 +83,15 @@ let package = Package(
         .target(
             name: "AarKayRunnerKit",
             dependencies: [
-                "AarKayKit",
+                "SharedKit",
                 "Commandant",
                 "ReactiveTask",
                 "Curry",
             ]
+        ),
+        .target(
+            name: "SharedKit",
+            dependencies: []
         ),
         .testTarget(
             name: "AarKayTests",

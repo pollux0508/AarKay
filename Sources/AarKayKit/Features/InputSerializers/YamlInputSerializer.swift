@@ -16,7 +16,6 @@ public final class YamlInputSerializer: InputSerializable {
 
 extension YamlInputSerializer {
     public static func load(_ yaml: String) throws -> Any? {
-        // FIXME: - Error
         return try Yams.load(yaml: yaml)
     }
 }

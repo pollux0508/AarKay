@@ -11,12 +11,12 @@ import ReactiveSwift
 import ReactiveTask
 import Result
 
-/// A type that encapsulates all task events in AarKay.
+/// Type that encapsulates all task events in AarKay.
 class Tasks {
     /// Builds the `AarKayRunner` swift package.
     ///
     /// - Parameter path: The working directory path.
-    /// - Returns: A result containing either success or `AarKayError`
+    /// - Returns: A result containing either success or `AarKayError`.
     static func build(at path: String) -> Result<(), AarKayError> {
         let buildArguments = [
             "build", "-c", "debug",
@@ -30,10 +30,10 @@ class Tasks {
         return task.run()
     }
 
-    /// Updates the dependencies of `AarKayRunner` swift package
+    /// Updates the dependencies of `AarKayRunner` swift package.
     ///
     /// - Parameter path: The working directory path.
-    /// - Returns: A result containing either success or `AarKayError`
+    /// - Returns: A result containing either success or `AarKayError`.
     static func update(at path: String) -> Result<(), AarKayError> {
         let buildArguments = [
             "package",
@@ -52,7 +52,7 @@ class Tasks {
     /// Resolves the `AarKayRunner` swift packages with respect to Package.resolved.
     ///
     /// - Parameter path: The working directory path.
-    /// - Returns: A result containing either success or `AarKayError`
+    /// - Returns: A result containing either success or `AarKayError`.
     static func install(at path: String) -> Result<(), AarKayError> {
         let buildArguments = [
             "package",
@@ -72,8 +72,8 @@ class Tasks {
     ///
     /// - Parameter
     ///   - path: The path to execute as shell command.
-    ///   - arguments: The list of arguments
-    /// - Returns: A result containing either success or `AarKayError`
+    ///   - arguments: The list of arguments.
+    /// - Returns: A result containing either success or `AarKayError`.
     static func execute(at path: String, arguments: [String] = []) -> Result<(), AarKayError> {
         return Task(path, arguments: arguments).run()
     }

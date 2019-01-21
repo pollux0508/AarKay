@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedKit
 
 public struct Generatedfile {
     public let name: String

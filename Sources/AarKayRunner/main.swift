@@ -14,5 +14,9 @@ registry.register(HelpCommand(registry: registry))
 
 /// Setting the default command to `run`.
 registry.main(defaultVerb: "run") { error in
-    fputs(error.description + "\n", stderr)
+    if let description = error.errorDescription {
+        fputs(description + "\n", stderr)
+    } else {
+        fputs("", stderr)
+    }
 }

@@ -5,10 +5,10 @@
 //  Created by Rahul Katariya on 04/03/18.
 //
 
-import AarKayKit
 import Foundation
+import SharedKit
 
-/// Type that encapsulates creation of all files required by `AarKayRunner`.
+/// Responsible for creating files required by `AarKayRunner`.
 public struct Bootstrapper {
     /// The AarKayPaths
     let aarkayPaths: AarKayPaths

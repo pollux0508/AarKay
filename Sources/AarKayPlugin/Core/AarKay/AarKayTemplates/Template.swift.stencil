@@ -27,17 +27,6 @@ public class {{name}}: {% if base %}{{base}}{% else %}NSObject, Templatable{% en
         self.model = try self.datafile.dencode(type: {{name}}Model.self)
         {% if base %}try super.init(datafile: datafile){% endif %}
     }
-    {% if not base %}
-
-    public static func templates() -> [String] {
-        var templates: [String] = []
-        templates.append(#file)
-        /// <aarkay templates{{name}}>
-        /// </aarkay>
-        return templates
-    }
-    {% endif %}
-    
     {% if inputSerializer %}
 
     public static func inputSerializer(

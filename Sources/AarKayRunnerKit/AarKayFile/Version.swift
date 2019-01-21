@@ -7,19 +7,21 @@
 
 import Foundation
 
-/// Type that encapuslates semvar version specification
+/// A semantic version.
+/// - Note: See <http://semver.org/>
 struct Version {
     /// The major version.
     let major: Int
+
     /// The minor version.
     let minor: Int
+
     /// The patch version.
     let patch: Int
 
-    /// Constructs a version from a string
+    /// Initializes a version from a string.
     ///
-    /// - Parameter string: The version string.
-    /// - Throws: Parsing error.
+    /// - Parameter string: The string representing a version.
     init?(string: String) {
         let components = string
             .trimmingCharacters(in: .whitespacesAndNewlines)

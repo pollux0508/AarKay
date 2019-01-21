@@ -7,14 +7,14 @@
 
 import Foundation
 
-public struct Try<Value> {
+public struct Try<Value, Failure: Error> {
     private let block: () throws -> Value
 
     public init(block: @escaping () throws -> Value) {
         self.block = block
     }
 
-    public func catchMapError(_ mappedError: (Error) -> Error) throws -> Value {
+    public func catchMapError(_ mappedError: (Error) -> Failure) throws -> Value {
         do {
             return try block()
         } catch {

@@ -26,7 +26,7 @@ class VersionTypeSpec: QuickSpec {
 
                 versionMapping.forEach { string, description in
                     it("should pass") {
-                        let version = try? VersionType(string: string)
+                        let version = VersionType(string: string)
                         expect(version?.description()) == description
                     }
                 }
@@ -49,7 +49,7 @@ class VersionTypeSpec: QuickSpec {
 
                 failVersions.forEach { string in
                     it("should fail") {
-                        let version = try? VersionType(string: string)
+                        let version = VersionType(string: string)
                         expect(version).to(beNil())
                     }
                 }

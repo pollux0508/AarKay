@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedKit
 
 public enum Template {
     case name(String)
@@ -57,8 +58,14 @@ public struct Datafile {
             let decodedData = try JSONSerialization.data(withJSONObject: self.context)
             return try JSONDecoder().decode(type, from: decodedData) as T
         }.catchMapError { error in
-            AarKayError.invalidContents(
-                AarKayError.InvalidContentsReason.invalidModel
+            AarKayKitError.invalidContents(
+                AarKayKitError.InvalidContentsReason
+                    .invalidModel(
+                        fileName: fileName,
+                        template: template.name(),
+                        type: String(describing: T.self),
+                        context: context
+                    )
             )
         }
         return model
@@ -91,12 +98,18 @@ public struct Datafile {
                 options: .allowFragments
             )
         }.catchMapError { error in
-            AarKayError.invalidContents(
-                AarKayError.InvalidContentsReason.invalidModel
+            AarKayKitError.invalidContents(
+                AarKayKitError.InvalidContentsReason
+                    .invalidModel(
+                        fileName: self.fileName,
+                        template: self.template.name(),
+                        type: String(describing: T.self),
+                        context: self.context
+                    )
             )
         }
         guard let obj = object as? [String: Any] else {
-            throw AarKayError.internalError(
+            throw AarKayKitError.internalError(
                 "Could not decode collection from encoded data"
             )
         }

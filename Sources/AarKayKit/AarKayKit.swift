@@ -8,33 +8,29 @@
 import Foundation
 import Result
 
-public class AarKayKit {
+public struct AarKayKit {
     let plugin: String
     let globalContext: [String: Any]?
     let globalTemplates: [URL]?
     let fileManager: FileManager
-    var aarkayService: AarKayService
+    var aarkayService: AarKayService!
 
     public init(
         plugin: String,
         globalContext: [String: Any]?,
         globalTemplates: [URL]?,
         fileManager: FileManager = FileManager.default
-    ) {
+    ) throws {
         self.plugin = plugin
         self.globalContext = globalContext
         self.globalTemplates = globalTemplates
         self.fileManager = fileManager
-        let aarkayService = AarKayProvider(
+        self.aarkayService = AarKayProvider(
             datafileService: DatafileProvider(),
             generatedfileService: GeneratedfileProvider(
-//                aarkayTemplates: AarKayTemplates(
-//                    templatefiles: Templatefiles,
-//                    fileManager: fileManager
-//                )
+                templatesService: try templatefiles(plugin: plugin)
             )
         )
-        self.aarkayService = aarkayService
     }
 }
 
@@ -57,18 +53,6 @@ extension AarKayKit {
                 contents: contents
             )
         } else {
-            guard let globalTempaltes = globalTemplates else {
-                throw AarKayError.invalidTemplate(
-                    AarKayError.InvalidTemplateReason.notFound
-                )
-            }
-            let templatesUrls = try templates(urls: globalTempaltes)
-            
-            let templatefiles = Templatefiles(
-                urls: globalTempaltes,
-                files: templatesUrls
-            )
-
             let datafiles = try aarkayService.datafileService.serialize(
                 plugin: plugin,
                 name: name,
@@ -79,7 +63,6 @@ extension AarKayKit {
             )
 
             return aarkayService.generatedfileService.generatedfiles(
-                templatefiles: templatefiles,
                 datafiles: datafiles,
                 globalContext: globalContext
             )
@@ -93,18 +76,6 @@ extension AarKayKit {
         template: String,
         contents: String
     ) throws -> [Result<Generatedfile, AnyError>] {
-        let templatesDir = try templatesDirectory(urls: templateClass.templates())
-        let templatesUrls = try templates(urls: templatesDir)
-        let templatefiles = Templatefiles(
-            urls: templatesDir,
-            files: templatesUrls
-        )
-        
-        aarkayService.generatedfileService.aarkayTemplates = try AarKayTemplates(
-            templatefiles: templatefiles,
-            fileManager: fileManager
-        )
-        
         let datafiles = try aarkayService.datafileService.serialize(
             plugin: plugin,
             name: name,
@@ -143,7 +114,6 @@ extension AarKayKit {
             }
 
         return aarkayService.generatedfileService.generatedfiles(
-            templatefiles: templatefiles,
             datafiles: templateDatafiles,
             globalContext: globalContext
         )
@@ -153,48 +123,38 @@ extension AarKayKit {
 // MARK: - Private Helpers
 
 extension AarKayKit {
-    fileprivate func templatesDirectory(urls: [String]) throws -> [URL] {
-        return try urls.map {
-            var url = URL(fileURLWithPath: $0)
-            while url.lastPathComponent != "Sources" {
-                if url.lastPathComponent == "/" {
-                    throw AarKayError.internalError(
-                        "Incorrect plugin structure at \($0)"
-                    )
-                }
-                url = url.deletingLastPathComponent()
-            }
-            url = url
-                .deletingLastPathComponent()
-                .appendingPathComponent(
-                    "AarKay/AarKayTemplates",
-                    isDirectory: true
+    private func templatefiles(plugin: String) throws -> TemplateService {
+        var templateServiceClass: TemplateService.Type = StencilProvider.self
+        var templatefiles: Templatefiles!
+        if let plugable = NSClassFromString("\(plugin).\(plugin)") as? Plugable.Type {
+            templatefiles = try Templatefiles(
+                plugin: plugin,
+                templatesDir: plugable.templates().map { URL(fileURLWithPath: $0) },
+                fileManager: fileManager
+            )
+            templateServiceClass = plugable.templateService()
+        } else if let plugable = NSClassFromString("aarkay_plugin_\(plugin.lowercased()).\(plugin)") as? Plugable.Type {
+            templatefiles = try Templatefiles(
+                plugin: plugin,
+                templatesDir: plugable.templates().map { URL(fileURLWithPath: $0) },
+                fileManager: fileManager
+            )
+            templateServiceClass = plugable.templateService()
+        } else {
+            guard let templates = globalTemplates else {
+                throw AarKayKitError.invalidTemplate(
+                    AarKayKitError.InvalidTemplateReason
+                        .templatesNil(name: plugin)
                 )
-            if url.path.hasPrefix("/tmp") {
-                print("[OLD]", url.absoluteString)
-                let pathComponents = Array(url.pathComponents.dropFirst().dropFirst())
-                let newPath = "/" + pathComponents.joined(separator: "/")
-                url = URL(fileURLWithPath: newPath, isDirectory: true)
-                print("[NEW]", url.absoluteString)
             }
-            return url
+            templatefiles = try Templatefiles(
+                plugin: plugin,
+                templatesDir: templates,
+                fileManager: fileManager
+            )
         }
-    }
-    
-    fileprivate func templates(urls: [URL]) throws -> [String: [URL]] {
-        let templates = try fileManager.subFiles(at: urls)
-            .filter { !$0.lastPathComponent.hasPrefix(".") }
-            .reduce(Dictionary<String, [URL]>()) { initial, item in
-                let templateFile = try Templatefile(name: item.lastPathComponent)
-                guard initial[templateFile.template] == nil else {
-                    throw AarKayError.invalidTemplate(
-                        AarKayError.InvalidTemplateReason.mutipleFound
-                    )
-                }
-                var initial = initial
-                initial[templateFile.template] = [item]
-                return initial
-        }
-        return templates
+        return try templateServiceClass.init(
+            templatefiles: templatefiles
+        )
     }
 }

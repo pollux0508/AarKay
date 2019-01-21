@@ -27,12 +27,15 @@ struct InitCommand: CommandProtocol {
         let url = AarKayPaths.default.directoryPath(global: options.global)
         let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
         if FileManager.default.fileExists(atPath: runnerUrl.path) && !options.force {
-            return .failure(.projectAlreadyExists(url.path))
+            return .failure(.projectAlreadyExists(url: url))
         } else {
             do {
-                try Bootstrapper.default.bootstrap(global: options.global, force: options.force)
+                try Bootstrapper.default.bootstrap(
+                    global: options.global,
+                    force: options.force
+                )
             } catch {
-                return .failure(error)
+                return .failure(error as! AarKayError)
             }
             let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
             println("Setting up at \(url.path). This might take a few minutes...")

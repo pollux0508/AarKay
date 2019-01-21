@@ -8,6 +8,7 @@
 import AarKayKit
 import AarKayRunnerKit
 import Foundation
+import SharedKit
 
 /// Represents an AarKay Project.
 public class AarKay {
@@ -20,20 +21,20 @@ public class AarKay {
     /// The global.
     let global: AarKayGlobal
 
-    /// The file manager.
+    /// The FileManager.
     let fileManager: FileManager
 
-    /// The data files url relative to the project url.
+    /// The datafiles url relative to the project url.
     lazy var aarkayFilesUrl: URL = {
         url.appendingPathComponent("AarKay/AarKayData", isDirectory: true)
     }()
 
-    /// The template files url relative to the project url.
+    /// The templatefiles url relative to the project url.
     lazy var aarkayTemplatesUrl: URL = {
         url.appendingPathComponent("AarKay/AarKayTemplates", isDirectory: true)
     }()
 
-    /// Constructs an `AarKay` project.
+    /// Initializes an `AarKay` project.
     ///
     /// - Parameters:
     ///   - url: The url of project directory where files will be generated.
@@ -47,12 +48,12 @@ public class AarKay {
         self.url = url
         self.options = options
         self.fileManager = fileManager
-        self.global = AarKayGlobal(url: url)
+        self.global = AarKayGlobal(url: url, fileManager: fileManager)
     }
 
     /// Bootstrap files generation process.
     public func bootstrap() {
-        /// Log the url and AarkayFiles url.
+        /// Log the url and AarKayFiles url.
         AarKayLogger.logTable(url: url, datafilesUrl: aarkayFilesUrl)
 
         /// Log if the AarKayFiles directory is empty.
@@ -108,21 +109,20 @@ public class AarKay {
         globalContext: [String: Any]? = nil
     ) {
         let plugin = pluginUrl.lastPathComponent
-
-        let aarkayKit = AarKayKit(
-            plugin: plugin,
-            globalContext: globalContext,
-            globalTemplates: templateUrls
-        )
-
-        /// Create directory tree mirror with source as the AarKayFiles url and destination as the project url.
-        let dirTreeMirror = DirTreeMirror(
-            sourceUrl: pluginUrl,
-            destinationUrl: url,
-            fileManager: fileManager
-        )
-
         do {
+            let aarkayKit = try AarKayKit(
+                plugin: plugin,
+                globalContext: globalContext,
+                globalTemplates: templateUrls
+            )
+
+            /// Create directory tree mirror with source as the AarKayFiles url and destination as the project url.
+            let dirTreeMirror = DirTreeMirror(
+                sourceUrl: pluginUrl,
+                destinationUrl: url,
+                fileManager: fileManager
+            )
+
             let mirrorUrls = try Try {
                 try dirTreeMirror.bootstrap()
             }.catchMapError { error in

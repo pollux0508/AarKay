@@ -9,7 +9,7 @@
 import AarKayKit
 import Foundation
 
-class PLUGINNAME: Plugable {
+class AarKayPlugin: Plugable {
     static func templates() -> [String] {
         return [#file]
     }

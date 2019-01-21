@@ -7,6 +7,7 @@
 
 import Foundation
 import Result
+import SharedKit
 
 struct DatafileProvider: DatafileService {
     func serialize(
@@ -20,14 +21,15 @@ struct DatafileProvider: DatafileService {
         let context = try Try {
             try serializer.context(contents: contents)
         }.catchMapError { _ in
-            AarKayError.invalidContents(
-                AarKayError.InvalidContentsReason.serializationFailed
+            AarKayKitError.invalidContents(
+                AarKayKitError.InvalidContentsReason
+                    .serializationFailed
             )
         }
         if name.isCollection {
             guard let contextArray = context as? [[String: Any]] else {
-                throw AarKayError.invalidContents(
-                    AarKayError.InvalidContentsReason.arrayExpected
+                throw AarKayKitError.invalidContents(
+                    AarKayKitError.InvalidContentsReason.arrayExpected
                 )
             }
             return datafiles(
@@ -38,8 +40,8 @@ struct DatafileProvider: DatafileService {
             )
         } else {
             guard let context = context as? [String: Any] else {
-                throw AarKayError.invalidContents(
-                    AarKayError.InvalidContentsReason.objectExpected
+                throw AarKayKitError.invalidContents(
+                    AarKayKitError.InvalidContentsReason.objectExpected
                 )
             }
             let df = datafile(
@@ -94,8 +96,8 @@ extension DatafileProvider {
         return contextArray.map { context -> Result<Datafile, AnyError> in
             Result<Datafile, AnyError> {
                 guard let fileName = context.fileName() ?? context.name() else {
-                    throw AarKayError.invalidContents(
-                        AarKayError.InvalidContentsReason.missingFileName
+                    throw AarKayKitError.invalidContents(
+                        AarKayKitError.InvalidContentsReason.missingFileName
                     )
                 }
                 return datafile(

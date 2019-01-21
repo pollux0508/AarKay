@@ -7,13 +7,13 @@
 
 import Foundation
 
-func + <T, U>(lhs: [T: U]?, rhs: [T: U]?) -> [T: U]? {
+public func + <T, U>(lhs: [T: U]?, rhs: [T: U]?) -> [T: U]? {
     guard let lhs = lhs else { return rhs }
     guard let rhs = rhs else { return lhs }
     return lhs + rhs
 }
 
-func + <T, U>(lhs: [T: U], rhs: [T: U]) -> [T: U] {
+public func + <T, U>(lhs: [T: U], rhs: [T: U]) -> [T: U] {
     var merged = lhs
     for (key, val) in rhs {
         merged[key] = val

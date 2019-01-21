@@ -38,7 +38,9 @@ struct RunCommand: CommandProtocol {
 
         guard FileManager.default.fileExists(atPath: runnerUrl.path),
             FileManager.default.fileExists(atPath: cliUrl.path) else {
-            return .failure(.missingProject(runnerUrl.deletingLastPathComponent().path))
+            return .failure(
+                AarKayError.missingProject(url: runnerUrl.deletingLastPathComponent())
+            )
         }
 
         var arguments: [String] = []

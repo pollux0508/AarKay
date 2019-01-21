@@ -8,7 +8,7 @@
 import Foundation
 
 extension String {
-    func capturedGroups(withRegex pattern: String) -> [[Range<String.Index>]]? {
+    public func capturedGroups(withRegex pattern: String) -> [[Range<String.Index>]]? {
         var regex: NSRegularExpression
         do {
             regex = try NSRegularExpression(pattern: pattern, options: [])

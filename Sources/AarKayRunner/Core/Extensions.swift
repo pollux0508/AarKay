@@ -61,7 +61,7 @@ extension String {
 }
 
 extension Task {
-    /// Launches the task and converts the task data to string.
+    /// Launches the task and prints the output.
     ///
     /// - Returns: A result containing either success or `AarKayError`
     internal func run() -> Result<(), AarKayError> {

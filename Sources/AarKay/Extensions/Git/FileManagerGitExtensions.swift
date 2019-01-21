@@ -5,7 +5,7 @@
 //  Created by RahulKatariya on 01/01/19.
 //
 
-import AarKayKit
+import AarKayRunnerKit
 import Foundation
 
 extension FileManager: GitExtensionsProvider {}
@@ -17,11 +17,12 @@ extension Git where Base == FileManager {
     /// - Returns: False if the directory is dirty otherwise true.
     /// - Throws: An error if url contents return nil.
     func isDirty(url: URL) throws -> Bool {
-        let contents = try Try {
-            try self.base.contentsOfDirectory(atPath: url.path)
+        var contents: [String]!
+        do {
+            contents = try base.contentsOfDirectory(atPath: url.path)
                 .filter { $0 != ".DS_Strore" }
-        }.catchMapError { error in
-            AarKayError.internalError(
+        } catch {
+            throw AarKayError.internalError(
                 "Failed to fetch contents of directory at \(url.absoluteString)",
                 with: error
             )

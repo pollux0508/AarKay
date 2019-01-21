@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Type that encapuslates the type of version with respect to Package.swift version spec.
+/// A type encapsulating the type of version with respect to Package.swift version spec.
 ///
 /// - exact: Returned when the version string is exact.
 /// - upToNextMajor: Returend when the version has prefix '>'.
@@ -21,10 +21,9 @@ enum VersionType {
     case branch(String)
     case revision(String)
 
-    /// Initializes the type of version.
+    /// Initializes the type of version with respect to Package.swift.
     ///
-    /// - Parameter string: The string representing the version
-    /// - Throws: Parsing errors.
+    /// - Parameter string: The string representing a version.
     init?(string: String) {
         let str = string.trimmingCharacters(in: .whitespacesAndNewlines)
         if str.hasPrefix("b-") {

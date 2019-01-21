@@ -5,39 +5,50 @@
 //  Created by RahulKatariya on 04/01/19.
 //
 
-import AarKayKit
 import Foundation
 
-/// Represents the plugin dependency file.
+/// Represents the AarKayFile, which is a specification of a project's plugin dependencies.
 public struct AarKayFile {
-    /// The dependencies
+    /// Any dependency that starts this character is skipped.
+    static let commentIndicator = "#"
+
+    /// The dependencies listed in the AarKayFile.
     public let dependencies: [Dependency]
 
-    /// Initializes the dependencies.
+    /// Initializes the AarKayFile with all its plugin dependencies.
     ///
-    /// - Parameter contents: The string containing all dependencies seperated by newlines.
-    /// - Throws: Parsing error.
+    /// - Parameter
+    ///   - url: The location of AarKayFile.
+    ///   - fileManager: The file manager.
+    /// - Throws: Errors related to reading AarKayFile.
     public init(url: URL, fileManager: FileManager) throws {
         guard fileManager.fileExists(atPath: url.path) else {
             throw AarKayError.aarkayFileParsingFailed(
-                reason: AarKayError.AarKayFileParsingReason.missingFile(url)
+                reason: AarKayError.AarKayFileParsingReason.missingFile(url: url)
             )
         }
-        let contents = try Try {
-            try String(contentsOf: url)
-        }.catchMapError { error in
-            AarKayError.internalError(
+        var contents: String!
+        do {
+            contents = try String(contentsOf: url)
+        } catch {
+            throw AarKayError.internalError(
                 "Failed to fetch contents of \(url)", with: error
             )
         }
         let lines = contents.components(separatedBy: .newlines).filter { !$0.isEmpty }
-        dependencies = try lines.map { try Dependency(string: $0) }
+        dependencies = try lines.filter {
+            $0.trimmingCharacters(in: .whitespaces).hasPrefix(
+                AarKayFile.commentIndicator
+            )
+        }
+        .map { try Dependency(string: $0) }
         let hasAarKay = dependencies
             .map { $0.targetDescription() }
             .contains("\"AarKay\",")
         guard hasAarKay else {
             throw AarKayError.aarkayFileParsingFailed(
-                reason: AarKayError.AarKayFileParsingReason.missingAarKayDependency(url)
+                reason: AarKayError.AarKayFileParsingReason
+                    .missingAarKayDependency(url: url)
             )
         }
     }

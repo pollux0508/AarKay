@@ -5,17 +5,17 @@
 //  Created by RahulKatariya on 06/01/19.
 //
 
-import AarKayKit
 import Foundation
 
-/// Type that encapsulates a single dependency with respect to Package.swift.
+/// Represents a plugin dependency for AarKay.
 public struct Dependency {
     /// The url of dependency.
     let url: URL
+
     /// The version type.
     let version: VersionType
 
-    /// Initializes the dependency object.
+    /// Initializes the AarKay plugin dependency.
     ///
     /// - Parameter string: The string with url and version.
     /// - Throws: Parsing error.
@@ -24,7 +24,8 @@ public struct Dependency {
         guard comps.count == 2,
             let url = URL(string: comps[0].trimmingCharacters(in: .whitespacesAndNewlines)) else {
             throw AarKayError.aarkayFileParsingFailed(
-                reason: AarKayError.AarKayFileParsingReason.invalidDependency(string)
+                reason: AarKayError.AarKayFileParsingReason
+                    .invalidUrl(dependency: string)
             )
         }
         self.url = url
@@ -32,7 +33,8 @@ public struct Dependency {
             string: comps[1].trimmingCharacters(in: .whitespacesAndNewlines)
         ) else {
             throw AarKayError.aarkayFileParsingFailed(
-                reason: AarKayError.AarKayFileParsingReason.invalidVersion(string)
+                reason: AarKayError.AarKayFileParsingReason
+                    .invalidVersion(dependency: string)
             )
         }
         self.version = version
@@ -45,7 +47,7 @@ public struct Dependency {
         return ".package(url: \"\(path)\", \(version.description())),"
     }
 
-    /// - Returns: Returns the name of the target.
+    /// - Returns: Returns the name of the target for Package.swift.
     public func targetDescription() -> String {
         var url = self.url
         if url.absoluteString.hasSuffix(".git") { url = url.deletingPathExtension() }

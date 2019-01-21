@@ -27,7 +27,9 @@ struct InstallCommand: CommandProtocol {
         let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
 
         guard FileManager.default.fileExists(atPath: runnerUrl.path) else {
-            return .failure(.missingProject(runnerUrl.deletingLastPathComponent().path))
+            return .failure(
+                .missingProject(url: runnerUrl.deletingLastPathComponent())
+            )
         }
 
         do {
@@ -36,7 +38,7 @@ struct InstallCommand: CommandProtocol {
                 force: options.force
             )
         } catch {
-            return .failure(error)
+            return .failure(error as! AarKayError)
         }
         println("Installing plugins at \(runnerUrl.path). This might take a few minutes...")
         return Tasks.install(at: runnerUrl.path)

@@ -10,7 +10,7 @@ import PrettyColors
 typealias PrettyColor = PrettyColors.Color.Named.Color
 
 extension PrettyColor {
-    /// Wraps the string with self color.
+    /// Wraps the string with the color.
     ///
     /// - Parameter string: The string to color.
     /// - Returns: The colored string.

@@ -4,14 +4,16 @@ import ReactiveTask
 /// A type encapsulating all errors related to `AarKay` commands.
 ///
 /// - unknownError: Returned when the program reaches an unexpected state.
+/// - globalContextReadFailed: Returned when unable to read the global context.
 /// - projectAlreadyExists: Returned when init is tried on the project that already exists.
 /// - missingProject: Returned when the project doesn't exist.
 /// - aarkayFileParsingFailed: Returned when the AarKayFile parsing fails.
 /// - taskError: Returned when the task fails.
 public enum AarKayError: Error {
     case unknownError(error: Error?)
-    case projectAlreadyExists(String)
-    case missingProject(String)
+    case globalContextReadFailed(url: URL)
+    case projectAlreadyExists(url: URL)
+    case missingProject(url: URL)
     case aarkayFileParsingFailed(reason: AarKayFileParsingReason)
     case taskError(TaskError)
 
@@ -22,10 +24,10 @@ public enum AarKayError: Error {
     /// - invalidVersion: Returned if the version is in invalid format.
     /// - invalidDependency: Returned if the dependency is in invalid format.
     public enum AarKayFileParsingReason {
-        case missingFile(URL)
-        case missingAarKayDependency(URL)
-        case invalidVersion(String)
-        case invalidDependency(String)
+        case missingFile(url: URL)
+        case missingAarKayDependency(url: URL)
+        case invalidVersion(dependency: String)
+        case invalidUrl(dependency: String)
     }
 }
 
@@ -54,10 +56,12 @@ extension AarKayError: LocalizedError {
                 desc = desc + "- " + err.localizedDescription
             }
             return desc
-        case .projectAlreadyExists(let path):
-            return "Project already exists at \(path). Use `--force` to start over."
-        case .missingProject(let path):
-            return "AarKay is not yet setup at \(path). Use `aarkay init [--global]` to setup."
+        case .globalContextReadFailed(let url):
+            return "Failed to serialize the contents of \(url.absoluteString) to an object."
+        case .projectAlreadyExists(let url):
+            return "Project already exists at \(url.absoluteString). Use `--force` to start over."
+        case .missingProject(let url):
+            return "AarKay is not yet setup at \(url.absoluteString). Use `aarkay init [--global]` to setup."
         case .aarkayFileParsingFailed(let reason):
             return reason.localizedDescription
         case .taskError(let error):
@@ -70,13 +74,13 @@ extension AarKayError.AarKayFileParsingReason {
     public var localizedDescription: String {
         switch self {
         case .missingFile(let url):
-            return "AarKayFile was missing at url - \(url.path)."
+            return "AarKayFile was missing at the url - \(url.absoluteString)."
         case .missingAarKayDependency(let url):
-            return "Could not find the dependency - http://github.com/RahulKatariya/AarKay, ~> \(AarKayVersion) at \(url)."
-        case .invalidVersion(let version):
-            return "Version - \(version) could not be validated."
-        case .invalidDependency(let dependency):
-            return "Dependency - \(dependency) could not be validated."
+            return "Could not find the dependency - http://github.com/RahulKatariya/AarKay, ~> \(AarKayVersion) at \(url.absoluteString)."
+        case .invalidVersion(let dependency):
+            return "Version could not be validated for \(dependency) ."
+        case .invalidUrl(let dependency):
+            return "URL could not be validated for \(dependency)."
         }
     }
 }

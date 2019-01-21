@@ -8,7 +8,7 @@ import Foundation
 /// - templateNotFound: Returned when the template could not be found.
 /// - multipleTemplatesFound: Returned when multiple templates exist under same name.
 /// - invalidTemplate: Returned when the name of template doesn't conform to AarKayTemplate.
-public enum AarKayError: Error {
+public enum AarKayKitError: Error {
     case unknownError(error: Error?)
     case invalidContents(InvalidContentsReason)
     case invalidTemplate(InvalidTemplateReason)
@@ -24,39 +24,46 @@ public enum AarKayError: Error {
         case serializationFailed
         case objectExpected
         case arrayExpected
-        case invalidModel
+        case invalidModel(
+            fileName: String,
+            template: String,
+            type: String,
+            context: [String: Any]
+        )
         case missingFileName
     }
 
     /// The underlying reason the invalid templates error occurred.
     ///
+    /// - templatesNil: Returned when there are no templates for the plugin.
     /// - mutipleFound: Returned when there are more than one template with the same name.
     /// - notFound: Returned when there is no template with that name.
     /// - invalidName: Returned when the template name is invalid.
     public enum InvalidTemplateReason {
-        case mutipleFound
-        case notFound
-        case invalidName
+        case templatesNil(name: String)
+        case mutipleFound(name: String)
+        case notFound(name: String)
+        case invalidName(name: String)
     }
 }
 
-extension AarKayError {
+extension AarKayKitError {
     public static func internalError(
         _ message: String,
         with error: Error? = nil,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> AarKayError {
+    ) -> AarKayKitError {
         /// <aarkay internalError>
         assertionFailure("\(file):\(line) - \(message). \(error.debugDescription)")
         /// </aarkay>
-        return AarKayError.unknownError(error: error)
+        return AarKayKitError.unknownError(error: error)
     }
 }
 
 // MARK: - LocalizedError
 
-extension AarKayError: LocalizedError {
+extension AarKayKitError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .unknownError(let error):
@@ -73,7 +80,7 @@ extension AarKayError: LocalizedError {
     }
 }
 
-extension AarKayError.InvalidContentsReason: LocalizedError {
+extension AarKayKitError.InvalidContentsReason: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .serializationFailed:
@@ -82,23 +89,25 @@ extension AarKayError.InvalidContentsReason: LocalizedError {
             return "Expected an array."
         case .objectExpected:
             return "Expected an object."
-        case .invalidModel:
-            return "The data doesn't conform to the Template."
+        case .invalidModel(let fileName, let template, let type, let context):
+            return "The data for fileName - (\(fileName)) and template (\(template)) could not be serailzied to type - (\(type))\nContext :- \(context)"
         case .missingFileName:
-            return "Couldn't resolve filename."
+            return "Failed to resolve filename."
         }
     }
 }
 
-extension AarKayError.InvalidTemplateReason: LocalizedError {
+extension AarKayKitError.InvalidTemplateReason: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .mutipleFound:
-            return "Mutliple templates found"
-        case .notFound:
-            return "Could not find the template"
-        case .invalidName:
-            return "The template of the template is wrong"
+        case .templatesNil(let plugin):
+            return "Could not find templates for plugin - \(plugin)"
+        case .mutipleFound(let name):
+            return "Mutliple templates found with name - \(name)"
+        case .notFound(let name):
+            return "Could not find the template with name - \(name)"
+        case .invalidName(let name):
+            return "Could not resolve template with name - \(name)"
         }
     }
 }

@@ -5,15 +5,17 @@
 //  Created by RahulKatariya on 21/01/19.
 //
 
-import AarKayKit
 import AarKayRunnerKit
 import Foundation
 import Yams
 
 /// A type encapsulating the global properties of AarKay.
 struct AarKayGlobal {
-    /// The project url.
+    /// The location of AarKay project.
     let url: URL
+    
+    /// The FileManager.
+    let fileManager: FileManager
 
     /// Creates the global templates directory path.
     ///
@@ -38,13 +40,14 @@ struct AarKayGlobal {
     /// - Throws: An error if the url contents cannot be loaded.
     func context() throws -> [String: Any]? {
         let aarkayGlobalContextUrl = url.appendingPathComponent("AarKay/.aarkay")
-        guard FileManager.default.fileExists(atPath: aarkayGlobalContextUrl.path) else {
+        guard fileManager.fileExists(atPath: aarkayGlobalContextUrl.path) else {
             return nil
         }
-        let contents = try Try {
-            try String(contentsOf: aarkayGlobalContextUrl)
-        }.catchMapError { error in
-            AarKayError.internalError(
+        var contents: String!
+        do {
+            contents = try String(contentsOf: aarkayGlobalContextUrl)
+        } catch {
+            throw AarKayError.internalError(
                 "Failed to read the contents of \(aarkayGlobalContextUrl)",
                 with: error
             )

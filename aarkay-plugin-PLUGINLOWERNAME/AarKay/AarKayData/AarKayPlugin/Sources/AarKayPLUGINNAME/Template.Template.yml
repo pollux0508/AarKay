@@ -1,4 +1,4 @@
-name: {{ cookiecutter.name }}
+name: Template
 isTemplate: true
 properties:
   - name|String

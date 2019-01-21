@@ -7,45 +7,10 @@
 //
 
 import AarKayKit
-import AarKayPlugin
 import Foundation
 
-public class {{ cookiecutter.name }}: NSObject, Templatable {
-    public var datafile: Datafile
-    private var model: {{ cookiecutter.name }}Model
-
-    public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: {{ cookiecutter.name }}Model.self)
-    }
-
-    public static func templates() -> [String] {
-        var templates: [String] = []
-        templates.append(#file)
-        /// <aarkay templates{{ cookiecutter.name }}>
-        /// </aarkay>
-        return templates
-    }
-}
-
-public class {{ cookiecutter.name }}Model: Codable {
-    public var name: String
-
-    private enum CodingKeys: String, CodingKey {
-        case name
-    }
-
-    public init(name: String) {
-        self.name = name
-    }
-
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.name = try container.decode(String.self, forKey: .name)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(name, forKey: .name)
+class {{ cookiecutter.name }}: Pluggable {
+    static func templates() -> [String] {
+        return [#file]
     }
 }

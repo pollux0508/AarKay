@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedKit
 
 extension FileManager {
     public func subDirectories(at url: URL) throws -> [URL] {
@@ -36,7 +37,7 @@ extension FileManager {
         if fileExists(atPath: url.path, isDirectory: &isDir) {
             return isDir.boolValue
         } else {
-            throw AarKayError.internalError(
+            throw AarKayKitError.internalError(
                 "File doesn't exist at \(url.absoluteString)"
             )
         }
@@ -44,13 +45,13 @@ extension FileManager {
         return try Try {
             let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
             guard let isDir = resourceValues.isDirectory else {
-                throw AarKayError.internalError(
+                throw AarKayKitError.internalError(
                     "Failed to fetch isDirectory for \(url.absoluteString)"
                 )
             }
             return isDir
         }.catchMapError { error in
-            AarKayError.internalError(
+            AarKayKitError.internalError(
                 "Failed to fetch resourceValues for \(url.absoluteString)",
                 with: error
             )
@@ -66,7 +67,7 @@ extension FileManager {
         guard let enumerator = self.enumerator(
             at: url, includingPropertiesForKeys: [.isDirectoryKey]
         ) else {
-            throw AarKayError.internalError(
+            throw AarKayKitError.internalError(
                 "Failed to create directory enumerator at \(url.absoluteString)"
             )
         }

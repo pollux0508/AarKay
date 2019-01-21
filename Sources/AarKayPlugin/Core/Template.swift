@@ -17,14 +17,6 @@ public class Template: NSObject, Templatable {
         self.datafile = datafile
         self.model = try self.datafile.dencode(type: TemplateModel.self)
     }
-
-    public static func templates() -> [String] {
-        var templates: [String] = []
-        templates.append(#file)
-        /// <aarkay templatesTemplate>
-        /// </aarkay>
-        return templates
-    }
 }
 
 public class TemplateModel: Codable {

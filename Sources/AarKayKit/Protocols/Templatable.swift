@@ -13,7 +13,6 @@ public protocol Templatable: class {
     init(datafile: Datafile) throws
     func datafiles() throws -> [Datafile]
 
-    static func templates() -> [String]
     static func inputSerializer() -> InputSerializable
 }
 
