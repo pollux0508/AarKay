@@ -67,7 +67,7 @@ extension AarKayKit {
                                 .templateDatafiles(
                                     datafile: value,
                                     templateClass: templateClass
-                            )
+                                )
                         }
                         switch res {
                         case .success(let files):
@@ -84,8 +84,8 @@ extension AarKayKit {
                     var results: [Result<Datafile, AnyError>] = initial
                     next.forEach { results.append($0) }
                     return results
-            }
-            
+                }
+
             return aarkayService.generatedfileService.generatedfiles(
                 datafiles: templateDatafiles,
                 globalContext: pluginfile.globalContext

@@ -1,5 +1,5 @@
 #!/bin/bash
 
 set -e
-shasum=`shasum -a 256 -b AarKay-v$1.zip | awk '{print $1}'`
-brew bump-formula-pr --url="https://github.com/RahulKatariya/AarKay/releases/download/v$1/AarKay-v$1.zip" --sha256=$shasum --version="$1" --message="Release v$1 🎉" -n
+shasum=`shasum -a 256 -b AarKay-$1.zip | awk '{print $1}'`
+brew bump-formula-pr --url="https://github.com/RahulKatariya/AarKay/releases/download/$1/AarKay-$1.zip" --sha256=$shasum --version="$1" --message="Release v$1 🎉" -n

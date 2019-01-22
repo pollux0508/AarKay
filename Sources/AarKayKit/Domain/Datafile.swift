@@ -110,7 +110,7 @@ public struct Datafile {
         }
         guard let obj = object as? [String: Any] else {
             throw AarKayKitError.internalError(
-                "Could not decode collection from encoded data"
+                "Failed to decode object from encoded data"
             )
         }
         if let context = context {

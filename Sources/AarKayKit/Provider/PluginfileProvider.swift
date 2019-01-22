@@ -9,7 +9,7 @@ import Foundation
 
 struct PluginfileProvider: PluginfileService {
     let pluginfile: Pluginfile
-    
+
     func templatefiles(fileManager: FileManager) throws -> TemplateService {
         if let templateService = try templateService(
             plugin: pluginfile.name,
@@ -52,7 +52,7 @@ extension PluginfileProvider {
             templatefiles: templatefiles
         )
     }
-    
+
     private func plugableClass(
         plugin: String
     ) -> Plugable.Type? {

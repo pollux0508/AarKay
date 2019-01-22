@@ -10,7 +10,6 @@ import Result
 import SharedKit
 
 struct DatafileProvider: DatafileService {
-
     func templateClass(
         plugin: String,
         template: String

@@ -97,13 +97,13 @@ extension AarKayKitError.InvalidTemplateReason: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .templatesNil(let plugin):
-            return "Could not find templates for plugin - \(plugin)"
+            return "Failed to find templates for plugin - \(plugin)"
         case .mutipleFound(let name):
             return "Mutliple templates found with name - \(name)"
         case .notFound(let name):
-            return "Could not find the template with name - \(name)"
+            return "Failed to find the template with name - \(name)"
         case .invalidName(let name):
-            return "Could not resolve template with name - \(name)"
+            return "Failed to resolve template with name - \(name)"
         }
     }
 }
