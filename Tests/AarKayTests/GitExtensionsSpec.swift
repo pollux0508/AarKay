@@ -14,7 +14,10 @@ class GitExtensionsSpec: QuickSpec {
     override func spec() {
         let fileManager = FileManager.default
         let fixturesUrl = URL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent("me.rahulkatariya.AarKay/fixtures")
+            .appendingPathComponent(
+                "me.rahulkatariya.AarKay",
+                isDirectory: true
+            )
 
         beforeEach {
             try? fileManager.removeItem(at: fixturesUrl)

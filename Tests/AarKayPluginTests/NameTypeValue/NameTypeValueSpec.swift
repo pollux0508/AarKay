@@ -23,7 +23,7 @@ class NameTypeValueSpec: QuickSpec {
                         types: types,
                         value: string
                     ).toDictionary()
-                    
+
                     expect((ntv["bool"] as! Bool)).to(equal(true))
                     expect((ntv["int"] as! Int)).to(equal(2))
                     expect((ntv["string"] as! String)).to(equal("someString"))
@@ -32,7 +32,7 @@ class NameTypeValueSpec: QuickSpec {
                     expect((ntv["float"] as! Float)).to(equal(10.01))
                 }.toNot(throwError())
             }
-            
+
             it("should throw error for unknown types") {
                 expect { () -> Void in
                     let string = "1||someString|fail"
@@ -43,7 +43,7 @@ class NameTypeValueSpec: QuickSpec {
                         types: types,
                         value: string
                     ).toDictionary()
-                    
+
                     expect((ntv["bool"] as! Bool)).to(equal(true))
                     expect((ntv["int"])).to(beNil())
                     expect((ntv["string"] as! String)).to(equal("someString"))
@@ -54,7 +54,6 @@ class NameTypeValueSpec: QuickSpec {
                         )
                     )
                 )
-                
             }
         }
     }

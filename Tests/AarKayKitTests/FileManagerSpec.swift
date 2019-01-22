@@ -14,7 +14,10 @@ class FileManagerSpec: QuickSpec {
     override func spec() {
         let fileManager = FileManager.default
         let fixturesUrl = URL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent("AarKay")
+            .appendingPathComponent(
+                "me.rahulkatariya.AarKay",
+                isDirectory: true
+            )
 
         let paths = [
             "Folder1/File.txt",
@@ -50,19 +53,15 @@ class FileManagerSpec: QuickSpec {
 
         describe("Temproray Directory") {
             it("should have 8 folders") {
-                let url = URL(fileURLWithPath: NSTemporaryDirectory())
-                    .appendingPathComponent("AarKay")
                 expect { () -> Void in
-                    let files = try FileManager.default.subDirectories(at: [url])
+                    let files = try FileManager.default.subDirectories(at: [fixturesUrl])
                     expect(files.count) == 8
                 }.toNot(throwError())
             }
 
             it("should have 4 files") {
-                let url = URL(fileURLWithPath: NSTemporaryDirectory())
-                    .appendingPathComponent("AarKay")
                 expect { () -> Void in
-                    let files = try FileManager.default.subFiles(at: [url])
+                    let files = try FileManager.default.subFiles(at: [fixturesUrl])
                     expect(files.count) == 4
                 }.toNot(throwError())
             }

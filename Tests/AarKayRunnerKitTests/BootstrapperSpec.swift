@@ -13,7 +13,10 @@ import Quick
 class BootstrapperSpec: QuickSpec {
     let fileManager = FileManager.default
     let tempDir = URL(fileURLWithPath: NSTemporaryDirectory())
-        .appendingPathComponent("me.rahulkatariya.aarkay")
+        .appendingPathComponent(
+            "me.rahulkatariya.AarKay",
+            isDirectory: true
+        )
 
     override func spec() {
         let aarkayPaths = AarKayPaths(

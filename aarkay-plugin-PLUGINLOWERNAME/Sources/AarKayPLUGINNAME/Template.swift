@@ -16,7 +16,7 @@ public class Template: NSObject, Templatable {
 
     public required init(datafile: Datafile) throws {
         self.datafile = datafile
-        self.model = try self.datafile.dencode(type: PLUGINNAMEModel.self)
+        self.model = try self.datafile.dencode(type: TemplateModel.self)
     }
 }
 

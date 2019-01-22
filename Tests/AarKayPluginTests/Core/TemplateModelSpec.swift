@@ -35,7 +35,7 @@ class TemplateModelSpec: QuickSpec {
                     expect(templateModel.computedProperties?.count) == 1
                 }.toNot(throwError())
             }
-            
+
             it("should throw error if name is missing") {
                 expect { () -> Void in
                     let templateString = """
@@ -46,7 +46,7 @@ class TemplateModelSpec: QuickSpec {
                     computedProperties:
                       - arg|String?
                     """
-                    let _ = try YAMLDecoder().decode(TemplateModel.self, from: templateString)
+                    _ = try YAMLDecoder().decode(TemplateModel.self, from: templateString)
                 }.to(throwError())
             }
         }

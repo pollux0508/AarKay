@@ -16,14 +16,27 @@ class AarKayFileSpec: QuickSpec {
     let fileManager = FileManager.default
 
     override func spec() {
+        beforeEach {
+            expect {
+                try self.fileManager.createDirectory(
+                    at: self.aarkayfileUrl.deletingLastPathComponent(),
+                    withIntermediateDirectories: true,
+                    attributes: nil
+                )
+            }.toNot(throwError())
+        }
+
         afterEach {
             expect { () -> Void in
-                try self.fileManager.removeItem(at: self.aarkayfileUrl)
+                try self.fileManager.removeItem(
+                    at: self.aarkayfileUrl.deletingLastPathComponent()
+                )
                 expect(
                     self.fileManager.fileExists(atPath: self.aarkayfileUrl.path)
                 ) == false
             }.toNot(throwError())
         }
+
         describe("AarKayFile") {
             it("should work for correct format") {
                 expect { () -> Void in
@@ -68,7 +81,7 @@ class AarKayFileSpec: QuickSpec {
                     ).dependencies
                 }.to(throwError())
             }
-            
+
             it("should fail if AarKay is not found") {
                 expect { () -> Void in
                     let aarkayFileContents = """
@@ -81,8 +94,8 @@ class AarKayFileSpec: QuickSpec {
                     _ = try AarKayFile(
                         url: self.aarkayfileUrl,
                         fileManager: FileManager.default
-                        ).dependencies
-                    }.to(throwError())
+                    ).dependencies
+                }.to(throwError())
             }
         }
     }

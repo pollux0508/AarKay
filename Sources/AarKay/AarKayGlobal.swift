@@ -53,9 +53,12 @@ struct AarKayGlobal {
             )
         }
         let object = try Yams.load(yaml: contents)
-        guard let obj = object as? [String: Any] else {
+        guard let obj = object else {
+            return [:]
+        }
+        guard let dict = obj as? [String: Any] else {
             throw AarKayError.globalContextReadFailed(url: aarkayGlobalContextUrl)
         }
-        return obj
+        return dict
     }
 }

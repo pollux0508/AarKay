@@ -48,16 +48,3 @@ protocol GeneratedfileService {
         globalContext: [String: Any]?
     ) -> [Result<Generatedfile, AnyError>]
 }
-
-public protocol TemplateService {
-    var templatefiles: Templatefiles { get }
-
-    init(
-        templatefiles: Templatefiles
-    ) throws
-
-    func renderTemplate(
-        name: String,
-        context: [String: Any]?
-    ) throws -> String
-}

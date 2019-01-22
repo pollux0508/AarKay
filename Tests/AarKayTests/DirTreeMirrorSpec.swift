@@ -13,7 +13,10 @@ import Quick
 class DirTreeMirrorSpec: QuickSpec {
     override func spec() {
         let fixturesUrl = URL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent("AarKay")
+            .appendingPathComponent(
+                "me.rahulkatariya.AarKay",
+                isDirectory: true
+            )
 
         let sourceDir = "DirTree"
         let sourceUrl = fixturesUrl.appendingPathComponent(sourceDir)
