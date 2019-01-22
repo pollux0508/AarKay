@@ -157,9 +157,6 @@ public class AarKay {
         sourceUrl: URL,
         destinationUrl: URL
     ) {
-        /// Ignore the system dotfiles in AarKayFiles directory. Users can create custom dotfiles using string "dot" like 'dot.filename.yml' which will be generated as '.filename.ext'.
-        guard !sourceUrl.lastPathComponent.hasPrefix(".") else { return }
-
         AarKayLogger.logDatafile(at: sourceUrl)
 
         /// All Datafiles will have atleast two components seperated by ".".
