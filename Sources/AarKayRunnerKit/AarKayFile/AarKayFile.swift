@@ -37,11 +37,10 @@ public struct AarKayFile {
         }
         let lines = contents.components(separatedBy: .newlines).filter { !$0.isEmpty }
         dependencies = try lines.filter {
-            $0.trimmingCharacters(in: .whitespaces).hasPrefix(
+            !$0.trimmingCharacters(in: .whitespaces).hasPrefix(
                 AarKayFile.commentIndicator
             )
-        }
-        .map { try Dependency(string: $0) }
+        }.map { try Dependency(string: $0) }
         let hasAarKay = dependencies
             .map { $0.targetDescription() }
             .contains("\"AarKay\",")

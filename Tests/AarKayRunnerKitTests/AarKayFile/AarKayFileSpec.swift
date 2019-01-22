@@ -12,7 +12,7 @@ import Quick
 
 class AarKayFileSpec: QuickSpec {
     let aarkayfileUrl = URL(fileURLWithPath: NSTemporaryDirectory())
-        .appendingPathComponent("AarKayFile")
+        .appendingPathComponent("me.rahulkatariya.AarKay/AarKayFile")
     let fileManager = FileManager.default
 
     override func spec() {
@@ -30,7 +30,8 @@ class AarKayFileSpec: QuickSpec {
                     let aarkayFileContents = """
                     https://github.com/RahulKatariya/AarKay.git, b-master
                     ./../aarkay-plugin-test, ~> 0.0.0
-                    /Users/Developer/Restofire/Restofire, > 1.1.0
+                    /Users/RahulKatariya/Developer/Restofire/Restofire, > 1.1.0
+                    # https://github.com/RahulKatariya/aarkay-plugin-personal.git, b-master
                     """
                     try aarkayFileContents.write(
                         to: self.aarkayfileUrl, atomically: true, encoding: .utf8
@@ -47,7 +48,7 @@ class AarKayFileSpec: QuickSpec {
                     expect(deps[1].url.absoluteString) == "./../aarkay-plugin-test"
                     expect(deps[1].version) == .upToNextMinor("0.0.0")
 
-                    expect(deps[2].url.absoluteString) == "/Users/Developer/Restofire/Restofire"
+                    expect(deps[2].url.absoluteString) == "/Users/RahulKatariya/Developer/Restofire/Restofire"
                     expect(deps[2].version) == .upToNextMajor("1.1.0")
                 }.toNot(throwError())
             }
@@ -66,6 +67,22 @@ class AarKayFileSpec: QuickSpec {
                         fileManager: FileManager.default
                     ).dependencies
                 }.to(throwError())
+            }
+            
+            it("should fail if AarKay is not found") {
+                expect { () -> Void in
+                    let aarkayFileContents = """
+                    # https://github.com/RahulKatariya/AarKay.git
+                    ./../aarkay-plugin-test, ~> 0.0.0
+                    """
+                    try aarkayFileContents.write(
+                        to: self.aarkayfileUrl, atomically: true, encoding: .utf8
+                    )
+                    _ = try AarKayFile(
+                        url: self.aarkayfileUrl,
+                        fileManager: FileManager.default
+                        ).dependencies
+                    }.to(throwError())
             }
         }
     }
