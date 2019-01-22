@@ -7,8 +7,10 @@
 
 import Foundation
 
+/// Responsible for transforming string to its respective type.
 public class TypeValueTransformer {
-    private(set) static var transformers: [String: StringTransformable.Type] = [
+    /// Collection of swift type transformers
+    private static var transformers: [String: StringTransformable.Type] = [
         "String": String.self,
         "Bool": Bool.self,
         "Int": Int.self,
@@ -19,12 +21,21 @@ public class TypeValueTransformer {
         "Double": Double.self,
     ]
 
+    /// Registers a String transformerable
+    ///
+    /// - Parameter transformer: The string transformable
     public static func register(transformer: StringTransformable.Type) {
         transformers[String(describing: transformer)] = transformer
     }
 
     let value: Any?
 
+    /// Initializes a typed value by transforming the given value with respect to type.
+    ///
+    /// - Parameters:
+    ///   - type: The swift type.
+    ///   - value: The value of type in string format.
+    /// - Returns: nil if transformer for the type is not registered.
     init?(type: String, value: String) {
         if let transformer = TypeValueTransformer.transformers[type] {
             self.value = transformer.transform(value: value)

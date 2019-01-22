@@ -1,5 +1,5 @@
 {
-    "name" : "Plugin",
-    "summary" : "cookiecutter plugin template for aarkay framework",
-    "github" : "RahulKatariya"
+  "name": "Personal",
+  "summary": "Personal plugin for AarKay",
+  "github": "RahulKatariya"
 }
