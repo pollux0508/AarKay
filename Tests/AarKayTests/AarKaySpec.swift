@@ -52,15 +52,18 @@ class AarKaySpec: QuickSpec {
                         )
                         try contents.write(to: pathUrl, atomically: true, encoding: .utf8)
                     }
+
                     let options = AarKayOptions(
                         force: true,
                         verbose: true
                     )
                     AarKay(url: self.aarkayUrl, options: options).bootstrap()
+
                     let file1Url = self.aarkayUrl
                         .appendingPathComponent("Directory/File1.txt")
                     let contents1 = try String(contentsOf: file1Url)
                     expect(contents1) == "AarKay - Rahul"
+
                     let file2Url = self.aarkayUrl
                         .appendingPathComponent("Directory/File2.txt")
                     let contents2 = try String(contentsOf: file2Url)
@@ -85,11 +88,13 @@ class AarKaySpec: QuickSpec {
                         )
                         try contents.write(to: pathUrl, atomically: true, encoding: .utf8)
                     }
+
                     let options = AarKayOptions(
                         force: true,
                         verbose: true
                     )
                     AarKay(url: self.aarkayUrl, options: options).bootstrap()
+
                     let fileUrl = self.aarkayUrl
                         .appendingPathComponent("Directory/File.txt")
                     let contents = try String(contentsOf: fileUrl)
