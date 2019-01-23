@@ -10,25 +10,29 @@ import Foundation
 struct PluginfileProvider: PluginfileService {
     let pluginfile: Pluginfile
 
-    func templatefiles(fileManager: FileManager) throws -> TemplateService {
+    func templateProvider(fileManager: FileManager) throws -> TemplateService {
         if let templateService = try templateService(
             plugin: pluginfile.name,
             fileManager: fileManager
         ) {
             return templateService
         } else {
-            guard let templates = pluginfile.globalTemplates else {
+            guard let globalTemplates = pluginfile.globalTemplates else {
                 throw AarKayKitError.invalidTemplate(
                     AarKayKitError.InvalidTemplateReason
                         .templatesNil(name: pluginfile.name)
                 )
             }
-            let templatefiles = try Templatefiles(
-                plugin: pluginfile.name,
-                templatesDir: templates,
-                fileManager: fileManager
-            )
-            return StencilProvider(templatefiles: templatefiles)
+            guard let templates = try Templates(
+                fileManager: fileManager,
+                templates: globalTemplates
+            ) else {
+                throw AarKayKitError.invalidTemplate(
+                    AarKayKitError.InvalidTemplateReason
+                        .templatesNil(name: pluginfile.name)
+                )
+            }
+            return StencilProvider(templates: templates)
         }
     }
 }
@@ -43,13 +47,19 @@ extension PluginfileProvider {
         guard let plugable = plugableClass(plugin: plugin) else {
             return nil
         }
-        let templatefiles = try Templatefiles(
-            plugin: plugin,
-            templatesDir: plugable.templates().map { URL(fileURLWithPath: $0) },
-            fileManager: fileManager
-        )
+
+        guard let templates = try Templates(
+            fileManager: fileManager,
+            templates: plugable.templates().map { URL(fileURLWithPath: $0) }
+        ) else {
+            throw AarKayKitError.invalidTemplate(
+                AarKayKitError.InvalidTemplateReason
+                    .templatesNil(name: pluginfile.name)
+            )
+        }
+
         return try plugable.templateService().init(
-            templatefiles: templatefiles
+            templates: templates
         )
     }
 

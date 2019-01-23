@@ -29,7 +29,7 @@ public class AarKay {
         url.appendingPathComponent("AarKay/AarKayData", isDirectory: true)
     }()
 
-    /// The templatefiles url relative to the project url.
+    /// The templates url relative to the project url.
     lazy var aarkayTemplatesUrl: URL = {
         url.appendingPathComponent("AarKay/AarKayTemplates", isDirectory: true)
     }()
@@ -236,20 +236,20 @@ public class AarKay {
     /// - Throws: FileManager operation errors.
     private func createFile(generatedfile: Generatedfile, at url: URL) throws {
         var url = url
-        if let directory = generatedfile.directory {
+        if let directory = generatedfile.datafile.directory {
             url = url
                 .appendingPathComponent(directory, isDirectory: true)
                 .standardized
         }
         url.appendPathComponent(generatedfile.nameWithExt)
-        guard !generatedfile.skip else {
+        guard !generatedfile.datafile.skip else {
             if options.verbose {
                 AarKayLogger.logFileSkipped(at: url)
             }
             return
         }
         if fileManager.fileExists(atPath: url.path) {
-            if !generatedfile.override {
+            if !generatedfile.datafile.override {
                 if options.verbose {
                     AarKayLogger.logFileSkipped(at: url); return
                 }

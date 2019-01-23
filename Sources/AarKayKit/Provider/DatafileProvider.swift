@@ -88,8 +88,7 @@ extension DatafileProvider {
             context: context,
             override: context.override(),
             skip: context.skip(),
-            template: .name(template),
-            globalContext: globalContext
+            template: .name(template)
         )
     }
 

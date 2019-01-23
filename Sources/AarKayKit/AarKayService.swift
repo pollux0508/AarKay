@@ -16,7 +16,7 @@ protocol AarKayService {
 
 protocol PluginfileService {
     var pluginfile: Pluginfile { get }
-    func templatefiles(fileManager: FileManager) throws -> TemplateService
+    func templateProvider(fileManager: FileManager) throws -> TemplateService
 }
 
 protocol DatafileService {

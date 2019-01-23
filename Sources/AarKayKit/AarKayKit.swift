@@ -30,7 +30,7 @@ public struct AarKayKit {
             pluginfileService: pluginfileService,
             datafileService: DatafileProvider(),
             generatedfileService: GeneratedfileProvider(
-                templatesService: try pluginfileService.templatefiles(
+                templatesService: try pluginfileService.templateProvider(
                     fileManager: fileManager
                 )
             )

@@ -8,10 +8,15 @@
 import Foundation
 import SharedKit
 
+/// A Type that encapsulates the template.
+///
+/// - name: Returned when using a file as template.
+/// - nameStringExt: Returned when using a string as a template
 public enum Template {
     case name(String)
     case nameStringExt(String, String, String)
 
+    /// Returns the name of the Template
     public func name() -> String {
         switch self {
         case .name(let name): return name
@@ -20,23 +25,42 @@ public enum Template {
     }
 }
 
+/// Represents a Datafile.
 public struct Datafile {
+    /// The name of the file.
     public private(set) var fileName: String
-    public private(set) var directory: String?
-    public private(set) var context: [String: Any]
-    public private(set) var override: Bool
-    public private(set) var skip: Bool
-    public private(set) var template: Template
-    public private(set) var globalContext: [String: Any]?
 
+    /// The directory of the file.
+    public private(set) var directory: String?
+
+    /// The context to apply to the template.
+    public private(set) var context: [String: Any]
+
+    /// Whether to override the existing file with new contents.
+    public private(set) var override: Bool
+
+    /// Whether to skip creation of Generatedfile.
+    public private(set) var skip: Bool
+
+    /// The template to use for the Datafile.
+    public private(set) var template: Template
+
+    /// Initializes a Datafile.
+    ///
+    /// - Parameters:
+    ///   - fileName: The name of the file.
+    ///   - directory: The directory of the file.
+    ///   - context: The context to apply to the template.
+    ///   - override: Whether to override the existing file with new contents.
+    ///   - skip: Whether to skip creation of Generatedfile.
+    ///   - template: The template to use for the Datafile.
     public init(
         fileName: String,
         directory: String?,
         context: [String: Any],
         override: Bool,
         skip: Bool,
-        template: Template,
-        globalContext: [String: Any]?
+        template: Template
     ) {
         self.directory = directory.nilIfEmpty()
         self.fileName = fileName.failIfEmpty()
@@ -44,7 +68,6 @@ public struct Datafile {
         self.override = override
         self.skip = skip
         self.template = template
-        self.globalContext = globalContext
     }
 
     public mutating func dencode<T: Codable>(type: T.Type) throws -> T {
@@ -71,18 +94,30 @@ public struct Datafile {
         return model
     }
 
+    /// Sets the name of the file.
+    ///
+    /// - Parameter fileName: The file name.
     public mutating func setFileName(_ fileName: String) {
         self.fileName = fileName.failIfEmpty()
     }
 
+    /// Sets the directory path.
+    ///
+    /// - Parameter directory: The path of directory.
     public mutating func setDirectory(_ directory: String?) {
         self.directory = directory.nilIfEmpty()
     }
 
+    /// Sets the context.
+    ///
+    /// - Parameter context: The context.
     public mutating func setContext(_ context: [String: Any]) {
         self.context = context
     }
 
+    /// Adds values to the exiting context.
+    ///
+    /// - Parameter context: The context.
     public mutating func addContext(_ context: [String: Any]) {
         setContext(self.context + context)
     }
@@ -120,19 +155,24 @@ public struct Datafile {
         }
     }
 
+    /// Sets whether to override the exisitng file.
+    ///
+    /// - Parameter override: The override value.
     public mutating func setOverride(_ override: Bool) {
         self.override = override
     }
 
+    /// Sets whether to skip creation of Generatedfile.
+    ///
+    /// - Parameter skip: The skip value.
     public mutating func setSkip(_ skip: Bool) {
         self.skip = skip
     }
 
+    /// Sets the template.
+    ///
+    /// - Parameter template: The template.
     public mutating func setTemplate(_ template: Template) {
         self.template = template
-    }
-
-    public mutating func setGlobalContext(_ globalContext: [String: Any]?) {
-        self.globalContext = globalContext
     }
 }

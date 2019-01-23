@@ -8,9 +8,9 @@
 import Foundation
 
 public protocol TemplateService {
-    var templatefiles: Templatefiles { get }
+    var templates: Templates { get }
 
-    init(templatefiles: Templatefiles) throws
+    init(templates: Templates) throws
 
     func renderTemplate(
         name: String,

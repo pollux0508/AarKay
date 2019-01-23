@@ -55,7 +55,7 @@ extension GeneratedfileProvider {
             return try generatedfiles(
                 datafile: datafile,
                 template: name,
-                context: datafile.globalContext + datafile.context
+                context: globalContext + datafile.context
             )
         case .nameStringExt(_, let string, let ext):
             let file = generatedfile(
@@ -72,7 +72,7 @@ extension GeneratedfileProvider {
         template: String,
         context: [String: Any]? = nil
     ) throws -> [Generatedfile] {
-        let templateUrls = try templatesService.templatefiles
+        let templateUrls = try templatesService.templates
             .getTemplatefile(for: template)
         return try templateUrls.map { templateFile in
             try Try {
@@ -99,11 +99,8 @@ extension GeneratedfileProvider {
         pathExtension: String?
     ) -> Generatedfile {
         return Generatedfile(
-            name: datafile.fileName,
+            datafile: datafile,
             ext: pathExtension,
-            directory: datafile.directory,
-            override: datafile.override,
-            skip: datafile.skip,
             contents: stringContents
         )
     }

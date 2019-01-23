@@ -129,15 +129,15 @@ public class TemplateModel: Codable {
 extension Template {
     public func datafiles() throws -> [Datafile] {
         var all = [Datafile]()
-        var templatesDir = "AarKay/AarKayTemplates"
+        var templates = "AarKay/AarKayTemplates"
         if let directory = datafile.directory {
             let components = directory.components(separatedBy: "/")
             let backPath = Array(repeating: "../", count: components.count).joined()
-            templatesDir = backPath + templatesDir
+            templates = backPath + templates
         }
         templatefiles(
             datafile: datafile,
-            templatesDir: templatesDir,
+            templates: templates,
             model: model,
             all: &all
         )
@@ -151,15 +151,15 @@ extension Template {
 
     func templatefiles(
         datafile: Datafile,
-        templatesDir: String,
+        templates: String,
         model: TemplateModel,
         all: inout [Datafile]
     ) {
         let templateFilename = model.name
 
-        var templatesDir = templatesDir
+        var templates = templates
         if let dir = model.dir {
-            templatesDir = templatesDir + "/" + dir
+            templates = templates + "/" + dir
         }
         model.templates?.forEach {
             let fileName = templateFilename + ($0.suffix ?? "")
@@ -167,7 +167,7 @@ extension Template {
                 of: "{{self.name}}", with: model.name
             )
             var gfile = datafile
-            gfile.setDirectory(templatesDir)
+            gfile.setDirectory(templates)
             let ext: String = $0.ext.nilIfEmpty() != nil ? "\($0.ext!).stencil" : "stencil"
             let templateName = datafile.template.name()
             gfile.setTemplate(.nameStringExt(templateName, templateString, ext))
@@ -180,7 +180,7 @@ extension Template {
         subs.forEach {
             let sub = $0
             sub.dir = model.name
-            templatesDir = "../" + templatesDir
+            templates = "../" + templates
             if sub.templates == nil && model.templates != nil {
                 sub.templates = model.templates!.map { t in
                     if let substring = t.subString {
@@ -194,7 +194,7 @@ extension Template {
             }
             templatefiles(
                 datafile: datafile,
-                templatesDir: templatesDir,
+                templates: templates,
                 model: sub,
                 all: &all
             )

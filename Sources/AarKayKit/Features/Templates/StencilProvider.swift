@@ -11,15 +11,15 @@ import Stencil
 import StencilSwiftKit
 
 class StencilProvider: TemplateService {
-    let templatefiles: Templatefiles
+    let templates: Templates
     var environment: Environment!
 
     required init(
-        templatefiles: Templatefiles
+        templates: Templates
     ) {
-        self.templatefiles = templatefiles
+        self.templates = templates
         self.environment = {
-            let paths = templatefiles.directories.map { Path($0.path) }
+            let paths = templates.directories.map { Path($0.path) }
             let aarkayFilesLoader = FileSystemLoader(paths: paths)
             let ext = Extension()
             ext.registerStencilSwiftExtensions()

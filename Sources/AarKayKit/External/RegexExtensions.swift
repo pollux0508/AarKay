@@ -9,6 +9,12 @@ import Foundation
 import SharedKit
 
 extension String {
+    /// Appends the string inside the template after the location of regex match.
+    ///
+    /// - Parameters:
+    ///   - template: The template.
+    ///   - regex: The regex.
+    /// - Returns: The appended string.
     public func append(template: String, regex: String) -> String {
         var string = template
         if let existingRange = template.range(of: regex, options: [.regularExpression]) {
@@ -20,6 +26,13 @@ extension String {
         return string
     }
 
+    /// Merges the string inside the template using regex captured groups.
+    ///
+    /// - Parameters:
+    ///   - template: The template.
+    ///   - regex: The regex.
+    /// - Returns: The merged string.
+    /// - Throws: An `Error` if regex merge encouters an error.
     public func merge(template: String, regex: String) throws -> String {
         var template = template
         let blockGroups = try capturedGroups(regex: regex)
