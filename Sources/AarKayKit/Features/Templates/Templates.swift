@@ -7,11 +7,23 @@
 
 import Foundation
 
+/// A Type that encapsulates Templates.
 public struct Templates {
+    /// The FileManager.
     let fileManager: FileManager
+
+    /// The directories.
     private(set) var directories: [URL]!
+
+    /// The Templatefile objects.
     private(set) var files: [String: [Templatefile]]!
 
+    /// Initializes a Templates object.
+    ///
+    /// - Parameters:
+    ///   - fileManager: The FileManager.
+    ///   - templates: The root directories of all Templates.
+    /// - Throws: An `Error` if file manager operations encouter any error.
     public init?(
         fileManager: FileManager,
         templates: [URL]
@@ -23,6 +35,11 @@ public struct Templates {
         guard files.count > 0 else { return nil }
     }
 
+    /// Finds the Templatefile stored in files corresponding the name.
+    ///
+    /// - Parameter template: The name of the template.
+    /// - Returns: An Array of Templatefiles.
+    /// - Throws: An `Error` if template file is not found or more than one exists.
     func getTemplatefile(for template: String) throws -> [Templatefile] {
         guard let templates = files[template] else {
             throw AarKayKitError.invalidTemplate(

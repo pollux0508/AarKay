@@ -7,7 +7,8 @@
 
 import Foundation
 
-/// An abstraction over swift try catch encouraging immutable return value and custom error mapping.
+/// An abstraction over swift try catch encouraging immutable return value and
+/// custom error mapping.
 public struct Try<Value> {
     /// The throwing block.
     private let block: () throws -> Value

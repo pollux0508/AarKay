@@ -1,5 +1,5 @@
 //
-//  AarKayKit.swift
+//  Plugin.swift
 //  AarKayKit
 //
 //  Created by Rahul Katariya on 04/12/17.
@@ -8,53 +8,81 @@
 import Foundation
 import Result
 
-public struct AarKayKit {
-    let pluginfile: Pluginfile
-    let fileManager: FileManager
-    var aarkayService: AarKayService!
+/// Represents a Plugin.
+public struct Plugin {
+    /// The name of the plugin.
+    let name: String
 
+    /// The global context shared with all Generatedfiles.
+    let globalContext: [String: Any]?
+
+    /// The location of global templates.
+    let globalTemplates: [URL]?
+
+    /// The FileManager
+    let fileManager: FileManager
+
+    /// The AarKayService
+    let aarkayService: AarKayService
+
+    /// The TemplateService
+    let templateService: TemplateService
+
+    /// Initializes a Plugin object.
+    ///
+    /// - Parameters:
+    ///   - name: The name of the plugin.
+    ///   - globalContext: The global context shared with all Generatedfiles.
+    ///   - globalTemplates: The location of global templates.
+    ///   - fileManager: The FileManager
+    /// - Throws: An `Error` if the templates service encouters any error.
     public init(
-        plugin: String,
+        name: String,
         globalContext: [String: Any]?,
         globalTemplates: [URL]?,
         fileManager: FileManager = FileManager.default
     ) throws {
+        self.name = name
+        self.globalContext = globalContext
+        self.globalTemplates = globalTemplates
         self.fileManager = fileManager
-        self.pluginfile = Pluginfile(
-            name: plugin,
-            globalContext: globalContext,
-            globalTemplates: globalTemplates
-        )
-        let pluginfileService = PluginfileProvider(pluginfile: pluginfile)
         self.aarkayService = AarKayProvider(
-            pluginfileService: pluginfileService,
             datafileService: DatafileProvider(),
-            generatedfileService: GeneratedfileProvider(
-                templatesService: try pluginfileService.templateProvider(
-                    fileManager: fileManager
-                )
-            )
+            generatedfileService: GeneratedfileProvider()
+        )
+        self.templateService = try aarkayService.templateProvider(
+            plugin: name,
+            globalTemplates: globalTemplates,
+            fileManager: fileManager
         )
     }
 }
 
-extension AarKayKit {
-    public func bootstrap(
-        name: String,
+extension Plugin {
+    /// Creates GeneratedFile results from one Datafile on a disk.
+    ///
+    /// - Parameters:
+    ///   - fileName: The name of the file.
+    ///   - directory: The directory.
+    ///   - template: The template to use.
+    ///   - contents: The contents of the file.
+    /// - Returns: The `Generatedfile` results.
+    /// - Throws: An `Error` if the program encouters any error.
+    public func generate(
+        fileName: String,
         directory: String?,
         template: String,
         contents: String
     ) throws -> [Result<Generatedfile, AnyError>] {
         if let templateClass = aarkayService.datafileService.templateClass(
-            plugin: pluginfile.name,
+            plugin: name,
             template: template
         ) {
             let datafiles = try aarkayService.datafileService.serialize(
-                plugin: pluginfile.name,
-                name: name,
+                plugin: name,
+                name: fileName,
                 template: template,
                 contents: contents,
-                globalContext: pluginfile.globalContext,
                 using: templateClass.inputSerializer()
             )
 
@@ -88,21 +116,22 @@ extension AarKayKit {
 
             return aarkayService.generatedfileService.generatedfiles(
                 datafiles: templateDatafiles,
-                globalContext: pluginfile.globalContext
+                templateService: templateService,
+                globalContext: globalContext
             )
         } else {
             let datafiles = try aarkayService.datafileService.serialize(
-                plugin: pluginfile.name,
-                name: name,
+                plugin: name,
+                name: fileName,
                 template: template,
                 contents: contents,
-                globalContext: pluginfile.globalContext,
                 using: YamlInputSerializer()
             )
 
             return aarkayService.generatedfileService.generatedfiles(
                 datafiles: datafiles,
-                globalContext: pluginfile.globalContext
+                templateService: templateService,
+                globalContext: globalContext
             )
         }
     }

@@ -8,6 +8,7 @@
 import Foundation
 import Yams
 
+/// Responsible for decoding Yaml file.
 public final class YamlInputSerializer: InputSerializable {
     public func context(contents: String) throws -> Any? {
         return try YamlInputSerializer.load(contents)

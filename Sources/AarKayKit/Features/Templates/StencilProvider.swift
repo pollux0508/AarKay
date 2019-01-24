@@ -10,9 +10,10 @@ import PathKit
 import Stencil
 import StencilSwiftKit
 
+/// Responsible for rendering stencil templates.
 class StencilProvider: TemplateService {
     let templates: Templates
-    var environment: Environment!
+    private var environment: Environment!
 
     required init(
         templates: Templates

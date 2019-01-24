@@ -28,7 +28,6 @@ struct DatafileProvider: DatafileService {
         name: String,
         template: String,
         contents: String,
-        globalContext: [String: Any]?,
         using serializer: InputSerializable
     ) throws -> [Result<Datafile, AnyError>] {
         let context = try serializer.context(contents: contents)
@@ -41,8 +40,7 @@ struct DatafileProvider: DatafileService {
             return datafiles(
                 plugin: plugin,
                 contextArray: contextArray,
-                template: template,
-                globalContext: globalContext
+                template: template
             )
         } else {
             guard let context = context as? [String: Any] else {
@@ -53,8 +51,7 @@ struct DatafileProvider: DatafileService {
             let df = datafile(
                 fileName: name,
                 context: context,
-                template: template,
-                globalContext: globalContext
+                template: template
             )
             return [Result<Datafile, AnyError>.success(df)]
         }
@@ -78,8 +75,7 @@ extension DatafileProvider {
     private func datafile(
         fileName: String,
         context: [String: Any],
-        template: String,
-        globalContext: [String: Any]?
+        template: String
     ) -> Datafile {
         let fileName = context.fileName() ?? fileName
         return Datafile(
@@ -95,8 +91,7 @@ extension DatafileProvider {
     private func datafiles(
         plugin: String,
         contextArray: [[String: Any]],
-        template: String,
-        globalContext: [String: Any]?
+        template: String
     ) -> [Result<Datafile, AnyError>] {
         return contextArray.map { context -> Result<Datafile, AnyError> in
             Result<Datafile, AnyError> {
@@ -108,8 +103,7 @@ extension DatafileProvider {
                 return datafile(
                     fileName: fileName,
                     context: context,
-                    template: template,
-                    globalContext: globalContext
+                    template: template
                 )
             }
         }

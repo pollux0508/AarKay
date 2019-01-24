@@ -10,10 +10,9 @@ import Result
 import SharedKit
 
 struct GeneratedfileProvider: GeneratedfileService {
-    var templatesService: TemplateService
-
     func generatedfiles(
         datafiles: [Result<Datafile, AnyError>],
+        templateService: TemplateService,
         globalContext: [String: Any]?
     ) -> [Result<Generatedfile, AnyError>] {
         return datafiles.map { result -> Result<[Generatedfile], AnyError> in
@@ -22,6 +21,7 @@ struct GeneratedfileProvider: GeneratedfileService {
                 return Result {
                     try generatedfiles(
                         datafile: value,
+                        templateService: templateService,
                         globalContext: globalContext
                     )
                 }
@@ -48,6 +48,7 @@ struct GeneratedfileProvider: GeneratedfileService {
 extension GeneratedfileProvider {
     private func generatedfiles(
         datafile: Datafile,
+        templateService: TemplateService,
         globalContext: [String: Any]?
     ) throws -> [Generatedfile] {
         switch datafile.template {
@@ -55,6 +56,7 @@ extension GeneratedfileProvider {
             return try generatedfiles(
                 datafile: datafile,
                 template: name,
+                templateService: templateService,
                 context: globalContext + datafile.context
             )
         case .nameStringExt(_, let string, let ext):
@@ -70,13 +72,14 @@ extension GeneratedfileProvider {
     private func generatedfiles(
         datafile: Datafile,
         template: String,
+        templateService: TemplateService,
         context: [String: Any]? = nil
     ) throws -> [Generatedfile] {
-        let templateUrls = try templatesService.templates
+        let templateUrls = try templateService.templates
             .getTemplatefile(for: template)
         return try templateUrls.map { templateFile in
             try Try {
-                let rendered = try self.templatesService.renderTemplate(
+                let rendered = try templateService.renderTemplate(
                     name: templateFile.template, context: context
                 )
                 return self.generatedfile(

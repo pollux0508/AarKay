@@ -108,10 +108,10 @@ public class AarKay {
         templateUrls: [URL],
         globalContext: [String: Any]? = nil
     ) {
-        let plugin = pluginUrl.lastPathComponent
+        let pluginName = pluginUrl.lastPathComponent
         do {
-            let aarkayKit = try AarKayKit(
-                plugin: plugin,
+            let plugin = try Plugin(
+                name: pluginName,
                 globalContext: globalContext,
                 globalTemplates: templateUrls
             )
@@ -134,7 +134,6 @@ public class AarKay {
 
             mirrorUrls.forEach { (sourceUrl: URL, destinationUrl: URL) in
                 self.bootstrap(
-                    aarkayKit: aarkayKit,
                     plugin: plugin,
                     globalContext: globalContext,
                     sourceUrl: sourceUrl,
@@ -151,8 +150,7 @@ public class AarKay {
     }
 
     private func bootstrap(
-        aarkayKit: AarKayKit,
-        plugin: String,
+        plugin: Plugin,
         globalContext: [String: Any]?,
         sourceUrl: URL,
         destinationUrl: URL
@@ -196,8 +194,8 @@ public class AarKay {
             let contents = try String(contentsOf: sourceUrl)
 
             /// Returns all generated files result.
-            let renderedfiles = try aarkayKit.bootstrap(
-                name: name,
+            let renderedfiles = try plugin.generate(
+                fileName: name,
                 directory: directory,
                 template: template,
                 contents: contents

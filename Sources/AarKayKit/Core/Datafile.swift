@@ -70,13 +70,23 @@ public struct Datafile {
         self.template = template
     }
 
+    /// Decodes and Encodes the model and sets the context.
+    ///
+    /// - Parameter type: The type of `Codable`.
+    /// - Returns: The decoded model.
+    /// - Throws: An `Error` if JSON Decoding or Encoding encouters any error.
     public mutating func dencode<T: Codable>(type: T.Type) throws -> T {
         let model = try decode(type: type)
         try setContext(model)
         return model
     }
 
-    public func decode<T: Codable>(type: T.Type) throws -> T {
+    /// Decodes the dictionary to the `Decodable` type.
+    ///
+    /// - Parameter type: The type of `Decodable`.
+    /// - Returns: The decoded model.
+    /// - Throws: An `Error` if JSON Decoding encouters any error.
+    public func decode<T: Decodable>(type: T.Type) throws -> T {
         let model: T = try Try {
             let decodedData = try JSONSerialization.data(withJSONObject: self.context)
             return try JSONDecoder().decode(type, from: decodedData) as T
@@ -122,6 +132,12 @@ public struct Datafile {
         setContext(self.context + context)
     }
 
+    /// Encodes the model to an object, appends it with another object and sets the context.
+    ///
+    /// - Parameters:
+    ///   - model: The model conforming to `Encodable`.
+    ///   - context: The additional context to append.
+    /// - Throws: An `Error` if JSON encoding encounters any error.
     public mutating func setContext<T: Encodable>(
         _ model: T,
         with context: [String: Any]? = nil
