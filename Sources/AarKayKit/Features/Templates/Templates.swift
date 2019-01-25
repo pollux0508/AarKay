@@ -66,7 +66,8 @@ extension Templates {
                 return templateUrl
             }
             var url = templateUrl
-            while url.lastPathComponent != "Sources" {
+            while url.lastPathComponent != "Sources" &&
+                url.lastPathComponent != "Tests" {
                 if url.lastPathComponent == "/" {
                     throw AarKayKitError.internalError(
                         "Incorrect plugin structure at \(templateUrl.path)"

@@ -142,6 +142,38 @@ public struct Datafile {
         _ model: T,
         with context: [String: Any]? = nil
     ) throws {
+        let object = try encode(model)
+        if let context = context {
+            setContext(object + context)
+        } else {
+            setContext(object)
+        }
+    }
+
+    /// Encodes the model to an object, appends it with another object and sets the context.
+    ///
+    /// - Parameters:
+    ///   - model: The model conforming to `Encodable`.
+    ///   - context: The additional context to append.
+    /// - Throws: An `Error` if JSON encoding encounters any error.
+    public mutating func setContext<T: Encodable>(
+        _ context: [String: Any],
+        with model: T? = nil
+    ) throws {
+        if let model = model {
+            let object = try encode(model)
+            setContext(context + object)
+        } else {
+            setContext(context)
+        }
+    }
+
+    /// Encodes the model to an object.
+    ///
+    /// - Parameters: model: The model conforming to `Encodable`.
+    /// - Returns: The encoded model.
+    /// - Throws: An `Error` if JSON encoding encounters any error.
+    public mutating func encode<T: Encodable>(_ model: T) throws -> [String: Any] {
         let object: Any? = try Try {
             let encodedData = try JSONEncoder().encode(model)
             return try JSONSerialization.jsonObject(
@@ -164,11 +196,7 @@ public struct Datafile {
                 "Failed to decode object from encoded data"
             )
         }
-        if let context = context {
-            setContext(obj + context)
-        } else {
-            setContext(obj)
-        }
+        return obj
     }
 
     /// Sets whether to override the exisitng file.

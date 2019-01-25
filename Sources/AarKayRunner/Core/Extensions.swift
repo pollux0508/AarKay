@@ -12,11 +12,7 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import AarKayRunnerKit
 import Foundation
-import ReactiveSwift
-import ReactiveTask
-import Result
 
 /// A queue to print all logs on console asynchrously.
 private let outputQueue = { () -> DispatchQueue in
@@ -49,56 +45,5 @@ internal func println<T>(_ object: T) {
 internal func print<T>(_ object: T) {
     outputQueue.async {
         Swift.print(object, terminator: "")
-    }
-}
-
-extension String {
-    /// Split the string into substrings separated by the given separators.
-    internal func split(maxSplits: Int = .max, omittingEmptySubsequences: Bool = true, separators: [Character] = [",", " "]) -> [String] {
-        return split(maxSplits: maxSplits, omittingEmptySubsequences: omittingEmptySubsequences, whereSeparator: separators.contains)
-            .map(String.init)
-    }
-}
-
-extension Task {
-    /// Launches the task and prints the output.
-    ///
-    /// - Returns: A result containing either success or `AarKayError`
-    internal func run() -> Result<(), AarKayError> {
-        let result = launch()
-            .flatMapTaskEvents(.concat) { data in
-                return SignalProducer(
-                    value: String(data: data, encoding: .utf8)
-                )
-            }
-        return result.waitOnCommand()
-    }
-}
-
-extension SignalProducer where Value == TaskEvent<String?>, Error == TaskError {
-    /// Waits on a SignalProducer that implements the behavior of a CommandProtocol.
-    internal func waitOnCommand() -> Result<(), AarKayError> {
-        let result = producer
-            .on(
-                event: { event in
-                    switch event {
-                    case .value(let value):
-                        switch value {
-                        case .standardOutput(let data):
-                            if let o = String(data: data, encoding: .utf8) {
-                                print(o)
-                            }
-                        default: break
-                        }
-                    default: break
-                    }
-                }
-            )
-            .mapError(AarKayError.taskError)
-            .then(SignalProducer<(), AarKayError>.empty)
-            .wait()
-
-        Task.waitForAllTaskTermination()
-        return result
     }
 }

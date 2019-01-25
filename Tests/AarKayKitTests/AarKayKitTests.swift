@@ -13,3 +13,9 @@ class AarKayKitTests: XCTestCase {
         ("testExample", testExample),
     ]
 }
+
+extension AarKayKitTests: Plugable {
+    static func templates() -> [String] {
+        return [#file]
+    }
+}

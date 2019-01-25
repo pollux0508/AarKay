@@ -78,3 +78,46 @@ class Tasks {
         return Task(path, arguments: arguments).run()
     }
 }
+
+extension Task {
+    /// Launches the task and prints the output.
+    ///
+    /// - Returns: A result containing either success or `AarKayError`
+    internal func run() -> Result<(), AarKayError> {
+        let result = launch()
+            .flatMapTaskEvents(.concat) { data in
+                return SignalProducer(
+                    value: String(data: data, encoding: .utf8)
+                )
+            }
+        return result.waitOnCommand()
+    }
+}
+
+extension SignalProducer where Value == TaskEvent<String?>, Error == TaskError {
+    /// Waits on a SignalProducer that implements the behavior of a CommandProtocol.
+    internal func waitOnCommand() -> Result<(), AarKayError> {
+        let result = producer
+            .on(
+                event: { event in
+                    switch event {
+                    case .value(let value):
+                        switch value {
+                        case .standardOutput(let data):
+                            if let o = String(data: data, encoding: .utf8) {
+                                print(o)
+                            }
+                        default: break
+                        }
+                    default: break
+                    }
+                }
+            )
+            .mapError(AarKayError.taskError)
+            .then(SignalProducer<(), AarKayError>.empty)
+            .wait()
+
+        Task.waitForAllTaskTermination()
+        return result
+    }
+}

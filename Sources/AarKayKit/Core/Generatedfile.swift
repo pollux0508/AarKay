@@ -53,11 +53,11 @@ public struct Generatedfile {
         var template = contents
         template = try string.merge(
             template: template,
-            regex: "\\n?(.*)<aarkay (.*)>([\\s\\S]*?)\\n(.*)<\\/aarkay>(.*)\\n"
+            regex: "\\n?(.*?)<aarkay (.*)>([\\s\\S]*?)\\n(.*?)<\\/aarkay>(.*?)\\n?"
         )
         template = string.append(
             template: template,
-            regex: "\\n(.*) AarKayEnd"
+            regex: "\\n?(.*?)AarKayEnd"
         )
         return template
     }
