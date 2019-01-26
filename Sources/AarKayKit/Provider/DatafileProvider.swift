@@ -26,6 +26,7 @@ struct DatafileProvider: DatafileService {
     func serialize(
         plugin: String,
         name: String,
+        directory: String,
         template: String,
         contents: String,
         using serializer: InputSerializable
@@ -39,6 +40,7 @@ struct DatafileProvider: DatafileService {
             }
             return datafiles(
                 plugin: plugin,
+                directory: directory,
                 contextArray: contextArray,
                 template: template
             )
@@ -50,6 +52,7 @@ struct DatafileProvider: DatafileService {
             }
             let df = datafile(
                 fileName: name,
+                directory: directory,
                 context: context,
                 template: template
             )
@@ -74,13 +77,18 @@ struct DatafileProvider: DatafileService {
 extension DatafileProvider {
     private func datafile(
         fileName: String,
+        directory: String,
         context: [String: Any],
         template: String
     ) -> Datafile {
         let fileName = context.fileName() ?? fileName
+        var dir = directory
+        if let dirName = context.dirName() {
+            dir = dir + "/" + dirName
+        }
         return Datafile(
             fileName: fileName.standardized,
-            directory: context.dirName(),
+            directory: dir,
             context: context,
             override: context.override(),
             skip: context.skip(),
@@ -90,6 +98,7 @@ extension DatafileProvider {
 
     private func datafiles(
         plugin: String,
+        directory: String,
         contextArray: [[String: Any]],
         template: String
     ) -> [Result<Datafile, AnyError>] {
@@ -102,6 +111,7 @@ extension DatafileProvider {
                 }
                 return datafile(
                     fileName: fileName,
+                    directory: directory,
                     context: context,
                     template: template
                 )

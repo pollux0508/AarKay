@@ -70,7 +70,7 @@ extension Plugin {
     /// - Throws: An `Error` if the program encouters any error.
     public func generate(
         fileName: String,
-        directory: String?,
+        directory: String,
         template: String,
         contents: String
     ) throws -> [Result<Generatedfile, AnyError>] {
@@ -81,6 +81,7 @@ extension Plugin {
             let datafiles = try aarkayService.datafileService.serialize(
                 plugin: name,
                 name: fileName,
+                directory: directory,
                 template: template,
                 contents: contents,
                 using: templateClass.inputSerializer()
@@ -123,6 +124,7 @@ extension Plugin {
             let datafiles = try aarkayService.datafileService.serialize(
                 plugin: name,
                 name: fileName,
+                directory: directory,
                 template: template,
                 contents: contents,
                 using: YamlInputSerializer()

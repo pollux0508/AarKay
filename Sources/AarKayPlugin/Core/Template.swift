@@ -129,15 +129,10 @@ public class TemplateModel: Codable {
 extension Template {
     public func datafiles() throws -> [Datafile] {
         var all = [Datafile]()
-        var templates = "AarKay/AarKayTemplates"
-        if let directory = datafile.directory {
-            let components = directory.components(separatedBy: "/")
-            let backPath = Array(repeating: "../", count: components.count).joined()
-            templates = backPath + templates
-        }
+        var templateDatafile = datafile
+        templateDatafile.setDirectory("AarKay/AarKayTemplates")
         templatefiles(
-            datafile: datafile,
-            templates: templates,
+            datafile: templateDatafile,
             model: model,
             all: &all
         )
@@ -151,28 +146,21 @@ extension Template {
 
     func templatefiles(
         datafile: Datafile,
-        templates: String,
         model: TemplateModel,
         all: inout [Datafile]
     ) {
-        let templateFilename = model.name
-
-        var templates = templates
-        if let dir = model.dir {
-            templates = templates + "/" + dir
-        }
+        var df = datafile
+        df.appendDirectory(model.dir)
         model.templates?.forEach {
-            let fileName = templateFilename + ($0.suffix ?? "")
+            let fileName = model.name + ($0.suffix ?? "")
             let templateString = $0.string.replacingOccurrences(
                 of: "{{self.name}}", with: model.name
             )
-            var gfile = datafile
-            gfile.setDirectory(templates)
+            var subDf = df
             let ext: String = $0.ext.nilIfEmpty() != nil ? "\($0.ext!).stencil" : "stencil"
-            let templateName = datafile.template.name()
-            gfile.setTemplate(.nameStringExt(templateName, templateString, ext))
-            gfile.setFileName(fileName)
-            all.append(gfile)
+            subDf.setTemplate(.nameStringExt(df.template.name(), templateString, ext))
+            subDf.setFileName(fileName)
+            all.append(subDf)
         }
 
         guard let subs = model.subs else { return }
@@ -180,7 +168,6 @@ extension Template {
         subs.forEach {
             let sub = $0
             sub.dir = model.name
-            templates = "../" + templates
             if sub.templates == nil && model.templates != nil {
                 sub.templates = model.templates!.map { t in
                     if let substring = t.subString {
@@ -194,7 +181,6 @@ extension Template {
             }
             templatefiles(
                 datafile: datafile,
-                templates: templates,
                 model: sub,
                 all: &all
             )
@@ -214,11 +200,8 @@ extension Template {
         try subs.forEach { sub in
             sub.base = (model.properties.isEmpty) ? model.base : model.name
             sub.baseProperties = model.baseProperties + model.properties
-            let subDir = datafile.directory != nil ?
-                datafile.directory! + "/" + model.name :
-                model.name
             var subFile = datafile
-            subFile.setDirectory(subDir)
+            subFile.appendDirectory(model.name)
             try subFile.setContext(sub)
             try modelFiles(datafile: subFile, model: sub, all: &all)
         }

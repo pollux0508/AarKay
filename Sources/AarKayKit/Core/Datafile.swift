@@ -31,7 +31,7 @@ public struct Datafile {
     public private(set) var fileName: String
 
     /// The directory of the file.
-    public private(set) var directory: String?
+    public private(set) var directory: String
 
     /// The context to apply to the template.
     public private(set) var context: [String: Any]
@@ -56,14 +56,14 @@ public struct Datafile {
     ///   - template: The template to use for the Datafile.
     public init(
         fileName: String,
-        directory: String?,
+        directory: String,
         context: [String: Any],
         override: Bool,
         skip: Bool,
         template: Template
     ) {
-        self.directory = directory.nilIfEmpty()
         self.fileName = fileName.failIfEmpty()
+        self.directory = directory
         self.context = context
         self.override = override
         self.skip = skip
@@ -114,8 +114,19 @@ public struct Datafile {
     /// Sets the directory path.
     ///
     /// - Parameter directory: The path of directory.
-    public mutating func setDirectory(_ directory: String?) {
-        self.directory = directory.nilIfEmpty()
+    public mutating func setDirectory(_ directory: String) {
+        self.directory = directory
+    }
+
+    /// Appends the directory path.
+    ///
+    /// - Parameter directory: The path of directory.
+    public mutating func appendDirectory(_ directory: String?) {
+        if let directory = directory.nilIfEmpty() {
+            var dir = self.directory
+            if !dir.trimmingCharacters(in: .whitespaces).isEmpty { dir = dir + "/" }
+            self.directory = dir + directory
+        }
     }
 
     /// Sets the context.

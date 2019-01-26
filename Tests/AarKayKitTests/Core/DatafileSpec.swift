@@ -25,7 +25,7 @@ class DatafileSpec: QuickSpec {
                 )
                 var df = Datafile(
                     fileName: "File",
-                    directory: "Directory",
+                    directory: "",
                     context: [:],
                     override: true,
                     skip: false,
@@ -33,9 +33,18 @@ class DatafileSpec: QuickSpec {
                 )
                 let context = Context(name: "Rahul")
                 expect { () -> Void in
-                    expect(df.directory) == "Directory"
-
                     expect(df.context.isEmpty) == true
+                    
+                    expect(df.directory.isEmpty) == true
+                    df.appendDirectory(nil)
+                    expect(df.directory.isEmpty) == true
+                    
+                    df.appendDirectory("Directory")
+                    expect(df.directory) == "Directory"
+                    
+                    df.setDirectory("Directory")
+                    df.appendDirectory("Directory")
+                    expect(df.directory) == "Directory/Directory"
 
                     try df.setContext(context)
                     expect(df.context["name"] as? String) == "Rahul"

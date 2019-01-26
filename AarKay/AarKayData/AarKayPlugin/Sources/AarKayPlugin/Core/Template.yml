@@ -53,11 +53,8 @@ templates:
           }
           {% if inputSerializer %}
 
-          public static func inputSerializer(
-              components: FileComponents,
-              contents: String
-          ) -> InputSerializable {
-              return {{inputSerializer}}InputSerializer(components: components, contents: contents)
+          public static func inputSerializer() -> InputSerializable {
+              return {{inputSerializer}}InputSerializer()
           }
           {% endif %}
       }

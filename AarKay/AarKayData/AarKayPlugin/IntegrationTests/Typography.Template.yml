@@ -1,0 +1,4 @@
+name: Typography
+properties:
+  - fontStyles|[ArgModel]
+  - fontSizes|[ArgModel]

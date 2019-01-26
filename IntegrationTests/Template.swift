@@ -26,11 +26,13 @@ public class TemplateModel: Codable {
 
     public var allProperties: [ArgModel]? {
         /// <aarkay allProperties>
+        /// your code goes here.
         /// </aarkay>
     }
 
     public var requiredProperties: [ArgModel]? {
         /// <aarkay requiredProperties>
+        /// your code goes here.
         /// </aarkay>
     }
 

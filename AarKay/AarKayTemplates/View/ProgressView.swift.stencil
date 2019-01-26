@@ -1,0 +1,3 @@
+{% extends "View.swift.stencil" %}
+
+{% block type %}{% if base %}{{base}}{% else %}UIProgressView{% endif %}{% endblock %}

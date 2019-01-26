@@ -189,6 +189,17 @@ public class AarKay {
         let name = components.count == 4 ? components[1] : components[0]
         let template = components[components.count - 2]
         let directory = sourceUrl.deletingLastPathComponent().relativeString
+        guard let destination = destinationUrl.baseURL else {
+            let error = AarKayError.internalError(
+                "Failed to resolve the destination directory"
+            )
+            AarKayLogger.logFileErrored(
+                at: sourceUrl,
+                error: error,
+                verbose: options.verbose
+            )
+            return
+        }
         do {
             /// Read the contents of the Datafile.
             let contents = try String(contentsOf: sourceUrl)
@@ -205,10 +216,7 @@ public class AarKay {
                 switch generatedfile {
                 case .success(let value):
                     /// Create the file at the mirrored destination url with the generated contents.
-                    try createFile(
-                        generatedfile: value,
-                        at: destinationUrl.deletingLastPathComponent()
-                    )
+                    try createFile(generatedfile: value, at: destination)
                 case .failure(let error):
                     AarKayLogger.logFileErrored(
                         at: sourceUrl,
@@ -233,20 +241,20 @@ public class AarKay {
     ///   - url: The destination url.
     /// - Throws: FileManager operation errors.
     private func createFile(generatedfile: Generatedfile, at url: URL) throws {
-        var url = url
-        if let directory = generatedfile.datafile.directory {
-            url = url
-                .appendingPathComponent(directory, isDirectory: true)
-                .standardized
-        }
-        url.appendPathComponent(generatedfile.nameWithExt)
+        let destination = URL(
+            fileURLWithPath: generatedfile.datafile.directory,
+            isDirectory: true,
+            relativeTo: url
+        )
+            .appendingPathComponent(generatedfile.nameWithExt)
+            .standardized
         guard !generatedfile.datafile.skip else {
             if options.verbose {
                 AarKayLogger.logFileSkipped(at: url)
             }
             return
         }
-        if fileManager.fileExists(atPath: url.path) {
+        if fileManager.fileExists(atPath: destination.path) {
             if !generatedfile.datafile.override {
                 if options.verbose {
                     AarKayLogger.logFileSkipped(at: url); return
@@ -254,7 +262,7 @@ public class AarKay {
             } else {
                 do {
                     let currentString = try Try {
-                        try String(contentsOf: url)
+                        try String(contentsOf: destination)
                     }.catch { error in
                         AarKayError.internalError(
                             "Failed to read file at url - \(url)",
@@ -266,7 +274,7 @@ public class AarKay {
                         if !options.dryrun {
                             try Try { () -> Void in
                                 try string.write(
-                                    to: url, atomically: true, encoding: .utf8
+                                    to: destination, atomically: true, encoding: .utf8
                                 )
                             }.catch { error in
                                 AarKayError.internalError(
@@ -275,10 +283,10 @@ public class AarKay {
                                 )
                             }
                         }
-                        AarKayLogger.logFileModified(at: url)
+                        AarKayLogger.logFileModified(at: destination)
                     } else {
                         if options.verbose {
-                            AarKayLogger.logFileUnchanged(at: url)
+                            AarKayLogger.logFileUnchanged(at: destination)
                         }
                     }
                 } catch {
@@ -289,21 +297,21 @@ public class AarKay {
             if !options.dryrun {
                 try Try { () -> Void in
                     try self.fileManager.createDirectory(
-                        at: url.deletingLastPathComponent(),
+                        at: destination.deletingLastPathComponent(),
                         withIntermediateDirectories: true,
                         attributes: nil
                     )
                     try generatedfile.contents.write(
-                        to: url, atomically: true, encoding: .utf8
+                        to: destination, atomically: true, encoding: .utf8
                     )
                 }.catch { error in
                     AarKayError.internalError(
-                        "Could not create file at url - \(url.path)",
+                        "Could not create file at url - \(destination.path)",
                         with: error
                     )
                 }
             }
-            AarKayLogger.logFileAdded(at: url)
+            AarKayLogger.logFileAdded(at: destination)
         }
     }
 }

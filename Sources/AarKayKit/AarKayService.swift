@@ -57,6 +57,7 @@ protocol DatafileService {
     func serialize(
         plugin: String,
         name: String,
+        directory: String,
         template: String,
         contents: String,
         using serializer: InputSerializable

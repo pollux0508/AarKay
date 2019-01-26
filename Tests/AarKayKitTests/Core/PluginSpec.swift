@@ -24,7 +24,7 @@ class PluginSpec: QuickSpec {
                     expect { () -> Void in
                         let generatedFiles = try plugin.generate(
                             fileName: "File",
-                            directory: nil,
+                            directory: "",
                             template: "Template",
                             contents: "name: Template"
                         )
@@ -34,7 +34,7 @@ class PluginSpec: QuickSpec {
                     expect { () -> Void in
                         _ = try plugin.generate(
                             fileName: "File",
-                            directory: nil,
+                            directory: "",
                             template: "Template",
                             contents: "- name: Template\n- name: Template2"
                         )
@@ -43,7 +43,7 @@ class PluginSpec: QuickSpec {
                     expect { () -> Void in
                         let files = try plugin.generate(
                             fileName: "[]",
-                            directory: nil,
+                            directory: "",
                             template: "Template",
                             contents: "- name: Template\n- name: Template2"
                         )
@@ -53,7 +53,7 @@ class PluginSpec: QuickSpec {
                     expect { () -> Void in
                         let files = try plugin.generate(
                             fileName: "[]",
-                            directory: nil,
+                            directory: "",
                             template: "Template",
                             contents: "- name: Template\n- noname: Template2"
                         )
@@ -65,7 +65,7 @@ class PluginSpec: QuickSpec {
                     expect { () -> Void in
                         let files = try plugin.generate(
                             fileName: "[]",
-                            directory: nil,
+                            directory: "",
                             template: "Template",
                             contents: """
                             - name: Template

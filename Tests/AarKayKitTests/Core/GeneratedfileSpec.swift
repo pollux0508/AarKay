@@ -25,7 +25,7 @@ class GeneratedfileSpec: QuickSpec {
                 )
                 let df = Datafile(
                     fileName: "File",
-                    directory: nil,
+                    directory: "",
                     context: ["name": "Rahul"],
                     override: true,
                     skip: false,
@@ -109,7 +109,7 @@ class GeneratedfileSpec: QuickSpec {
                 )
                 let df = Datafile(
                     fileName: "File",
-                    directory: nil,
+                    directory: "",
                     context: ["name": "Rahul"],
                     override: true,
                     skip: false,

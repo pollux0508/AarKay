@@ -1,0 +1,3 @@
+{% extends "ViewController.swift.stencil" %}
+
+{% block extends %}{% if base %}{{base}}{{type}}ViewController{% else %}{{prefix}}PageViewController{% endif %}{% endblock %}
