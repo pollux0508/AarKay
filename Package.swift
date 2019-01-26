@@ -27,7 +27,7 @@ let package = Package(
         /* >>> AarKay ------------------------------------------- */
         /* ------------------------------------------------------ */
         .package(url: "https://github.com/jdhealy/PrettyColors.git", .exact("5.0.1")),
-        .package(url: "https://github.com/scottrhoyt/SwiftyTextTable.git", .exact("0.8.0")),
+        .package(url: "https://github.com/scottrhoyt/SwiftyTextTable.git", .upToNextMinor(from: "0.8.2")),
         /* ------------------------------------------------------ */
         /* >>> Runner ------------------------------------------- */
         /* ------------------------------------------------------ */
