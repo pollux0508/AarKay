@@ -29,7 +29,8 @@ class GeneratedfileSpec: QuickSpec {
                     context: ["name": "Rahul"],
                     override: true,
                     skip: false,
-                    template: template
+                    template: template,
+                    globalContext: nil
                 )
                 let contents = """
                 Hi, My name is Rahul.
@@ -113,7 +114,8 @@ class GeneratedfileSpec: QuickSpec {
                     context: ["name": "Rahul"],
                     override: true,
                     skip: false,
-                    template: template
+                    template: template,
+                    globalContext: nil
                 )
                 let contents = """
                 Hi, My name is Rahul.

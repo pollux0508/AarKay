@@ -29,7 +29,8 @@ class DatafileSpec: QuickSpec {
                     context: [:],
                     override: true,
                     skip: false,
-                    template: template
+                    template: template,
+                    globalContext: nil
                 )
                 let context = Context(name: "Rahul")
                 expect { () -> Void in
