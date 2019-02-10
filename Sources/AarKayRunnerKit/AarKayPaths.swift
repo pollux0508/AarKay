@@ -32,7 +32,8 @@ public struct AarKayPaths {
     /// - Parameter global: Setting global to true will return the global directory otherwise local directory.
     /// - Returns: The created url.
     public func directoryPath(global: Bool = false) -> URL {
-        return global ? globalUrl : localUrl
+        let baseUrl = global ? globalUrl : localUrl
+        return baseUrl
     }
 
     /// Creates the url for the root directory of `AarKay`.

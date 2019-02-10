@@ -40,7 +40,7 @@ struct UpdateCommand: CommandProtocol {
         } catch {
             return .failure(error as! AarKayError)
         }
-        println("Updating Plugins at \(runnerUrl.path). This might take a few minutes...")
+        println("Updating Plugins at \(runnerUrl.relativeString). This might take a few minutes...")
         return Tasks.update(at: runnerUrl.path)
         /// </aarkay>
     }

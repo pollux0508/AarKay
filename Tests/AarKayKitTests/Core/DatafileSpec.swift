@@ -35,14 +35,14 @@ class DatafileSpec: QuickSpec {
                 let context = Context(name: "Rahul")
                 expect { () -> Void in
                     expect(df.context.isEmpty) == true
-                    
+
                     expect(df.directory.isEmpty) == true
                     df.appendDirectory(nil)
                     expect(df.directory.isEmpty) == true
-                    
+
                     df.appendDirectory("Directory")
                     expect(df.directory) == "Directory"
-                    
+
                     df.setDirectory("Directory")
                     df.appendDirectory("Directory")
                     expect(df.directory) == "Directory/Directory"

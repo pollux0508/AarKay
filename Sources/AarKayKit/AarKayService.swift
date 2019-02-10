@@ -16,6 +16,15 @@ protocol AarKayService {
     /// The Generatedfile Service.
     var generatedfileService: GeneratedfileService { get }
 
+    /// Creates the Plugable Type at runtime from the plugin name.
+    ///
+    /// - Parameter plugin: The name of the plugin.
+    /// - Returns: The Plugable Type.
+    /// - Throws: An `Error` if plugable class could not be created.
+    func plugableClass(
+        plugin: String
+    ) throws -> Plugable.Type?
+
     /// Creates a TemplateService object which is responsible for rendering the contents to a template.
     ///
     /// - Parameters:

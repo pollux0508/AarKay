@@ -40,7 +40,7 @@ struct InstallCommand: CommandProtocol {
         } catch {
             return .failure(error as! AarKayError)
         }
-        println("Installing plugins at \(runnerUrl.path). This might take a few minutes...")
+        println("Installing plugins at \(runnerUrl.relativeString). This might take a few minutes...")
         return Tasks.install(at: runnerUrl.path)
         /// </aarkay>
     }

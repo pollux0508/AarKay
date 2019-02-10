@@ -81,7 +81,7 @@ extension GeneratedfileProvider {
             try Try {
                 var df = datafile
                 if let ext = templateFile.ext,
-                let dirs = context?["dirs"] as? [String: String],
+                    let dirs = context?["dirs"] as? [String: String],
                     let extDir = dirs[ext] {
                     df.setDirectory(extDir + "/" + df.directory)
                 }

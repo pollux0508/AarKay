@@ -9,6 +9,15 @@ import Foundation
 
 /// Represents a Plugin
 public protocol Plugable: class {
+    /// The Datafile.
+    var context: [String: Any] { get set }
+
+    /// Initializes the Plugable with the global context.
+    ///
+    /// - Parameter context: The global context.
+    /// - Throws: An `Error` if decoding model contents encouter any error.
+    init(context: [String: Any]) throws
+
     /// Returns the location of all templates on Disk.
     static func templates() -> [String]
 

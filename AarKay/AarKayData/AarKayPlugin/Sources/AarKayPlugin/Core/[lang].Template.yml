@@ -1,7 +1,6 @@
 - name: Arg
   customDecoder: true
   isTemplate: false
-  isPlugin: false
   properties:
     - name|String
     - type|String
@@ -14,7 +13,6 @@
     - swiftType|String
 - name: TemplateString
   isTemplate: false
-  isPlugin: false
   properties:
     - ext|String?
     - suffix|String?

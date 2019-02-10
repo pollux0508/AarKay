@@ -1,5 +1,4 @@
 name: Template
-isPlugin: false
 properties:
     - name|String
     - properties|[ArgModel]?

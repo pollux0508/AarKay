@@ -95,7 +95,7 @@ class AarKayLogger {
         error: Error,
         verbose: Bool
     ) {
-        print("   <!> \(url.relativeString)".red)
+        print("   <!> \(url.path)".red)
         if verbose {
             print("\(error.localizedDescription)".red)
         }

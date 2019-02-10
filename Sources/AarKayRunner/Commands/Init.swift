@@ -38,7 +38,7 @@ struct InitCommand: CommandProtocol {
                 return .failure(error as! AarKayError)
             }
             let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
-            println("Setting up at \(url.path). This might take a few minutes...")
+            println("Setting up at \(url.relativeString). This might take a few minutes...")
             return Tasks.install(at: runnerUrl.path)
         }
         /// </aarkay>

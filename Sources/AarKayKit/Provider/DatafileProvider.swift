@@ -14,9 +14,13 @@ struct DatafileProvider: DatafileService {
         plugin: String,
         template: String
     ) -> Templatable.Type? {
-        if let templateClass = NSClassFromString("\(plugin).\(template)") as? Templatable.Type {
+        if let templateClass = NSClassFromString(
+            "\(plugin).\(template)"
+        ) as? Templatable.Type {
             return templateClass
-        } else if let templateClass = NSClassFromString("aarkay_plugin_\(plugin.lowercased()).\(template)") as? Templatable.Type {
+        } else if let templateClass = NSClassFromString(
+            "aarkay_plugin_\(plugin.lowercased()).\(template)"
+        ) as? Templatable.Type {
             return templateClass
         } else {
             return nil

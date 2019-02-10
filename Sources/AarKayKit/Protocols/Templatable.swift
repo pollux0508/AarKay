@@ -17,6 +17,11 @@ public protocol Templatable: class {
     /// - Parameter datafile: The Datafile.
     /// - Throws: An `Error` if decoding datafile contents encouter any error.
     init(datafile: Datafile) throws
+
+    /// Processes the datafile and generate more datafiles from it.
+    ///
+    /// - Returns: An array of datafile.
+    /// - Throws: An `Error` if datafiles creation encouters any error.
     func datafiles() throws -> [Datafile]
 
     /// Returns the `InputSerializable` to use to decode the contents of Datafile.

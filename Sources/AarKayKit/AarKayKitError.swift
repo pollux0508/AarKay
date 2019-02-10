@@ -10,6 +10,7 @@ import Foundation
 /// - invalidTemplate: Returned when the name of template doesn't conform to AarKayTemplate.
 public enum AarKayKitError: Error {
     case unknownError(error: Error?)
+    case invalidPlugin(name: String)
     case invalidContents(InvalidContentsReason)
     case invalidTemplate(InvalidTemplateReason)
 
@@ -25,6 +26,11 @@ public enum AarKayKitError: Error {
         case invalidModel(
             fileName: String,
             template: String,
+            type: String,
+            context: [String: Any]
+        )
+        case invalidPluginModel(
+            plugin: String,
             type: String,
             context: [String: Any]
         )
@@ -70,6 +76,8 @@ extension AarKayKitError: LocalizedError {
                 desc = desc + "- " + err.localizedDescription
             }
             return desc
+        case .invalidPlugin(let name):
+            return "Failed to load plugin - \(name)"
         case .invalidContents(let reason):
             return reason.localizedDescription
         case .invalidTemplate(let reason):
@@ -87,6 +95,8 @@ extension AarKayKitError.InvalidContentsReason: LocalizedError {
             return "Single datafile expects an object as an input."
         case .invalidModel(let fileName, let template, let type, let context):
             return "The data for fileName - (\(fileName)) and template (\(template)) could not be serailzied to type - (\(type))\nContext :- \(context)"
+        case .invalidPluginModel(let plugin, let type, let context):
+            return "The data for plugin - (\(plugin)) could not be serailzied to type - (\(type))\nContext :- \(context)"
         case .missingFileName:
             return "Failed to resolve filename."
         }

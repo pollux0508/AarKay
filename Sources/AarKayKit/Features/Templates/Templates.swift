@@ -70,7 +70,7 @@ extension Templates {
                 url.lastPathComponent != "Tests" {
                 if url.lastPathComponent == "/" {
                     throw AarKayKitError.internalError(
-                        "Incorrect plugin structure at \(templateUrl.path)"
+                        "Incorrect plugin structure at \(templateUrl.relativeString)"
                     )
                 }
                 url = url.deletingLastPathComponent()

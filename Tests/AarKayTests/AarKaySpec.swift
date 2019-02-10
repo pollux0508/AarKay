@@ -36,9 +36,9 @@ class AarKaySpec: QuickSpec {
         describe("AarKaySpec") {
             it("should work without plugin") {
                 let paths = [
-                    ("AarKay/.aarkay", "project: AarKay"),
-                    ("AarKay/AarKayData/Random/Directory/File1.Random.yml", "name: Rahul"),
-                    ("AarKay/AarKayData/Random/Directory/File2.Random.yml", "name: RK"),
+                    ("AarKay/.aarkay", "noplugin:\n  project: AarKay"),
+                    ("AarKay/AarKayData/NoPlugin/Directory/File1.Random.yml", "name: Rahul"),
+                    ("AarKay/AarKayData/NoPlugin/Directory/File2.Random.yml", "name: RK"),
                     ("AarKay/AarKayTemplates/Random.txt.stencil", "{{ project }} - {{ name }}"),
                 ]
 
@@ -74,7 +74,7 @@ class AarKaySpec: QuickSpec {
             it("should override global context") {
                 let paths = [
                     ("AarKay/.aarkay", "project: AarKay"),
-                    ("AarKay/AarKayData/Random/Directory/File.Random.yml", "project: Rahul\nname: RK"),
+                    ("AarKay/AarKayData/NoPlugin/Directory/File.Random.yml", "project: Rahul\nname: RK"),
                     ("AarKay/AarKayTemplates/Random.txt.stencil", "{{ project }} - {{ name }}"),
                 ]
 

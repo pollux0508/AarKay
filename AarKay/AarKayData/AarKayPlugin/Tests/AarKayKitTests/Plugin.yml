@@ -1,0 +1,3 @@
+name: AarKayKitTests
+properties:
+  - project|String!|"Project"

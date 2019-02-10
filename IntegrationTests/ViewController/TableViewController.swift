@@ -7,7 +7,6 @@
 //
 
 import AarKayKit
-import AarKayPlugin
 import Foundation
 
 public class TableViewController: ViewController {
@@ -27,7 +26,7 @@ public class TableViewControllerModel: ViewControllerModel {
         case isStatic
     }
 
-    override public init(name: String) {
+    public override init(name: String) {
         super.init(name: name)
     }
 

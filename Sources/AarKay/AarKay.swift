@@ -86,7 +86,7 @@ public class AarKay {
                 )
             }.catch { error in
                 AarKayError.internalError(
-                    "Failed to fetch contents of directory at url - \(url.path)",
+                    "Failed to fetch contents of directory at url - \(url.relativeString)",
                     with: error
                 )
             }
@@ -110,7 +110,7 @@ public class AarKay {
     ) {
         let pluginName = pluginUrl.lastPathComponent
         do {
-            let plugin = try Plugin(
+            let plugin = try Pluginfile(
                 name: pluginName,
                 globalContext: globalContext?[pluginName.lowercased()] as? [String: Any],
                 globalTemplates: templateUrls
@@ -149,7 +149,7 @@ public class AarKay {
     }
 
     private func bootstrap(
-        plugin: Plugin,
+        plugin: Pluginfile,
         sourceUrl: URL,
         destinationUrl: URL
     ) {
@@ -244,8 +244,8 @@ public class AarKay {
             isDirectory: true,
             relativeTo: url
         )
-            .appendingPathComponent(generatedfile.nameWithExt)
-            .standardized
+        .appendingPathComponent(generatedfile.nameWithExt)
+        .standardized
         guard !generatedfile.datafile.skip else {
             if options.verbose {
                 AarKayLogger.logFileSkipped(at: url)
@@ -276,7 +276,7 @@ public class AarKay {
                                 )
                             }.catch { error in
                                 AarKayError.internalError(
-                                    "Failed to create file at url - \(url.path)",
+                                    "Failed to create file at url - \(url.relativeString)",
                                     with: error
                                 )
                             }
@@ -304,7 +304,7 @@ public class AarKay {
                     )
                 }.catch { error in
                     AarKayError.internalError(
-                        "Could not create file at url - \(destination.path)",
+                        "Could not create file at url - \(destination.relativeString)",
                         with: error
                     )
                 }

@@ -7,14 +7,15 @@
 
 import Foundation
 import Result
+import SharedKit
 
 /// Represents a Plugin.
-public struct Plugin {
+public struct Pluginfile {
     /// The name of the plugin.
     let name: String
 
     /// The global context shared with all Generatedfiles.
-    let globalContext: [String: Any]?
+    private(set) var globalContext: [String: Any]
 
     /// The location of global templates.
     let globalTemplates: [URL]?
@@ -43,7 +44,6 @@ public struct Plugin {
         fileManager: FileManager = FileManager.default
     ) throws {
         self.name = name
-        self.globalContext = globalContext
         self.globalTemplates = globalTemplates
         self.fileManager = fileManager
         self.aarkayService = AarKayProvider(
@@ -55,10 +55,15 @@ public struct Plugin {
             globalTemplates: globalTemplates,
             fileManager: fileManager
         )
+        if let plugableType = try aarkayService.plugableClass(plugin: name) {
+            self.globalContext = try plugableType.init(context: globalContext ?? [:]).context
+        } else {
+            self.globalContext = globalContext ?? [:]
+        }
     }
 }
 
-extension Plugin {
+extension Pluginfile {
     /// Creates GeneratedFile results from one Datafile on a disk.
     ///
     /// - Parameters:

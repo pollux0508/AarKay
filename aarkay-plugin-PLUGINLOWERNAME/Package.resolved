@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/RahulKatariya/AarKay.git",
         "state": {
           "branch": null,
-          "revision": "c9e607f995f299f473b9ad6732e88b9936cc0f11",
-          "version": "0.0.13"
+          "revision": "1559b475a6b7a72c2827c52dec69db162b60d481",
+          "version": "0.5.0"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/Quick/Nimble.git",
         "state": {
           "branch": null,
-          "revision": "cd6dfb86f496fcd96ce0bc6da962cd936bf41903",
-          "version": "7.3.1"
+          "revision": "e9d769113660769a4d9dd3afb855562c0b7ae7b0",
+          "version": "7.3.4"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/Quick/Quick.git",
         "state": {
           "branch": null,
-          "revision": "5fbf13871d185526993130c3a1fad0b70bfe37ce",
-          "version": "1.3.2"
+          "revision": "f2b5a06440ea87eba1a167cab37bf6496646c52e",
+          "version": "1.3.4"
         }
       },
       {
@@ -114,8 +114,8 @@
         "repositoryURL": "https://github.com/SwiftGen/StencilSwiftKit.git",
         "state": {
           "branch": null,
-          "revision": "a50ab97b9380fbf75fedaeac2da79f4d52464b8f",
-          "version": "2.7.1"
+          "revision": "dbf02bd6afe71b65ead2bd250aaf974abc688094",
+          "version": "2.7.2"
         }
       },
       {
@@ -125,15 +125,6 @@
           "branch": null,
           "revision": "89728970c0a244c43f29c4155a1b1dc20b3c4633",
           "version": "0.8.0"
-        }
-      },
-      {
-        "package": "Willow",
-        "repositoryURL": "https://github.com/RahulKatariya/Willow.git",
-        "state": {
-          "branch": null,
-          "revision": "a4e7c86eae4c529fb2fc3c254645756986f7a4bf",
-          "version": "5.1.2"
         }
       },
       {

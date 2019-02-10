@@ -14,7 +14,7 @@ class PluginSpec: QuickSpec {
     override func spec() {
         describe("Plugin") {
             expect { () -> Void in
-                let plugin = try Plugin(
+                let plugin = try Pluginfile(
                     name: "AarKayKitTests",
                     globalContext: nil,
                     globalTemplates: nil
