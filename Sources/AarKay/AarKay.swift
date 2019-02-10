@@ -112,7 +112,7 @@ public class AarKay {
         do {
             let plugin = try Plugin(
                 name: pluginName,
-                globalContext: globalContext,
+                globalContext: globalContext?[pluginName.lowercased()] as? [String: Any],
                 globalTemplates: templateUrls
             )
 
@@ -135,7 +135,6 @@ public class AarKay {
             mirrorUrls.forEach { (sourceUrl: URL, destinationUrl: URL) in
                 self.bootstrap(
                     plugin: plugin,
-                    globalContext: globalContext,
                     sourceUrl: sourceUrl,
                     destinationUrl: destinationUrl
                 )
@@ -151,7 +150,6 @@ public class AarKay {
 
     private func bootstrap(
         plugin: Plugin,
-        globalContext: [String: Any]?,
         sourceUrl: URL,
         destinationUrl: URL
     ) {
