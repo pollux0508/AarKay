@@ -13,7 +13,10 @@ class AarKayKitTestsPlugin: Plugable {
     public var context: [String: Any]
 
     public required init(context: [String: Any]) throws {
-        self.context = try JSONCoder.dencode(type: AarKayKitTestsPluginModel.self, context: context)
+        self.context = try JSONCoder.dencode(
+            type: AarKayKitTestsPluginModel.self,
+            context: context
+        )
     }
 
     static func templates() -> [String] {
