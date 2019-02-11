@@ -84,7 +84,7 @@ public class AarKay {
                     includingPropertiesForKeys: [.isDirectoryKey],
                     options: .skipsHiddenFiles
                 )
-            }.catch { error in
+            }.do { error in
                 AarKayError.internalError(
                     "Failed to fetch contents of directory at url - \(url.relativeString)",
                     with: error
@@ -125,7 +125,7 @@ public class AarKay {
 
             let mirrorUrls = try Try {
                 try dirTreeMirror.bootstrap()
-            }.catch { error in
+            }.do { error in
                 AarKayError.internalError(
                     "Failed to create directory tree mirror with source url - \(pluginUrl) and destination url - \(url)",
                     with: error
@@ -261,7 +261,7 @@ public class AarKay {
                 do {
                     let currentString = try Try {
                         try String(contentsOf: destination)
-                    }.catch { error in
+                    }.do { error in
                         AarKayError.internalError(
                             "Failed to read file at url - \(url)",
                             with: error
@@ -274,7 +274,7 @@ public class AarKay {
                                 try string.write(
                                     to: destination, atomically: true, encoding: .utf8
                                 )
-                            }.catch { error in
+                            }.do { error in
                                 AarKayError.internalError(
                                     "Failed to create file at url - \(url.relativeString)",
                                     with: error
@@ -302,7 +302,7 @@ public class AarKay {
                     try generatedfile.contents.write(
                         to: destination, atomically: true, encoding: .utf8
                     )
-                }.catch { error in
+                }.do { error in
                     AarKayError.internalError(
                         "Could not create file at url - \(destination.relativeString)",
                         with: error

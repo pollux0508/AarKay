@@ -53,7 +53,7 @@ extension String {
     fileprivate func capturedGroups(regex: String) throws -> [[Range<String.Index>]] {
         let regex = try Try {
             try NSRegularExpression(pattern: regex, options: [])
-        }.catch { error in
+        }.do { error in
             AarKayKitError.internalError(
                 "Failed to construct NSRegularExpression with \(regex)",
                 with: error

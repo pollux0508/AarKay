@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedKit
 
 /// Represents the AarKayFile, which is a specification of a project's plugin dependencies.
 public struct AarKayFile {
@@ -27,11 +28,10 @@ public struct AarKayFile {
                 reason: AarKayError.AarKayFileParsingReason.missingFile(url: url)
             )
         }
-        var contents: String!
-        do {
-            contents = try String(contentsOf: url)
-        } catch {
-            throw AarKayError.internalError(
+        let contents = try Try {
+            try String(contentsOf: url)
+        }.do { error in
+            AarKayError.internalError(
                 "Failed to fetch contents of \(url)", with: error
             )
         }
