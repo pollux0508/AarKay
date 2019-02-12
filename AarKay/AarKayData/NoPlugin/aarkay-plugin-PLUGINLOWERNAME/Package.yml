@@ -1,1 +1,1 @@
-version: '.upToNextMinor(from: "0.6.0")'
+version: '.upToNextMinor(from: "0.6.1")'
