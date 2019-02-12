@@ -73,7 +73,17 @@ extension AarKayProvider {
 
         guard let templates = try Templates(
             fileManager: fileManager,
-            templates: plugable.templates().map { URL(fileURLWithPath: $0) }
+            templates: plugable.templates().map {
+                var url = URL(fileURLWithPath: $0)
+                if url.path.hasPrefix("/tmp") {
+                    print("[OLD]", url.absoluteString)
+                    let pathComponents = Array(url.pathComponents.dropFirst().dropFirst())
+                    let newPath = "/" + pathComponents.joined(separator: "/")
+                    url = URL(fileURLWithPath: newPath, isDirectory: true)
+                    print("[NEW]", url.absoluteString)
+                }
+                return url
+            }
         ) else {
             throw AarKayKitError.invalidTemplate(
                 AarKayKitError.InvalidTemplateReason
