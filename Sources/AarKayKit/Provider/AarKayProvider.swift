@@ -73,8 +73,8 @@ extension AarKayProvider {
 
         guard let templates = try Templates(
             fileManager: fileManager,
-            templates: plugable.templates().map {
-                var url = URL(fileURLWithPath: $0)
+            templates: plugable.templates().map { templateUrl in
+                var url = URL(fileURLWithPath: templateUrl)
                 if url.path.hasPrefix("/tmp") {
                     print("[OLD]", url.absoluteString)
                     let pathComponents = Array(url.pathComponents.dropFirst().dropFirst())
@@ -82,6 +82,21 @@ extension AarKayProvider {
                     url = URL(fileURLWithPath: newPath, isDirectory: true)
                     print("[NEW]", url.absoluteString)
                 }
+                while url.lastPathComponent != "Sources" &&
+                    url.lastPathComponent != "Tests" {
+                        if url.lastPathComponent == "/" {
+                            throw AarKayKitError.internalError(
+                                "Incorrect plugin structure at \(templateUrl)"
+                            )
+                        }
+                        url = url.deletingLastPathComponent()
+                }
+                url = url
+                    .deletingLastPathComponent()
+                    .appendingPathComponent(
+                        "AarKay/AarKayTemplates",
+                        isDirectory: true
+                )
                 return url
             }
         ) else {

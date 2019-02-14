@@ -29,7 +29,16 @@ class TemplatesSpec: QuickSpec {
                 expect { () -> Void in
                     let templates = try Templates(
                         fileManager: self.fileManager,
-                        templates: [#file].map { URL(fileURLWithPath: $0) }
+                        templates: [#file].map {
+                            URL(fileURLWithPath: $0)
+                                .deletingLastPathComponent()
+                                .deletingLastPathComponent()
+                                .deletingLastPathComponent()
+                                .deletingLastPathComponent()
+                                .appendingPathComponent(
+                                    "AarKay/AarKayTemplates", isDirectory: true
+                                )
+                        }
                     )
                     expect(templates).toNot(beNil())
 

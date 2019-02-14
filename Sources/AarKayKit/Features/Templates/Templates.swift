@@ -62,38 +62,13 @@ public struct Templates {
 extension Templates {
     private func templatesDirectories(urls: [URL]) throws -> [URL] {
         return try urls.map { templateUrl in
-            guard templateUrl.lastPathComponent != "AarKayTemplates" else {
-                return templateUrl
-            }
-            var url = templateUrl
-            while url.lastPathComponent != "Sources" &&
-                url.lastPathComponent != "Tests" {
-                if url.lastPathComponent == "/" {
-                    throw AarKayKitError.internalError(
-                        "Incorrect plugin structure at \(templateUrl.relativeString)"
-                    )
-                }
-                url = url.deletingLastPathComponent()
-            }
-            url = url
-                .deletingLastPathComponent()
-                .appendingPathComponent(
-                    "AarKay/AarKayTemplates",
-                    isDirectory: true
-                )
-            guard fileManager.fileExists(atPath: url.path) else {
+            guard templateUrl.lastPathComponent == "AarKayTemplates",
+                fileManager.fileExists(atPath: templateUrl.path) else {
                 throw AarKayKitError.internalError(
                     "Incorrect plugin structure at \(templateUrl)"
                 )
             }
-            if url.path.hasPrefix("/tmp") {
-                print("[OLD]", url.absoluteString)
-                let pathComponents = Array(url.pathComponents.dropFirst().dropFirst())
-                let newPath = "/" + pathComponents.joined(separator: "/")
-                url = URL(fileURLWithPath: newPath, isDirectory: true)
-                print("[NEW]", url.absoluteString)
-            }
-            return url
+            return templateUrl
         }
     }
 
