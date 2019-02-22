@@ -1,3 +1,0 @@
-{% extends "View.swift.stencil" %}
-
-{% block type %}{% if base %}{{base}}{% else %}UIButton{% endif %}{% endblock %}

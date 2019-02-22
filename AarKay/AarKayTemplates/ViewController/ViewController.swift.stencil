@@ -1,7 +1,0 @@
-import UIKit
-
-class {{name}}{{type}}ViewController: {% block extends %}{% if base %}{{base}}{{type}}ViewController{% else %}{{prefix}}{{type}}ViewController{% endif %}{% endblock %} {
-  /// <aarkay {{name}}{{type}}ViewController>
-
-  /// </aarkay>
-}
