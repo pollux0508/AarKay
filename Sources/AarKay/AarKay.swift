@@ -258,37 +258,33 @@ public class AarKay {
                     AarKayLogger.logFileSkipped(at: url); return
                 }
             } else {
-                do {
-                    let currentString = try Try {
-                        try String(contentsOf: destination)
-                    }.do { error in
-                        AarKayError.internalError(
-                            "Failed to read file at url - \(url)",
-                            with: error
-                        )
-                    }
-                    let string = try generatedfile.merge(currentString)
-                    if string != currentString {
-                        if !options.dryrun {
-                            try Try { () -> Void in
-                                try string.write(
-                                    to: destination, atomically: true, encoding: .utf8
-                                )
-                            }.do { error in
-                                AarKayError.internalError(
-                                    "Failed to create file at url - \(url.relativeString)",
-                                    with: error
-                                )
-                            }
-                        }
-                        AarKayLogger.logFileModified(at: destination)
-                    } else {
-                        if options.verbose {
-                            AarKayLogger.logFileUnchanged(at: destination)
+                let currentString = try Try {
+                    try String(contentsOf: destination)
+                }.do { error in
+                    AarKayError.internalError(
+                        "Failed to read file at url - \(url)",
+                        with: error
+                    )
+                }
+                let string = try generatedfile.merge(currentString)
+                if string != currentString {
+                    if !options.dryrun {
+                        try Try { () -> Void in
+                            try string.write(
+                                to: destination, atomically: true, encoding: .utf8
+                            )
+                        }.do { error in
+                            AarKayError.internalError(
+                                "Failed to create file at url - \(url.relativeString)",
+                                with: error
+                            )
                         }
                     }
-                } catch {
-                    AarKayLogger.logError(error)
+                    AarKayLogger.logFileModified(at: destination)
+                } else {
+                    if options.verbose {
+                        AarKayLogger.logFileUnchanged(at: destination)
+                    }
                 }
             }
         } else {

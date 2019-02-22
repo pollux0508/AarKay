@@ -20,7 +20,7 @@ public struct Try<Value> {
         self.block = block
     }
 
-    /// Executes the block and maps to a given error if block fails.
+    /// Executes the block.
     ///
     /// - Returns: The value returned by the block.
     /// - Throws: An `Error` if block encouters an error.
