@@ -26,7 +26,7 @@ public class {{name}}: {% if base %}{{base}}{% else %}NSObject, Templatable{% en
         {% if base %}
         var df = datafile
         self.model = try df.dencode(type: {{name}}Model.self)
-        try super.init(datafile: df)
+        try super.init(datafile: datafile)
         {% else %}
         self.datafile = datafile
         self.model = try self.datafile.dencode(type: {{name}}Model.self)
