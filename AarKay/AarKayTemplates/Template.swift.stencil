@@ -23,9 +23,9 @@ public class {{name}}: {% if base %}{{base}}{% else %}NSObject, Templatable{% en
     private var model: {{name}}Model
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
         self.model = try self.datafile.dencode(type: {{name}}Model.self)
         {% if base %}try super.init(datafile: datafile){% endif %}
+        self.datafile = datafile
     }
     {% if inputSerializer %}
 
