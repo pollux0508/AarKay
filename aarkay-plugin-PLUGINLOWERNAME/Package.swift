@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AarKayPLUGINNAME",
+    name: "AarKayPLUGINNAMEPlugin",
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .executable(
@@ -31,7 +31,7 @@ let package = Package(
         .target(
             name: "aarkay-plugin-PLUGINLOWERNAME",
             dependencies: ["AarKayPlugin"],
-            path: "Sources/AarKayPLUGINNAME"
+            path: "Sources/AarKayPLUGINNAMEPlugin"
         ),
     ],
     swiftLanguageVersions: [.v4, .v4_2]
