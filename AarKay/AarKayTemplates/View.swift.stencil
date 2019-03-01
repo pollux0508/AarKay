@@ -1,0 +1,48 @@
+import UIKit
+{% if useNib %}import Reusable{% endif %}
+import RxSwift
+import RxCocoa
+import SnapKit
+public struct {{name}}Context {
+    {% for item in context %}
+    public let {{ item.name }}: {{item.type}}
+    {% endfor %}
+    public init(
+        {% for item in context %}
+        {{ item.name }}: {{item.type}}{% if item.isOptional %} = nil{% endif %}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    ) {
+        {% for item in context %}
+        self.{{ item.name }} = {{ item.name }}
+        {% endfor %}
+    }
+}
+public class {{name}}Builder {
+    public static func build(
+      with context: {{name}}Context
+    ) -> {{name}} {
+        let {{ name|lowerFirstLetter }} = {{name}}{% if useNib %}.loadFromNib{% endif %}()
+        {{ name|lowerFirstLetter }}.context = context
+        {{ name|lowerFirstLetter }}.init{{name}}()
+        {{ name|lowerFirstLetter }}.layout{{name}}()
+        return {{ name|lowerFirstLetter }}
+    }
+}
+public class {{name}}: {% block type %}{% if base %}{{base}}{% else %}UIView{% endif %}{% endblock %} {
+    let disposeBag = DisposeBag()
+    var context: {{name}}Context!
+    {% block init %}{% endblock %}
+    {% if subviews %}
+    {% for item in subviews %}
+    public lazy var {{item.name}} = {{item.type}}
+    {% endfor %}
+    {% endif %}
+    func init{{name}}() {
+        /// <aarkay init{{name}}>
+        /// </aarkay>
+    }
+    func layout{{name}}() {
+        /// <aarkay layout{{name}}>
+        /// </aarkay>
+    }
+}

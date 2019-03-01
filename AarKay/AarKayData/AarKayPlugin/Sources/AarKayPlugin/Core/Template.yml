@@ -2,7 +2,6 @@ name: Template
 properties:
   - isTemplate|Bool!|true
   - name|String
-  - module|String!|self.name
   - dir|String?
   - inputSerializer|String?
   - customDecoder|Bool!|false

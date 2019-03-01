@@ -1,0 +1,150 @@
+templateModel:
+  name: View
+  dir: View
+  properties:
+    - name|String
+    - prefix|String!|"UI"
+templates:
+  - ext: swift
+    string: |
+      import UIKit
+      {% if useNib %}import Reusable{% endif %}
+      import RxSwift
+      import RxCocoa
+      import SnapKit
+      public struct {{name}}Context {
+          {% for item in context %}
+          public let {{ item.name }}: {{item.type}}
+          {% endfor %}
+          public init(
+              {% for item in context %}
+              {{ item.name }}: {{item.type}}{% if item.isOptional %} = nil{% endif %}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+          ) {
+              {% for item in context %}
+              self.{{ item.name }} = {{ item.name }}
+              {% endfor %}
+          }
+      }
+      public class {{name}}Builder {
+          public static func build(
+            with context: {{name}}Context
+          ) -> {{name}} {
+              let {{ name|lowerFirstLetter }} = {{name}}{% if useNib %}.loadFromNib{% endif %}()
+              {{ name|lowerFirstLetter }}.context = context
+              {{ name|lowerFirstLetter }}.init{{name}}()
+              {{ name|lowerFirstLetter }}.layout{{name}}()
+              return {{ name|lowerFirstLetter }}
+          }
+      }
+      public class {{name}}: {% block type %}{% if base %}{{base}}{% else %}UIView{% endif %}{% endblock %} {
+          let disposeBag = DisposeBag()
+          var context: {{name}}Context!
+          {% block init %}{% endblock %}
+          {% if subviews %}
+          {% for item in subviews %}
+          public lazy var {{item.name}} = {{item.type}}
+          {% endfor %}
+          {% endif %}
+          func init{{name}}() {
+              /// <aarkay init{{name}}>
+              /// </aarkay>
+          }
+          func layout{{name}}() {
+              /// <aarkay layout{{name}}>
+              /// </aarkay>
+          }
+      }
+    subString: |
+      {% extends "View.swift.stencil" %}
+      {% block type %}{% if base %}{{base}}{% else %}UI{{self.name}}{% endif %}{% endblock %}
+subModels:
+  - templateModel:
+      name: ActivityIndicatorView
+  - templateModel:
+      name: CollectionViewCell
+  - templateModel:
+      name: TableViewCell
+  - templateModel:
+      name: ImageView
+      properties:
+        - contentMode|String?
+    templates:
+      - ext: swift
+        string: |
+          {% extends "View.swift.stencil" %}
+          {% block type %}{% if base %}{{base}}{% else %}UI{{self.name}}{% endif %}{% endblock %}
+          {% block init %}
+              public override init(image: UIImage?) {
+                  super.init(image: image)
+                  init{{name}}()
+              }
+          {% endblock %}
+  - templateModel:
+      name: Label
+      properties:
+        - text|String?
+        - numberOfLines|Int?
+        - font|String?
+        - textColor|String?
+        - textAlignment|String?
+        - adjustsFontSizeToFitWidth|Bool?
+        - minimumScaleFactor|Float?
+        - allowsDefaultTighteningForTruncation|Bool?
+  - templateModel:
+      name: PickerView
+  - templateModel:
+      name: ProgressView
+  - templateModel:
+      name: StackView
+      properties:
+        - axis|String?
+        - distribution|String?
+        - alignment|String?
+        - spacing|Float?
+        - isBaselineRelativeArrangement|Bool?
+        - isLayoutMarginsRelativeArrangement|Bool?
+        - asv|[String]?
+  - templateModel:
+      name: ScrollView
+    subModels:
+      - templateModel:
+          name: TableView
+        templates:
+          - ext: swift
+            string: |
+              {% extends "View.swift.stencil" %}
+              {% block type %}{% if base %}{{base}}{% else %}UI{{self.name}}{% endif %}{% endblock %}
+              {% block init %}
+                  init() {
+                      super.init(frame: .zero, style: .plain)
+                      init{{name}}()
+                  }
+                  override init(frame: CGRect, style: UITableView.Style) {
+                      super.init(frame: frame, style: style)
+                      init{{name}}()
+                  }
+              {% endblock %}
+      - templateModel:
+          name: CollectionView
+      - templateModel:
+          name: TextView
+  - templateModel:
+      name: Control
+    subModels:
+      - templateModel:
+          name: Button
+      - templateModel:
+          name: DatePicker
+      - templateModel:
+          name: SegmentedControl
+      - templateModel:
+          name: Slider
+      - templateModel:
+          name: PageControl
+      - templateModel:
+          name: Switch
+      - templateModel:
+          name: TextField
+      - templateModel:
+          name: Stepper

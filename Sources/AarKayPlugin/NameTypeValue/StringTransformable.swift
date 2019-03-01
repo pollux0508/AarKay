@@ -76,6 +76,46 @@ extension Int64: StringTransformable {
     }
 }
 
+extension UInt: StringTransformable {
+    /// Transforms the value to a swift UInt.
+    ///
+    /// - Parameter value: The uint value in string format.
+    /// - Returns: nil if failed otherwise the casted UInt.
+    public static func transform(value: String) -> UInt? {
+        return UInt(value)
+    }
+}
+
+extension UInt16: StringTransformable {
+    /// Transforms the value to a swift UInt16.
+    ///
+    /// - Parameter value: The uint16 value in string format.
+    /// - Returns: nil if failed otherwise the casted UInt16.
+    public static func transform(value: String) -> UInt16? {
+        return UInt16(value)
+    }
+}
+
+extension UInt32: StringTransformable {
+    /// Transforms the value to a swift UInt32.
+    ///
+    /// - Parameter value: The uint32 value in string format.
+    /// - Returns: nil if failed otherwise the casted UInt32.
+    public static func transform(value: String) -> UInt32? {
+        return UInt32(value)
+    }
+}
+
+extension UInt64: StringTransformable {
+    /// Transforms the value to a swift UInt64.
+    ///
+    /// - Parameter value: The uint64 value in string format.
+    /// - Returns: nil if failed otherwise the casted UInt64.
+    public static func transform(value: String) -> UInt64? {
+        return UInt64(value)
+    }
+}
+
 extension Float: StringTransformable {
     /// Transforms the value to a swift Float.
     ///

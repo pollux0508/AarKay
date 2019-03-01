@@ -17,6 +17,10 @@ public class TypeValueTransformer {
         "Int16": Int16.self,
         "Int32": Int32.self,
         "Int64": Int64.self,
+        "UInt": UInt.self,
+        "UInt16": UInt16.self,
+        "UInt32": UInt32.self,
+        "UInt64": UInt64.self,
         "Float": Float.self,
         "Double": Double.self,
     ]

@@ -1,0 +1,7 @@
+name: Inheritance
+properties:
+  - base|String?
+  - inputSerializer|String?
+  - templateModel|TemplateModel
+  - templates|[TemplateStringModel]?
+  - subModels|[InheritanceModel]?

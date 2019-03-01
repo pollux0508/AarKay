@@ -1,0 +1,40 @@
+//     _____                  ____  __.
+//    /  _  \ _____ _______  |    |/ _|____  ___.__.
+//   /  /_\  \\__  \\_  __ \ |      < \__  \<   |  |
+//  /    |    \/ __ \|  | \/ |    |  \ / __ \\___  |
+//  \____|__  (____  /__|    |____|__ (____  / ____|
+//          \/     \/                \/    \/\/
+//
+
+import AarKayKit
+{% if not isNotPlugin %}
+import AarKayPlugin
+{% endif %}
+import Foundation
+{% for import in imports %}
+import {{import}}
+{% endfor %}
+{% if templateModel.isTemplate %}
+
+public class {{templateModel.name}}: {% if base %}{{base}}{% else %}NSObject, Templatable{% endif %} {
+    {% if not base %}
+    public var datafile: Datafile
+    {% endif %}
+    private var model: {{templateModel.name}}Model
+
+    public required init(datafile: Datafile) throws {
+        self.datafile = datafile
+        self.model = try self.datafile.dencode(type: {{templateModel.name}}Model.self)
+        {% if base %}try super.init(datafile: datafile){% endif %}
+    }
+    {% if inputSerializer %}
+
+    public static func inputSerializer() -> InputSerializable {
+        return {{inputSerializer}}InputSerializer()
+    }
+    {% endif %}
+}
+{% endif %}
+
+{% include "Model.stencil" templateModel %}
+
