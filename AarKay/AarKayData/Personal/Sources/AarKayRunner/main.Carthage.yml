@@ -1,6 +1,7 @@
 name: AarKay
 kit: AarKayRunnerKit
 defaultCommand: run
+commandsDir: ../AarKayRunnerKit
 commands:
   - name: Init
     desc: Initialize AarKay and install all the plugins from `AarKayFile`.

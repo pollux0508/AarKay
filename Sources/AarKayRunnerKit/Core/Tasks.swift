@@ -5,19 +5,21 @@
 //  Created by RahulKatariya on 01/01/19.
 //
 
-import AarKayRunnerKit
 import Foundation
 import ReactiveSwift
 import ReactiveTask
 import Result
 
 /// Type that encapsulates all task events in AarKay.
-class Tasks {
+public class Tasks {
     /// Builds the `AarKayRunner` swift package.
     ///
     /// - Parameter path: The working directory path.
     /// - Returns: A result containing either success or `AarKayError`.
-    static func build(at path: String) -> Result<(), AarKayError> {
+    public static func build(
+        at path: String,
+        standardOutput: ((String) -> ())? = nil
+    ) -> Result<(), AarKayError> {
         let buildArguments = [
             "build", "-c", "debug",
             "-Xswiftc", "-target", "-Xswiftc", "x86_64-apple-macosx10.12",
@@ -27,14 +29,17 @@ class Tasks {
             arguments: buildArguments,
             workingDirectoryPath: path
         )
-        return task.run()
+        return task.run(standardOutput: standardOutput)
     }
 
     /// Updates the dependencies of `AarKayRunner` swift package.
     ///
     /// - Parameter path: The working directory path.
     /// - Returns: A result containing either success or `AarKayError`.
-    static func update(at path: String) -> Result<(), AarKayError> {
+    public static func update(
+        at path: String,
+        standardOutput: ((String) -> ())? = nil
+    ) -> Result<(), AarKayError> {
         let buildArguments = [
             "package",
             "update",
@@ -44,7 +49,7 @@ class Tasks {
             arguments: buildArguments,
             workingDirectoryPath: path
         )
-        let result = task.run()
+        let result = task.run(standardOutput: standardOutput)
         guard result.error == nil else { return result }
         return build(at: path)
     }
@@ -53,7 +58,10 @@ class Tasks {
     ///
     /// - Parameter path: The working directory path.
     /// - Returns: A result containing either success or `AarKayError`.
-    static func install(at path: String) -> Result<(), AarKayError> {
+    public static func install(
+        at path: String,
+        standardOutput: ((String) -> ())? = nil
+    ) -> Result<(), AarKayError> {
         let buildArguments = [
             "package",
             "resolve",
@@ -63,7 +71,7 @@ class Tasks {
             arguments: buildArguments,
             workingDirectoryPath: path
         )
-        let result = task.run()
+        let result = task.run(standardOutput: standardOutput)
         guard result.error == nil else { return result }
         return build(at: path)
     }
@@ -74,8 +82,12 @@ class Tasks {
     ///   - path: The path to execute as shell command.
     ///   - arguments: The list of arguments.
     /// - Returns: A result containing either success or `AarKayError`.
-    static func execute(at path: String, arguments: [String] = []) -> Result<(), AarKayError> {
-        return Task(path, arguments: arguments).run()
+    public static func execute(
+        at path: String,
+        arguments: [String] = [],
+        standardOutput: ((String) -> ())? = nil
+    ) -> Result<(), AarKayError> {
+        return Task(path, arguments: arguments).run(standardOutput: standardOutput)
     }
 }
 
@@ -83,20 +95,24 @@ extension Task {
     /// Launches the task and prints the output.
     ///
     /// - Returns: A result containing either success or `AarKayError`
-    internal func run() -> Result<(), AarKayError> {
+    internal func run(
+        standardOutput: ((String) -> ())? = nil
+    ) -> Result<(), AarKayError> {
         let result = launch()
             .flatMapTaskEvents(.concat) { data in
                 return SignalProducer(
                     value: String(data: data, encoding: .utf8)
                 )
             }
-        return result.waitOnCommand()
+        return result.waitOnCommand(standardOutput: standardOutput)
     }
 }
 
 extension SignalProducer where Value == TaskEvent<String?>, Error == TaskError {
     /// Waits on a SignalProducer that implements the behavior of a CommandProtocol.
-    internal func waitOnCommand() -> Result<(), AarKayError> {
+    internal func waitOnCommand(
+        standardOutput: ((String) -> ())? = nil
+    ) -> Result<(), AarKayError> {
         let result = producer
             .on(
                 event: { event in
@@ -105,7 +121,7 @@ extension SignalProducer where Value == TaskEvent<String?>, Error == TaskError {
                         switch value {
                         case .standardOutput(let data):
                             if let o = String(data: data, encoding: .utf8) {
-                                print(o)
+                                standardOutput?(o)
                             }
                         default: break
                         }

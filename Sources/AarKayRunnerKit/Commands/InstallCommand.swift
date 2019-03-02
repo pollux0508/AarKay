@@ -1,14 +1,18 @@
-import AarKayRunnerKit
 import Commandant
 import Curry
 import Foundation
 import Result
 
-/// Type that encapsulates the configuration and evaluation of the `update` subcommand.
-struct UpdateCommand: CommandProtocol {
-    struct Options: OptionsProtocol {
-        let global: Bool
-        let force: Bool
+/// Type that encapsulates the configuration and evaluation of the `install` subcommand.
+public struct InstallCommand: CommandProtocol {
+    public struct Options: OptionsProtocol {
+        public let global: Bool
+        public let force: Bool
+
+        public init(global: Bool, force: Bool) {
+            self.global = global
+            self.force = force
+        }
 
         public static func evaluate(
             _ mode: CommandMode
@@ -19,11 +23,13 @@ struct UpdateCommand: CommandProtocol {
         }
     }
 
-    var verb: String = "update"
-    var function: String = "Update all the plugins from `AarKayFile`."
+    public var verb: String = "install"
+    public var function: String = "Install all the plugins from `AarKayFile`."
 
-    func run(_ options: Options) -> Result<(), AarKayError> {
-        /// <aarkay Update>
+    public init() {}
+
+    public func run(_ options: Options) -> Result<(), AarKayError> {
+        /// <aarkay Install>
         let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
 
         guard FileManager.default.fileExists(atPath: runnerUrl.path) else {
@@ -40,8 +46,10 @@ struct UpdateCommand: CommandProtocol {
         } catch {
             return .failure(error as! AarKayError)
         }
-        println("Updating Plugins at \(runnerUrl.relativeString). This might take a few minutes...")
-        return Tasks.update(at: runnerUrl.path)
+        println("Installing plugins at \(runnerUrl.relativeString). This might take a few minutes...")
+        return Tasks.install(at: runnerUrl.path) { str in
+            print(str)
+        }
         /// </aarkay>
     }
 }

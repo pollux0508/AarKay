@@ -1,14 +1,18 @@
-import AarKayRunnerKit
 import Commandant
 import Curry
 import Foundation
 import Result
 
 /// Type that encapsulates the configuration and evaluation of the `init` subcommand.
-struct InitCommand: CommandProtocol {
-    struct Options: OptionsProtocol {
-        let global: Bool
-        let force: Bool
+public struct InitCommand: CommandProtocol {
+    public struct Options: OptionsProtocol {
+        public let global: Bool
+        public let force: Bool
+
+        public init(global: Bool, force: Bool) {
+            self.global = global
+            self.force = force
+        }
 
         public static func evaluate(
             _ mode: CommandMode
@@ -19,10 +23,12 @@ struct InitCommand: CommandProtocol {
         }
     }
 
-    var verb: String = "init"
-    var function: String = "Initialize AarKay and install all the plugins from `AarKayFile`."
+    public var verb: String = "init"
+    public var function: String = "Initialize AarKay and install all the plugins from `AarKayFile`."
 
-    func run(_ options: Options) -> Result<(), AarKayError> {
+    public init() {}
+
+    public func run(_ options: Options) -> Result<(), AarKayError> {
         /// <aarkay Init>
         let url = AarKayPaths.default.directoryPath(global: options.global)
         let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
@@ -39,7 +45,9 @@ struct InitCommand: CommandProtocol {
             }
             let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
             println("Setting up at \(url.relativeString). This might take a few minutes...")
-            return Tasks.install(at: runnerUrl.path)
+            return Tasks.install(at: runnerUrl.path) { str in
+                print(str)
+            }
         }
         /// </aarkay>
     }

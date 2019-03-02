@@ -1,16 +1,22 @@
-import AarKayRunnerKit
 import Commandant
 import Curry
 import Foundation
 import Result
 
 /// Type that encapsulates the configuration and evaluation of the `run` subcommand.
-struct RunCommand: CommandProtocol {
-    struct Options: OptionsProtocol {
-        let global: Bool
-        let verbose: Bool
-        let force: Bool
-        let dryrun: Bool
+public struct RunCommand: CommandProtocol {
+    public struct Options: OptionsProtocol {
+        public let global: Bool
+        public let verbose: Bool
+        public let force: Bool
+        public let dryrun: Bool
+
+        public init(global: Bool, verbose: Bool, force: Bool, dryrun: Bool) {
+            self.global = global
+            self.verbose = verbose
+            self.force = force
+            self.dryrun = dryrun
+        }
 
         public static func evaluate(
             _ mode: CommandMode
@@ -23,10 +29,12 @@ struct RunCommand: CommandProtocol {
         }
     }
 
-    var verb: String = "run"
-    var function: String = "Generate respective files from the datafiles inside AarKayData."
+    public var verb: String = "run"
+    public var function: String = "Generate respective files from the datafiles inside AarKayData."
 
-    func run(_ options: Options) -> Result<(), AarKayError> {
+    public init() {}
+
+    public func run(_ options: Options) -> Result<(), AarKayError> {
         /// <aarkay Run>
         var runnerUrl = AarKayPaths.default.runnerPath()
         var cliUrl: URL = AarKayPaths.default.cliPath()
@@ -47,7 +55,9 @@ struct RunCommand: CommandProtocol {
         if options.verbose { arguments.append("--verbose") }
         if options.force { arguments.append("--force") }
         if options.dryrun { arguments.append("--dryrun") }
-        return Tasks.execute(at: cliUrl.path, arguments: arguments)
+        return Tasks.execute(at: cliUrl.path, arguments: arguments) { str in
+            print(str)
+        }
         /// </aarkay>
     }
 }
