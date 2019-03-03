@@ -9,7 +9,7 @@ import Foundation
 import SharedKit
 
 /// Represents the AarKayFile, which is a specification of a project's plugin dependencies.
-public struct AarKayFile {
+public struct AarKayFile: Equatable, Hashable {
     /// Any dependency that starts this character is skipped.
     static let commentIndicator = "#"
 

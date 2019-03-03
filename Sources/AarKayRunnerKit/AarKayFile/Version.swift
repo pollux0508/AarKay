@@ -9,7 +9,7 @@ import Foundation
 
 /// A semantic version.
 /// - Note: See <http://semver.org/>
-struct Version {
+struct Version: Equatable, Hashable {
     /// The major version.
     let major: Int
 

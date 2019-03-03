@@ -14,7 +14,7 @@ import Foundation
 /// - upToNextMinor: Returned when the version has prefix '~>' like (~> 1.0.0).
 /// - branch: Returned when the version has prefix 'b-' like (b-master).
 /// - revision: Returned when the version has prefix 'r-' like (r-32df72).
-enum VersionType {
+enum VersionType: Equatable, Hashable {
     case exact(String)
     case upToNextMajor(String)
     case upToNextMinor(String)
@@ -71,5 +71,3 @@ enum VersionType {
         }
     }
 }
-
-extension VersionType: Equatable {}

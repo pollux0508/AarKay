@@ -8,7 +8,7 @@
 import Foundation
 
 /// Represents a plugin dependency for AarKay.
-public struct Dependency {
+public struct Dependency: Equatable, Hashable {
     /// The url of dependency.
     let url: URL
 
