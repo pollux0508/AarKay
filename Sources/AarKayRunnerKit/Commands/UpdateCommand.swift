@@ -30,7 +30,9 @@ public struct UpdateCommand: CommandProtocol {
 
     public func run(_ options: Options) -> Result<(), AarKayError> {
         /// <aarkay Update>
-        let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
+        let aarkayPaths = options.global ?
+            AarKayPaths.global : AarKayPaths.local
+        let runnerUrl = aarkayPaths.runnerPath()
 
         guard FileManager.default.fileExists(atPath: runnerUrl.path) else {
             return .failure(
@@ -39,8 +41,9 @@ public struct UpdateCommand: CommandProtocol {
         }
 
         do {
-            try Bootstrapper.default.updatePackageSwift(
-                global: options.global,
+            let bootstrapper = options.global ?
+                Bootstrapper.global : Bootstrapper.local
+            try bootstrapper.updatePackageSwift(
                 force: options.force
             )
         } catch {

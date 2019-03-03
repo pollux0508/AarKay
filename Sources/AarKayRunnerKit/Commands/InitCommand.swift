@@ -30,21 +30,23 @@ public struct InitCommand: CommandProtocol {
 
     public func run(_ options: Options) -> Result<(), AarKayError> {
         /// <aarkay Init>
-        let url = AarKayPaths.default.directoryPath(global: options.global)
-        let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
+        let aarkayPaths = options.global ?
+            AarKayPaths.global : AarKayPaths.local
+        let runnerUrl = aarkayPaths.runnerPath()
         if FileManager.default.fileExists(atPath: runnerUrl.path) && !options.force {
-            return .failure(.projectAlreadyExists(url: url))
+            return .failure(.projectAlreadyExists(url: aarkayPaths.url))
         } else {
             do {
-                try Bootstrapper.default.bootstrap(
-                    global: options.global,
+                let bootstrapper = options.global ?
+                    Bootstrapper.global : Bootstrapper.local
+                try bootstrapper.bootstrap(
                     force: options.force
                 )
             } catch {
                 return .failure(error as! AarKayError)
             }
-            let runnerUrl = AarKayPaths.default.runnerPath(global: options.global)
-            println("Setting up at \(url.relativeString). This might take a few minutes...")
+            let runnerUrl = aarkayPaths.runnerPath()
+            println("Setting up at \(aarkayPaths.url.relativeString). This might take a few minutes...")
             return Tasks.install(at: runnerUrl.path) { str in
                 print(str)
             }

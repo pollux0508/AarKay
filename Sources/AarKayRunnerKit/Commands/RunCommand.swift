@@ -36,12 +36,14 @@ public struct RunCommand: CommandProtocol {
 
     public func run(_ options: Options) -> Result<(), AarKayError> {
         /// <aarkay Run>
-        var runnerUrl = AarKayPaths.default.runnerPath()
-        var cliUrl: URL = AarKayPaths.default.cliPath()
+        let aarkayPaths = options.global ?
+            AarKayPaths.global : AarKayPaths.local
+        var runnerUrl = aarkayPaths.runnerPath()
+        var cliUrl: URL = aarkayPaths.cliPath()
 
         if !FileManager.default.fileExists(atPath: runnerUrl.path) || options.global {
-            runnerUrl = AarKayPaths.default.runnerPath(global: true)
-            cliUrl = AarKayPaths.default.cliPath(global: true)
+            runnerUrl = AarKayPaths.global.runnerPath()
+            cliUrl = AarKayPaths.global.cliPath()
         }
 
         guard FileManager.default.fileExists(atPath: runnerUrl.path),

@@ -22,11 +22,11 @@ struct AarKayGlobal {
     /// - Parameter aarkayPaths: The `AarKayPaths`.
     /// - Returns: Returns the url of templates directory.
     func templatesUrl(aarkayPaths: AarKayPaths) -> URL? {
-        guard url != aarkayPaths.directoryPath(global: true) else {
+        guard url != aarkayPaths.url else {
             return nil
         }
         let aarkayTemplatesUrl = aarkayPaths
-            .aarkayPath(global: true)
+            .aarkayPath()
             .appendingPathComponent(
                 "AarKayTemplates",
                 isDirectory: true

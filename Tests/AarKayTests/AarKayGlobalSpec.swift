@@ -18,7 +18,6 @@ class AarKayGlobalSpec: QuickSpec {
             isDirectory: true
         )
     let fileManager = FileManager.default
-    let aarkayPaths = AarKayPaths.default
 
     override func spec() {
         describe("AarKayLocal") {
@@ -37,7 +36,7 @@ class AarKayGlobalSpec: QuickSpec {
             it("should be nil if there are no files") {
                 expect { () -> Void in
                     let globalTemplatesPath = aarkayGlobal
-                        .templatesUrl(aarkayPaths: self.aarkayPaths)
+                        .templatesUrl(aarkayPaths: AarKayPaths.local)
                     expect(globalTemplatesPath).toNot(beNil())
                     expect(try aarkayGlobal.context()).to(beNil())
                 }.toNot(throwError())
@@ -57,7 +56,7 @@ class AarKayGlobalSpec: QuickSpec {
                         to: globalContextUrl, atomically: true, encoding: .utf8
                     )
                     let globalTemplatesPath = aarkayGlobal
-                        .templatesUrl(aarkayPaths: self.aarkayPaths)
+                        .templatesUrl(aarkayPaths: AarKayPaths.local)
                     expect(globalTemplatesPath).toNot(beNil())
                     let projectName = try aarkayGlobal.context()?["projectName"] as? String
                     expect(projectName) == "AarKay"
@@ -75,7 +74,7 @@ class AarKayGlobalSpec: QuickSpec {
                         to: globalContextUrl, atomically: true, encoding: .utf8
                     )
                     let globalTemplatesPath = aarkayGlobal
-                        .templatesUrl(aarkayPaths: self.aarkayPaths)
+                        .templatesUrl(aarkayPaths: AarKayPaths.local)
                     expect(globalTemplatesPath).toNot(beNil())
                     expect(try aarkayGlobal.context()).to(beEmpty())
                 }.toNot(throwError())
@@ -90,7 +89,7 @@ class AarKayGlobalSpec: QuickSpec {
             it("should be nil if global version of AarKay is used") {
                 expect { () -> Void in
                     let globalTemplatesPath = aarkayGlobal
-                        .templatesUrl(aarkayPaths: self.aarkayPaths)
+                        .templatesUrl(aarkayPaths: AarKayPaths.global)
                     expect(globalTemplatesPath).to(beNil())
                     expect(try aarkayGlobal.context()).to(beNil())
                 }.toNot(throwError())

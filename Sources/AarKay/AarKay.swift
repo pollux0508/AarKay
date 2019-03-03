@@ -72,7 +72,7 @@ public class AarKay {
             /// The global context to be applied to all files being generated.
             let globalContext = try global.context()
             let globalTemplatesUrl = global.templatesUrl(
-                aarkayPaths: AarKayPaths.default
+                aarkayPaths: AarKayPaths.global
             )
             let templateUrls = [globalTemplatesUrl, aarkayTemplatesUrl]
                 .compactMap { $0 }
