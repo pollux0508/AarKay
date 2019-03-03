@@ -44,4 +44,3 @@ public class ViewModel: Codable {
         try container.encode(prefix, forKey: .prefix)
     }
 }
-

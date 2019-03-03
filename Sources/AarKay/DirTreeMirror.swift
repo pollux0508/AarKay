@@ -61,17 +61,17 @@ class DirTreeMirror {
         let subpaths = try fileManager.subpathsOfDirectory(atPath: sourceUrl.path)
         let mirrorUrls: [(URL, URL)] = subpaths
             .map {
-                return URL(
+                URL(
                     fileURLWithPath: $0,
                     isDirectory: sourceUrl.appendingPathComponent($0).hasDirectoryPath,
                     relativeTo: sourceUrl
                 )
             }
             .filter {
-                return !$0.lastPathComponent.hasPrefix(".") && !$0.hasDirectoryPath
+                !$0.lastPathComponent.hasPrefix(".") && !$0.hasDirectoryPath
             }
             .map {
-                return (
+                (
                     $0, URL(
                         fileURLWithPath: $0.relativePath,
                         isDirectory: $0.hasDirectoryPath,

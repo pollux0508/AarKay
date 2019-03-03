@@ -29,7 +29,7 @@ extension Git where Base == FileManager {
         }
 
         // Return false if the directory is empty
-        guard contents.count != 0 else { return false }
+        guard !contents.isEmpty else { return false }
 
         // Whether the url is a git directory
         let status = BashProcess.run(

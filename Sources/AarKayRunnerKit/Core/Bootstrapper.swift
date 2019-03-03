@@ -15,7 +15,7 @@ public struct Bootstrapper {
 
     /// The `FileManager`
     public let fileManager: FileManager
-    
+
     /// Initializes the Bootstrapper.
     ///
     /// - Parameters:
@@ -34,7 +34,7 @@ public struct Bootstrapper {
         aarkayPaths: AarKayPaths.local,
         fileManager: FileManager.default
     )
-    
+
     /// Initializes the global Bootstrapper with aarkayPaths global and fileManager.
     public static let global = Bootstrapper(
         aarkayPaths: AarKayPaths.global,

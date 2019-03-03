@@ -30,8 +30,7 @@ public class LabelModel: Codable {
         case allowsDefaultTighteningForTruncation
     }
 
-    public init(name: String) {
-    }
+    public init(name: String) {}
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -57,4 +56,3 @@ public class LabelModel: Codable {
         try container.encodeIfPresent(allowsDefaultTighteningForTruncation, forKey: .allowsDefaultTighteningForTruncation)
     }
 }
-

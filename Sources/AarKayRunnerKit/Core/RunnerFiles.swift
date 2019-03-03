@@ -34,13 +34,13 @@ class RunnerFiles {
     /// The package description string for `AarKayRunner`
     static func packageSwift(deps: [Dependency]) -> String {
         let packages = deps.reduce("") { (result, item) -> String in
-            return result + """
+            result + """
             \n        \(item.packageDescription())
             """
         }
 
         let dependencies = deps.reduce("") { (result, item) -> String in
-            return result + "\n                \(item.targetDescription())"
+            result + "\n                \(item.targetDescription())"
         }
 
         return """

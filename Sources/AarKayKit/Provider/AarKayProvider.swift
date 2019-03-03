@@ -84,19 +84,19 @@ extension AarKayProvider {
                 }
                 while url.lastPathComponent != "Sources" &&
                     url.lastPathComponent != "Tests" {
-                        if url.lastPathComponent == "/" {
-                            throw AarKayKitError.internalError(
-                                "Incorrect plugin structure at \(templateUrl)"
-                            )
-                        }
-                        url = url.deletingLastPathComponent()
+                    if url.lastPathComponent == "/" {
+                        throw AarKayKitError.internalError(
+                            "Incorrect plugin structure at \(templateUrl)"
+                        )
+                    }
+                    url = url.deletingLastPathComponent()
                 }
                 url = url
                     .deletingLastPathComponent()
                     .appendingPathComponent(
                         "AarKay/AarKayTemplates",
                         isDirectory: true
-                )
+                    )
                 return url
             }
         ) else {

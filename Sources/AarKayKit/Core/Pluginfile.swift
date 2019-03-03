@@ -98,7 +98,7 @@ extension Pluginfile {
                     switch result {
                     case .success(let value):
                         let res = Result {
-                            return try aarkayService.datafileService
+                            try aarkayService.datafileService
                                 .templateDatafiles(
                                     datafile: value,
                                     templateClass: templateClass

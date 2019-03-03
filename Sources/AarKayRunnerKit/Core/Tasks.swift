@@ -18,7 +18,7 @@ public class Tasks {
     /// - Returns: A result containing either success or `AarKayError`.
     public static func build(
         at path: String,
-        standardOutput: ((String) -> ())? = nil
+        standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         let buildArguments = [
             "build", "-c", "debug",
@@ -38,7 +38,7 @@ public class Tasks {
     /// - Returns: A result containing either success or `AarKayError`.
     public static func update(
         at path: String,
-        standardOutput: ((String) -> ())? = nil
+        standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         let buildArguments = [
             "package",
@@ -60,7 +60,7 @@ public class Tasks {
     /// - Returns: A result containing either success or `AarKayError`.
     public static func install(
         at path: String,
-        standardOutput: ((String) -> ())? = nil
+        standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         let buildArguments = [
             "package",
@@ -85,7 +85,7 @@ public class Tasks {
     public static func execute(
         at path: String,
         arguments: [String] = [],
-        standardOutput: ((String) -> ())? = nil
+        standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         return Task(path, arguments: arguments).run(standardOutput: standardOutput)
     }
@@ -96,11 +96,11 @@ extension Task {
     ///
     /// - Returns: A result containing either success or `AarKayError`
     internal func run(
-        standardOutput: ((String) -> ())? = nil
+        standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         let result = launch()
             .flatMapTaskEvents(.concat) { data in
-                return SignalProducer(
+                SignalProducer(
                     value: String(data: data, encoding: .utf8)
                 )
             }
@@ -111,7 +111,7 @@ extension Task {
 extension SignalProducer where Value == TaskEvent<String?>, Error == TaskError {
     /// Waits on a SignalProducer that implements the behavior of a CommandProtocol.
     internal func waitOnCommand(
-        standardOutput: ((String) -> ())? = nil
+        standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         let result = producer
             .on(

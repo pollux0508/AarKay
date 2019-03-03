@@ -54,13 +54,14 @@ public struct InstallCommand: CommandProtocol {
     }
 }
 
-/// MARK: - AarKayEnd
+// MARK: - AarKayEnd
+
 extension InstallCommand {
     public func run(
         at path: String,
         bootstrapper: Bootstrapper,
         force: Bool = false,
-        standardOutput: ((String) -> ())? = nil
+        standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         do {
             try bootstrapper.updatePackageSwift(

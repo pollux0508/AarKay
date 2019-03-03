@@ -24,12 +24,12 @@ class NameTypeValueSpec: QuickSpec {
                         value: string
                     ).toDictionary()
 
-                    expect((ntv["bool"] as! Bool)).to(equal(true))
-                    expect((ntv["int"] as! Int)).to(equal(2))
-                    expect((ntv["string"] as! String)).to(equal("someString"))
+                    expect(ntv["bool"] as? Bool).to(equal(true))
+                    expect(ntv["int"] as? Int).to(equal(2))
+                    expect(ntv["string"] as? String).to(equal("someString"))
                     expect(ntv["string?"] as? String).to(beEmpty())
                     expect(ntv["double?"]).to(beNil())
-                    expect((ntv["float"] as! Float)).to(equal(10.01))
+                    expect(ntv["float"] as? Float).to(equal(10.01))
                 }.toNot(throwError())
             }
 
@@ -44,9 +44,9 @@ class NameTypeValueSpec: QuickSpec {
                         value: string
                     ).toDictionary()
 
-                    expect((ntv["bool"] as! Bool)).to(equal(true))
-                    expect((ntv["int"])).to(beNil())
-                    expect((ntv["string"] as! String)).to(equal("someString"))
+                    expect(ntv["bool"] as? Bool).to(equal(true))
+                    expect(ntv["int"]).to(beNil())
+                    expect(ntv["string"] as? String).to(equal("someString"))
                 }.to(
                     throwError(
                         NameTypeValueError.invalidTransformation(

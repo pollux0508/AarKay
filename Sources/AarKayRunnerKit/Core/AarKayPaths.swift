@@ -28,7 +28,7 @@ public struct AarKayPaths {
             isDirectory: true
         )
     )
-    
+
     /// Initializes the default AarKayPaths with location as current directory.
     public static let local = AarKayPaths(
         url: URL(

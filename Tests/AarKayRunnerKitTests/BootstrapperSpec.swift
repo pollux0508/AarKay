@@ -46,7 +46,7 @@ class BootstrapperSpec: QuickSpec {
                     }.to(throwError())
                 }
             }
-            
+
             it("should bootstrap all directories") {
                 expect(self.fileManager.fileExists(atPath: aarkayPaths.url.path)) == false
                 expect { () -> Void in
@@ -54,7 +54,7 @@ class BootstrapperSpec: QuickSpec {
                 }.toNot(throwError())
                 expect(self.fileManager.fileExists(atPath: aarkayPaths.url.path)) == true
             }
-            
+
             it("should throw error if AarKayFile is empty") {
                 expect(self.fileManager.fileExists(atPath: aarkayPaths.url.path)) == false
                 expect { () -> Void in
@@ -69,12 +69,12 @@ class BootstrapperSpec: QuickSpec {
                 }.to(throwError())
                 expect(self.fileManager.fileExists(atPath: aarkayPaths.url.path)) == true
             }
-            
+
             it("should reset all directories") {
                 expect(self.fileManager.fileExists(atPath: aarkayPaths.url.path)) == false
                 expect { () -> Void in
                     try bootstrapper.bootstrap(force: true)
-                    }.toNot(throwError())
+                }.toNot(throwError())
                 expect(self.fileManager.fileExists(atPath: aarkayPaths.url.path)) == true
                 expect(self.fileManager.fileExists(atPath: aarkayPaths.aarkayPath().path)) == true
                 expect(self.fileManager.fileExists(atPath: aarkayPaths.runnerPath().path)) == true

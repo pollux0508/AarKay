@@ -10,4 +10,3 @@ import AarKayKit
 import Foundation
 
 public class TextViewModel: Codable {}
-

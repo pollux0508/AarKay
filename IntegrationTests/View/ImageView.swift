@@ -16,8 +16,7 @@ public class ImageViewModel: Codable {
         case contentMode
     }
 
-    public init(name: String) {
-    }
+    public init(name: String) {}
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -29,4 +28,3 @@ public class ImageViewModel: Codable {
         try container.encodeIfPresent(contentMode, forKey: .contentMode)
     }
 }
-

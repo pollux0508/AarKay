@@ -28,8 +28,7 @@ public class StackViewModel: Codable {
         case asv
     }
 
-    public init(name: String) {
-    }
+    public init(name: String) {}
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -53,4 +52,3 @@ public class StackViewModel: Codable {
         try container.encodeIfPresent(asv, forKey: .asv)
     }
 }
-

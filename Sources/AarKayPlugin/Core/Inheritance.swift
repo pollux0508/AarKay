@@ -58,6 +58,7 @@ public class InheritanceModel: Codable {
 }
 
 // MARK: - AarKayEnd
+
 extension Inheritance {
     public func datafiles() throws -> [Datafile] {
         var all = [Datafile]()
@@ -75,7 +76,7 @@ extension Inheritance {
         )
         return all
     }
-    
+
     func templatefiles(
         datafile: Datafile,
         model: InheritanceModel,
@@ -92,9 +93,9 @@ extension Inheritance {
             subDf.setFileName(fileName)
             all.append(subDf)
         }
-        
+
         guard let subs = model.subModels else { return }
-        
+
         subs.forEach {
             let sub = $0
             if sub.templates == nil && model.templates != nil {
@@ -117,7 +118,7 @@ extension Inheritance {
             )
         }
     }
-    
+
     func modelFiles(
         datafile: Datafile,
         model: InheritanceModel,
@@ -126,10 +127,10 @@ extension Inheritance {
         var dFile = datafile
         dFile.setFileName(model.templateModel.name)
         all.append(dFile)
-        
+
         guard let subs = model.subModels else { return }
         try subs.forEach { sub in
-            sub.base = (model.templateModel.properties.isEmpty) ? model.base : model.templateModel.name
+            sub.base = model.templateModel.properties.isEmpty ? model.base : model.templateModel.name
             sub.templateModel.baseProperties = model.templateModel.baseProperties + model.templateModel.properties
             var subFile = datafile
             subFile.appendDirectory(model.templateModel.name)

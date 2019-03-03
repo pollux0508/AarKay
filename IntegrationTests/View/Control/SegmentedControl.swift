@@ -10,4 +10,3 @@ import AarKayKit
 import Foundation
 
 public class SegmentedControlModel: Codable {}
-

@@ -52,13 +52,14 @@ public struct InitCommand: CommandProtocol {
     }
 }
 
-/// MARK: - AarKayEnd
+// MARK: - AarKayEnd
+
 extension InitCommand {
     public func run(
         at path: String,
         bootstrapper: Bootstrapper,
         force: Bool = false,
-        standardOutput: ((String) -> ())? = nil
+        standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         do {
             try bootstrapper.bootstrap(

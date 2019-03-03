@@ -65,20 +65,21 @@ public struct RunCommand: CommandProtocol {
     }
 }
 
-/// MARK: - AarKayEnd
+// MARK: - AarKayEnd
+
 extension RunCommand {
     public func run(
         at path: String,
         verbose: Bool = false,
         force: Bool = false,
         dryrun: Bool = false,
-        standardOutput: ((String) -> ())? = nil
+        standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         var arguments: [String] = []
         if verbose { arguments.append("--verbose") }
         if force { arguments.append("--force") }
         if dryrun { arguments.append("--dryrun") }
-        
+
         return Tasks.execute(
             at: path,
             arguments: arguments,

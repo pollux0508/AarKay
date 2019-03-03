@@ -32,7 +32,7 @@ public struct Templates {
         let templatesRootDirs = try templatesDirectories(urls: templates)
         self.directories = try fileManager.subDirectories(at: templatesRootDirs)
         self.files = try templatesFiles(urls: templatesRootDirs)
-        guard files.count > 0 else { return nil }
+        guard !files.isEmpty else { return nil }
     }
 
     /// Finds the Templatefile stored in files corresponding the name.
@@ -77,7 +77,7 @@ extension Templates {
             .filter { !$0.lastPathComponent.hasPrefix(".") }
             .map { try Templatefile(template: $0.lastPathComponent) }
         let templates = templatesfiles
-            .reduce(Dictionary<String, [Templatefile]>()) { initial, item in
+            .reduce([String: [Templatefile]]()) { initial, item in
                 var initial = initial
                 initial[item.name] = (initial[item.name] ?? []) + [item]
                 return initial
