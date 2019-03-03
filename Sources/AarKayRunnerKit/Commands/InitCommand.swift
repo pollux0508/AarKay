@@ -36,21 +36,41 @@ public struct InitCommand: CommandProtocol {
         if FileManager.default.fileExists(atPath: runnerUrl.path) && !options.force {
             return .failure(.projectAlreadyExists(url: aarkayPaths.url))
         } else {
-            do {
-                let bootstrapper = options.global ?
-                    Bootstrapper.global : Bootstrapper.local
-                try bootstrapper.bootstrap(
-                    force: options.force
-                )
-            } catch {
-                return .failure(error as! AarKayError)
-            }
-            let runnerUrl = aarkayPaths.runnerPath()
             println("Setting up at \(aarkayPaths.url.relativeString). This might take a few minutes...")
-            return Tasks.install(at: runnerUrl.path) { str in
+
+            let bootstrapper = options.global ?
+                Bootstrapper.global : Bootstrapper.local
+            return run(
+                at: runnerUrl.path,
+                bootstrapper: bootstrapper,
+                force: options.force
+            ) { str in
                 print(str)
             }
         }
         /// </aarkay>
+    }
+}
+
+/// MARK: - AarKayEnd
+extension InitCommand {
+    public func run(
+        at path: String,
+        bootstrapper: Bootstrapper,
+        force: Bool = false,
+        standardOutput: ((String) -> ())? = nil
+    ) -> Result<(), AarKayError> {
+        do {
+            try bootstrapper.bootstrap(
+                force: force
+            )
+        } catch {
+            return .failure(error as! AarKayError)
+        }
+
+        return Tasks.install(
+            at: path,
+            standardOutput: standardOutput
+        )
     }
 }

@@ -53,13 +53,36 @@ public struct RunCommand: CommandProtocol {
             )
         }
 
-        var arguments: [String] = []
-        if options.verbose { arguments.append("--verbose") }
-        if options.force { arguments.append("--force") }
-        if options.dryrun { arguments.append("--dryrun") }
-        return Tasks.execute(at: cliUrl.path, arguments: arguments) { str in
+        return run(
+            at: cliUrl.path,
+            verbose: options.verbose,
+            force: options.force,
+            dryrun: options.dryrun
+        ) { str in
             print(str)
         }
         /// </aarkay>
+    }
+}
+
+/// MARK: - AarKayEnd
+extension RunCommand {
+    public func run(
+        at path: String,
+        verbose: Bool = false,
+        force: Bool = false,
+        dryrun: Bool = false,
+        standardOutput: ((String) -> ())? = nil
+    ) -> Result<(), AarKayError> {
+        var arguments: [String] = []
+        if verbose { arguments.append("--verbose") }
+        if force { arguments.append("--force") }
+        if dryrun { arguments.append("--dryrun") }
+        
+        return Tasks.execute(
+            at: path,
+            arguments: arguments,
+            standardOutput: standardOutput
+        )
     }
 }

@@ -39,20 +39,40 @@ public struct UpdateCommand: CommandProtocol {
                 .missingProject(url: runnerUrl.deletingLastPathComponent())
             )
         }
+        println("Updating Plugins at \(runnerUrl.relativeString). This might take a few minutes...")
 
+        let bootstrapper = options.global ?
+            Bootstrapper.global : Bootstrapper.local
+        return run(
+            at: runnerUrl.path,
+            bootstrapper: bootstrapper,
+            force: options.force
+        ) { str in
+            print(str)
+        }
+        /// </aarkay>
+    }
+}
+
+/// MARK: - AarKayEnd
+extension UpdateCommand {
+    public func run(
+        at path: String,
+        bootstrapper: Bootstrapper,
+        force: Bool = false,
+        standardOutput: ((String) -> ())? = nil
+    ) -> Result<(), AarKayError> {
         do {
-            let bootstrapper = options.global ?
-                Bootstrapper.global : Bootstrapper.local
             try bootstrapper.updatePackageSwift(
-                force: options.force
+                force: force
             )
         } catch {
             return .failure(error as! AarKayError)
         }
-        println("Updating Plugins at \(runnerUrl.relativeString). This might take a few minutes...")
-        return Tasks.update(at: runnerUrl.path) { str in
-            print(str)
-        }
-        /// </aarkay>
+
+        return Tasks.update(
+            at: path,
+            standardOutput: standardOutput
+        )
     }
 }
