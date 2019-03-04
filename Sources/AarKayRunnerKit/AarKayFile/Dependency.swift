@@ -41,16 +41,16 @@ public struct Dependency: Equatable, Hashable {
     }
 
     /// - Returns: Returns the package dependency description for Package.swift.
-    public func packageDescription() -> String {
+    public func urlDescription() -> String {
         var path = url.absoluteString
         if path.hasPrefix("./") { path = "./." + path }
-        return ".package(url: \"\(path)\", \(version.description())),"
+        return path
     }
 
     /// - Returns: Returns the name of the target for Package.swift.
     public func targetDescription() -> String {
         var url = self.url
         if url.absoluteString.hasSuffix(".git") { url = url.deletingPathExtension() }
-        return "\"\(url.lastPathComponent)\","
+        return url.lastPathComponent
     }
 }

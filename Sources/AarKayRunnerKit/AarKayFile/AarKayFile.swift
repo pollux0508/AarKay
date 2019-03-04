@@ -43,7 +43,7 @@ public struct AarKayFile: Equatable, Hashable {
         }.map { try Dependency(string: $0) }
         let hasAarKay = dependencies
             .map { $0.targetDescription() }
-            .contains("\"AarKay\",")
+            .contains("AarKay")
         guard hasAarKay else {
             throw AarKayError.aarkayFileParsingFailed(
                 reason: AarKayError.AarKayFileParsingReason

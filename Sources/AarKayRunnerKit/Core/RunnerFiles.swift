@@ -35,12 +35,12 @@ class RunnerFiles {
     static func packageSwift(deps: [Dependency]) -> String {
         let packages = deps.reduce("") { (result, item) -> String in
             result + """
-            \n        \(item.packageDescription())
+            \n        .package(url: \"\(item.urlDescription())\", \(item.version.description())),
             """
         }
 
         let dependencies = deps.reduce("") { (result, item) -> String in
-            result + "\n                \(item.targetDescription())"
+            result + "\n                \"\(item.targetDescription())\","
         }
 
         return """
