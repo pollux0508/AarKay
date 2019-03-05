@@ -18,19 +18,19 @@ public class AarKay {
     /// The options.
     let options: AarKayOptions
 
-    /// The global.
-    let global: AarKayGlobal
-
     /// The FileManager.
     let fileManager: FileManager
 
+    /// The global.
+    public let global: AarKayGlobal
+
     /// The datafiles url relative to the project url.
-    lazy var aarkayFilesUrl: URL = {
+    public lazy var aarkayFilesUrl: URL = {
         url.appendingPathComponent("AarKay/AarKayData", isDirectory: true)
     }()
 
     /// The templates url relative to the project url.
-    lazy var aarkayTemplatesUrl: URL = {
+    public lazy var aarkayTemplatesUrl: URL = {
         url.appendingPathComponent("AarKay/AarKayTemplates", isDirectory: true)
     }()
 
@@ -71,11 +71,8 @@ public class AarKay {
 
             /// The global context to be applied to all files being generated.
             let globalContext = try global.context()
-            let globalTemplatesUrl = global.templatesUrl(
-                aarkayPaths: AarKayPaths.global
-            )
-            let templateUrls = [globalTemplatesUrl, aarkayTemplatesUrl]
-                .compactMap { $0 }
+            let globalTemplatesUrl = global.templatesUrl()
+            let templateUrls: Set<URL> = [globalTemplatesUrl, aarkayTemplatesUrl]
 
             /// First level of subdirectories in AarKayFiles directory are the names of the plugins.
             let urls = try Try {
@@ -94,7 +91,7 @@ public class AarKay {
             urls.forEach {
                 bootstrapPlugin(
                     pluginUrl: $0,
-                    templateUrls: templateUrls,
+                    templateUrls: Array(templateUrls),
                     globalContext: globalContext
                 )
             }

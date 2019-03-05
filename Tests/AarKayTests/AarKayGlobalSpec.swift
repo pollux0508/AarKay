@@ -20,7 +20,13 @@ class AarKayGlobalSpec: QuickSpec {
     let fileManager = FileManager.default
 
     override func spec() {
-        describe("AarKayLocal") {
+        describe("AarKayGlobal") {
+            beforeEach {
+                if self.fileManager.fileExists(atPath: self.aarkayUrl.path) {
+                    try! self.fileManager.removeItem(at: self.aarkayUrl)
+                }
+            }
+
             let aarkayGlobal = AarKayGlobal(
                 url: aarkayUrl,
                 fileManager: fileManager
@@ -29,14 +35,9 @@ class AarKayGlobalSpec: QuickSpec {
             let globalContextUrl = self.aarkayUrl
                 .appendingPathComponent("AarKay/.aarkay")
 
-            beforeEach {
-                try? self.fileManager.removeItem(at: self.aarkayUrl)
-            }
-
             it("should be nil if there are no files") {
                 expect { () -> Void in
-                    let globalTemplatesPath = aarkayGlobal
-                        .templatesUrl(aarkayPaths: AarKayPaths.local)
+                    let globalTemplatesPath = aarkayGlobal.templatesUrl()
                     expect(globalTemplatesPath).toNot(beNil())
                     expect(try aarkayGlobal.context()).to(beNil())
                 }.toNot(throwError())
@@ -55,8 +56,7 @@ class AarKayGlobalSpec: QuickSpec {
                     try globalContextContents.write(
                         to: globalContextUrl, atomically: true, encoding: .utf8
                     )
-                    let globalTemplatesPath = aarkayGlobal
-                        .templatesUrl(aarkayPaths: AarKayPaths.local)
+                    let globalTemplatesPath = aarkayGlobal.templatesUrl()
                     expect(globalTemplatesPath).toNot(beNil())
                     let projectName = try aarkayGlobal.context()?["projectName"] as? String
                     expect(projectName) == "AarKay"
@@ -73,25 +73,9 @@ class AarKayGlobalSpec: QuickSpec {
                     try "".write(
                         to: globalContextUrl, atomically: true, encoding: .utf8
                     )
-                    let globalTemplatesPath = aarkayGlobal
-                        .templatesUrl(aarkayPaths: AarKayPaths.local)
+                    let globalTemplatesPath = aarkayGlobal.templatesUrl()
                     expect(globalTemplatesPath).toNot(beNil())
                     expect(try aarkayGlobal.context()).to(beEmpty())
-                }.toNot(throwError())
-            }
-        }
-
-        describe("AarKayGlobal") {
-            let aarkayGlobal = AarKayGlobal(
-                url: URL(fileURLWithPath: NSHomeDirectory()),
-                fileManager: fileManager
-            )
-            it("should be nil if global version of AarKay is used") {
-                expect { () -> Void in
-                    let globalTemplatesPath = aarkayGlobal
-                        .templatesUrl(aarkayPaths: AarKayPaths.global)
-                    expect(globalTemplatesPath).to(beNil())
-                    expect(try aarkayGlobal.context()).to(beNil())
                 }.toNot(throwError())
             }
         }

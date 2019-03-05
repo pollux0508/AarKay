@@ -10,7 +10,7 @@ import Foundation
 import Yams
 
 /// A type encapsulating the global properties of AarKay.
-struct AarKayGlobal {
+public struct AarKayGlobal {
     /// The location of AarKay project.
     let url: URL
 
@@ -21,10 +21,8 @@ struct AarKayGlobal {
     ///
     /// - Parameter aarkayPaths: The `AarKayPaths`.
     /// - Returns: Returns the url of templates directory.
-    func templatesUrl(aarkayPaths: AarKayPaths) -> URL? {
-        guard url != aarkayPaths.url else {
-            return nil
-        }
+    public func templatesUrl() -> URL {
+        let aarkayPaths = AarKayPaths(url: url)
         let aarkayTemplatesUrl = aarkayPaths
             .aarkayPath()
             .appendingPathComponent(
@@ -38,7 +36,7 @@ struct AarKayGlobal {
     ///
     /// - Returns: The dictionary from contents.
     /// - Throws: An error if the url contents cannot be loaded.
-    func context() throws -> [String: Any]? {
+    public func context() throws -> [String: Any]? {
         let aarkayGlobalContextUrl = url.appendingPathComponent("AarKay/.aarkay")
         guard fileManager.fileExists(atPath: aarkayGlobalContextUrl.path) else {
             return nil

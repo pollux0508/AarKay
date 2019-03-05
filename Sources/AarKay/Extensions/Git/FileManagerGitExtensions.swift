@@ -7,6 +7,7 @@
 
 import AarKayRunnerKit
 import Foundation
+import SharedKit
 
 extension FileManager: GitExtensionsProvider {}
 
@@ -17,12 +18,11 @@ extension Git where Base == FileManager {
     /// - Returns: False if the directory is dirty otherwise true.
     /// - Throws: An error if url contents return nil.
     func isDirty(url: URL) throws -> Bool {
-        var contents: [String]!
-        do {
-            contents = try base.contentsOfDirectory(atPath: url.path)
+        let contents: [String] = try Try {
+            return try self.base.contentsOfDirectory(atPath: url.path)
                 .filter { $0 != ".DS_Strore" }
-        } catch {
-            throw AarKayError.internalError(
+        }.do { error -> Error in
+            AarKayError.internalError(
                 "Failed to fetch contents of directory at \(url.absoluteString)",
                 with: error
             )
