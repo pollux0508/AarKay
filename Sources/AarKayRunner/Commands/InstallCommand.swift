@@ -1,3 +1,4 @@
+import AarKayRunnerKit
 import Commandant
 import Curry
 import Foundation
@@ -39,11 +40,11 @@ public struct InstallCommand: CommandProtocol {
                 .missingProject(url: runnerUrl.deletingLastPathComponent())
             )
         }
-        println("Installing plugins at \(runnerUrl.relativeString). This might take a few minutes...")
+        print("Installing plugins at \(runnerUrl.relativeString). This might take a few minutes...")
 
         let bootstrapper = options.global ?
             Bootstrapper.global : Bootstrapper.local
-        return run(
+        return InstallTask.run(
             at: runnerUrl.path,
             bootstrapper: bootstrapper,
             force: options.force
@@ -51,29 +52,5 @@ public struct InstallCommand: CommandProtocol {
             print(str)
         }
         /// </aarkay>
-    }
-}
-
-// MARK: - AarKayEnd
-
-extension InstallCommand {
-    public func run(
-        at path: String,
-        bootstrapper: Bootstrapper,
-        force: Bool = false,
-        standardOutput: ((String) -> Void)? = nil
-    ) -> Result<(), AarKayError> {
-        do {
-            try bootstrapper.updatePackageSwift(
-                force: force
-            )
-        } catch {
-            return .failure(error as! AarKayError)
-        }
-
-        return Tasks.install(
-            at: path,
-            standardOutput: standardOutput
-        )
     }
 }

@@ -1,3 +1,4 @@
+import AarKayRunnerKit
 import Commandant
 import Curry
 import Foundation
@@ -36,11 +37,11 @@ public struct InitCommand: CommandProtocol {
         if FileManager.default.fileExists(atPath: runnerUrl.path) && !options.force {
             return .failure(.projectAlreadyExists(url: aarkayPaths.url))
         } else {
-            println("Setting up at \(aarkayPaths.url.relativeString). This might take a few minutes...")
+            print("Setting up at \(aarkayPaths.url.relativeString). This might take a few minutes...")
 
             let bootstrapper = options.global ?
                 Bootstrapper.global : Bootstrapper.local
-            return run(
+            return InitTask.run(
                 at: runnerUrl.path,
                 bootstrapper: bootstrapper,
                 force: options.force
@@ -49,29 +50,5 @@ public struct InitCommand: CommandProtocol {
             }
         }
         /// </aarkay>
-    }
-}
-
-// MARK: - AarKayEnd
-
-extension InitCommand {
-    public func run(
-        at path: String,
-        bootstrapper: Bootstrapper,
-        force: Bool = false,
-        standardOutput: ((String) -> Void)? = nil
-    ) -> Result<(), AarKayError> {
-        do {
-            try bootstrapper.bootstrap(
-                force: force
-            )
-        } catch {
-            return .failure(error as! AarKayError)
-        }
-
-        return Tasks.install(
-            at: path,
-            standardOutput: standardOutput
-        )
     }
 }

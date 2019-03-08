@@ -1,3 +1,4 @@
+import AarKayRunnerKit
 import Commandant
 import Curry
 import Foundation
@@ -52,7 +53,7 @@ public struct RunCommand: CommandProtocol {
             )
         }
 
-        return run(
+        return RunTask.run(
             at: cliUrl.path,
             verbose: options.verbose,
             force: options.force,
@@ -61,28 +62,5 @@ public struct RunCommand: CommandProtocol {
             print(str)
         }
         /// </aarkay>
-    }
-}
-
-// MARK: - AarKayEnd
-
-extension RunCommand {
-    public func run(
-        at path: String,
-        verbose: Bool = false,
-        force: Bool = false,
-        dryrun: Bool = false,
-        standardOutput: ((String) -> Void)? = nil
-    ) -> Result<(), AarKayError> {
-        var arguments: [String] = []
-        if verbose { arguments.append("--verbose") }
-        if force { arguments.append("--force") }
-        if dryrun { arguments.append("--dryrun") }
-
-        return Tasks.execute(
-            at: path,
-            arguments: arguments,
-            standardOutput: standardOutput
-        )
     }
 }

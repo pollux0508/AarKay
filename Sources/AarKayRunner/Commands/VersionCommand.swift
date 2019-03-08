@@ -1,3 +1,4 @@
+import AarKayRunnerKit
 import Commandant
 import Curry
 import Foundation
@@ -12,7 +13,7 @@ public struct VersionCommand: CommandProtocol {
 
     public func run(_ options: NoOptions<AarKayError>) -> Result<(), AarKayError> {
         /// <aarkay Version>
-        println(AarKayVersion)
+        print(AarKayVersion)
         return .success(())
         /// </aarkay>
     }
