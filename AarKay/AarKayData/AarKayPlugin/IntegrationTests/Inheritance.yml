@@ -3,6 +3,8 @@ templateModel:
   dir: View
   properties:
     - name|String
+    - context|[ArgModel]?
+    - useNib|Bool!|false
     - prefix|String!|"UI"
 templates:
   - ext: swift
@@ -17,6 +19,7 @@ templates:
           {% for item in context %}
           public let {{ item.name }}: {{item.type}}
           {% endfor %}
+
           public init(
               {% for item in context %}
               {{ item.name }}: {{item.type}}{% if item.isOptional %} = nil{% endif %}{% if not forloop.last %}, {% endif %}
@@ -62,6 +65,7 @@ templates:
       }
     subString: |
       {% extends "View.swift.stencil" %}
+
       {% block type %}{% if base %}{{base}}{% else %}UI{{self.name}}{% endif %}{% endblock %}
 subModels:
   - templateModel:
@@ -78,8 +82,11 @@ subModels:
       - ext: swift
         string: |
           {% extends "View.swift.stencil" %}
+
           {% block type %}{% if base %}{{base}}{% else %}UI{{self.name}}{% endif %}{% endblock %}
+
           {% block init %}
+
               public override init(image: UIImage?) {
                   super.init(image: image)
                   init{{name}}()
@@ -119,12 +126,16 @@ subModels:
           - ext: swift
             string: |
               {% extends "View.swift.stencil" %}
+
               {% block type %}{% if base %}{{base}}{% else %}UI{{self.name}}{% endif %}{% endblock %}
+
               {% block init %}
+
                   init() {
                       super.init(frame: .zero, style: .plain)
                       init{{name}}()
                   }
+
                   override init(frame: CGRect, style: UITableView.Style) {
                       super.init(frame: frame, style: style)
                       init{{name}}()

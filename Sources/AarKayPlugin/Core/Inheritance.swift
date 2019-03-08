@@ -70,6 +70,7 @@ extension Inheritance {
             all: &all
         )
         var modelFile = datafile
+        try modelFile.setContext(model.templateModel)
         modelFile.setTemplate(.name("Template"))
         try modelFiles(
             datafile: modelFile,
@@ -126,6 +127,9 @@ extension Inheritance {
         model: InheritanceModel,
         all: inout [Datafile]
     ) throws {
+        var df = datafile
+        df.setFileName(model.templateModel.name)
+        all.append(df)
         guard let subs = model.subModels else { return }
         try subs.forEach { sub in
             sub.base = model.templateModel.properties.isEmpty ?
@@ -134,8 +138,6 @@ extension Inheritance {
             var subFile = datafile
             subFile.appendDirectory(model.templateModel.name)
             try subFile.setContext(sub.templateModel, with: ["base": model.templateModel.name])
-            subFile.setFileName(sub.templateModel.name)
-            all.append(subFile)
             try modelFiles(datafile: subFile, model: sub, all: &all)
         }
     }

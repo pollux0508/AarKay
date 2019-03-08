@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/RahulKatariya/AarKay.git",
         "state": {
           "branch": null,
-          "revision": "1559b475a6b7a72c2827c52dec69db162b60d481",
-          "version": "0.5.0"
+          "revision": "e43119e94b6442efcdd7b6c0b32fe618b82267ac",
+          "version": "0.6.1"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/scottrhoyt/SwiftyTextTable.git",
         "state": {
           "branch": null,
-          "revision": "89728970c0a244c43f29c4155a1b1dc20b3c4633",
-          "version": "0.8.0"
+          "revision": "7b8661865f0d9590a4b7c146237fecd99f3d8406",
+          "version": "0.8.2"
         }
       },
       {

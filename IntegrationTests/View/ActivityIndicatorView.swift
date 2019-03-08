@@ -9,13 +9,13 @@
 import AarKayKit
 import Foundation
 
-public class ActivityIndicatorView: NSObject, Templatable {
-    public var datafile: Datafile
+public class ActivityIndicatorView: View {
     private var model: ActivityIndicatorViewModel
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: ActivityIndicatorViewModel.self)
+        var df = datafile
+        self.model = try df.dencode(type: ActivityIndicatorViewModel.self)
+        try super.init(datafile: datafile)
     }
 }
 

@@ -9,12 +9,12 @@
 import AarKayKit
 import Foundation
 
-class AarKayKitTestsPlugin: Plugable {
+class AarKayPlugin: Plugable {
     public var context: [String: Any]
 
     public required init(context: [String: Any]) throws {
         self.context = try JSONCoder.dencode(
-            type: AarKayKitTestsPluginModel.self,
+            type: AarKayPluginModel.self,
             context: context
         )
     }
@@ -28,22 +28,4 @@ class AarKayKitTestsPlugin: Plugable {
     }
 }
 
-public class AarKayKitTestsPluginModel: Codable {
-    public var project: String!
-
-    private enum CodingKeys: String, CodingKey {
-        case project
-    }
-
-    public init() {}
-
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.project = try container.decodeIfPresent(String.self, forKey: .project) ?? "Project"
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(project, forKey: .project)
-    }
-}
+public class AarKayPluginModel: Codable {}

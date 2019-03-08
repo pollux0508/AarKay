@@ -9,13 +9,13 @@
 import AarKayKit
 import Foundation
 
-public class TextField: NSObject, Templatable {
-    public var datafile: Datafile
+public class TextField: Control {
     private var model: TextFieldModel
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: TextFieldModel.self)
+        var df = datafile
+        self.model = try df.dencode(type: TextFieldModel.self)
+        try super.init(datafile: datafile)
     }
 }
 

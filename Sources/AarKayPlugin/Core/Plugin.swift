@@ -20,7 +20,6 @@ public class Plugin: NSObject, Templatable {
 }
 
 public class PluginModel: Codable {
-    public var name: String
     public var properties: [ArgModel]!
     public var computedProperties: [ArgModel]?
 
@@ -46,7 +45,6 @@ public class PluginModel: Codable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case name
         case properties
         case computedProperties
         case allProperties
@@ -54,20 +52,16 @@ public class PluginModel: Codable {
         case requiredAllProperties
     }
 
-    public init(name: String) {
-        self.name = name
-    }
+    public init() {}
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.name = try container.decode(String.self, forKey: .name)
         self.properties = try container.decodeIfPresent([ArgModel].self, forKey: .properties) ?? []
         self.computedProperties = try container.decodeIfPresent([ArgModel].self, forKey: .computedProperties)
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(name, forKey: .name)
         try container.encode(properties, forKey: .properties)
         try container.encodeIfPresent(computedProperties, forKey: .computedProperties)
         try container.encodeIfPresent(allProperties, forKey: .allProperties)
@@ -80,9 +74,8 @@ public class PluginModel: Codable {
 
 extension Plugin {
     public func datafiles() throws -> [Datafile] {
-        model.name = model.name + "Plugin"
-        datafile.setFileName(model.name)
-        try datafile.setContext(model)
+        datafile.setFileName("AarKayPlugin")
+        try datafile.setContext(model, with: ["name": "AarKayPlugin"])
         return [datafile]
     }
 }

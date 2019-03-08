@@ -4,16 +4,16 @@
 import PackageDescription
 
 let package = Package(
-    name: "AarKayPLUGINNAMEPlugin",
+    name: "AarKaypluginnamePlugin",
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .executable(
-            name: "AarKayPLUGINNAMECLI",
-            targets: ["AarKayPLUGINNAMECLI"]
+            name: "AarKaypluginnameCLI",
+            targets: ["AarKaypluginnameCLI"]
         ),
         .library(
-            name: "aarkay-plugin-PLUGINLOWERNAME",
-            targets: ["aarkay-plugin-PLUGINLOWERNAME"]
+            name: "aarkay-plugin-pluginlowername",
+            targets: ["aarkay-plugin-pluginlowername"]
         ),
     ],
     dependencies: [
@@ -25,13 +25,13 @@ let package = Package(
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
-            name: "AarKayPLUGINNAMECLI",
-            dependencies: ["aarkay-plugin-PLUGINLOWERNAME", "AarKay"]
+            name: "AarKaypluginnameCLI",
+            dependencies: ["aarkay-plugin-pluginlowername", "AarKay"]
         ),
         .target(
-            name: "aarkay-plugin-PLUGINLOWERNAME",
+            name: "aarkay-plugin-pluginlowername",
             dependencies: ["AarKayPlugin"],
-            path: "Sources/AarKayPLUGINNAMEPlugin"
+            path: "Sources/AarKaypluginnamePlugin"
         ),
     ],
     swiftLanguageVersions: [.v4, .v4_2]

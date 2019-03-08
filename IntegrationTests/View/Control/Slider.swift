@@ -9,13 +9,13 @@
 import AarKayKit
 import Foundation
 
-public class Slider: NSObject, Templatable {
-    public var datafile: Datafile
+public class Slider: Control {
     private var model: SliderModel
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: SliderModel.self)
+        var df = datafile
+        self.model = try df.dencode(type: SliderModel.self)
+        try super.init(datafile: datafile)
     }
 }
 

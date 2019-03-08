@@ -9,13 +9,13 @@
 import AarKayKit
 import Foundation
 
-public class Switch: NSObject, Templatable {
-    public var datafile: Datafile
+public class Switch: Control {
     private var model: SwitchModel
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: SwitchModel.self)
+        var df = datafile
+        self.model = try df.dencode(type: SwitchModel.self)
+        try super.init(datafile: datafile)
     }
 }
 

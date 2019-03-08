@@ -9,13 +9,13 @@
 import AarKayKit
 import Foundation
 
-public class ProgressView: NSObject, Templatable {
-    public var datafile: Datafile
+public class ProgressView: View {
     private var model: ProgressViewModel
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: ProgressViewModel.self)
+        var df = datafile
+        self.model = try df.dencode(type: ProgressViewModel.self)
+        try super.init(datafile: datafile)
     }
 }
 

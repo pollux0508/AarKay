@@ -9,13 +9,13 @@
 import AarKayKit
 import Foundation
 
-public class ImageView: NSObject, Templatable {
-    public var datafile: Datafile
+public class ImageView: View {
     private var model: ImageViewModel
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: ImageViewModel.self)
+        var df = datafile
+        self.model = try df.dencode(type: ImageViewModel.self)
+        try super.init(datafile: datafile)
     }
 }
 

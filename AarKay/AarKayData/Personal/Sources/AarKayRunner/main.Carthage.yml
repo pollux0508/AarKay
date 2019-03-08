@@ -1,7 +1,6 @@
 name: AarKay
 kit: AarKayRunnerKit
 defaultCommand: run
-commandsDir: ../AarKayRunnerKit
 commands:
   - name: Init
     desc: Initialize AarKay and install all the plugins from `AarKayFile`.
@@ -20,6 +19,7 @@ commands:
       - verbose|v|Adds verbose logging.
       - force|f|Will not check if the directory has any uncomitted changes.
       - dryrun|n|Will only create files and will not write them to disk.
+      - exitOnError|e|Exits the process if an error is encoutered.
   - name: Update
     desc: Update all the plugins from `AarKayFile`.
     switches:

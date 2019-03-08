@@ -9,13 +9,13 @@
 import AarKayKit
 import Foundation
 
-public class Stepper: NSObject, Templatable {
-    public var datafile: Datafile
+public class Stepper: Control {
     private var model: StepperModel
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: StepperModel.self)
+        var df = datafile
+        self.model = try df.dencode(type: StepperModel.self)
+        try super.init(datafile: datafile)
     }
 }
 

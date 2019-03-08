@@ -9,13 +9,13 @@
 import AarKayKit
 import Foundation
 
-public class TableViewCell: NSObject, Templatable {
-    public var datafile: Datafile
+public class TableViewCell: View {
     private var model: TableViewCellModel
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: TableViewCellModel.self)
+        var df = datafile
+        self.model = try df.dencode(type: TableViewCellModel.self)
+        try super.init(datafile: datafile)
     }
 }
 

@@ -96,7 +96,10 @@ public class AarKay {
                 )
             }
         } catch {
-            AarKayLogger.logError(error)
+            AarKayLogger.logError(
+                error,
+                options: options
+            )
         }
     }
 
@@ -140,7 +143,7 @@ public class AarKay {
             AarKayLogger.logFileErrored(
                 at: pluginUrl,
                 error: error,
-                verbose: options.verbose
+                options: options
             )
         }
     }
@@ -176,7 +179,10 @@ public class AarKay {
         if components.count < 2 ||
             components.count > 4 ||
             (components.count == 4 && components[0] != "dot") {
-            AarKayLogger.logErrorMessage("Invalid Datafile name at \(sourceUrl.absoluteString)")
+            AarKayLogger.logErrorMessage(
+                "Invalid Datafile name at \(sourceUrl.absoluteString)",
+                options: options
+            )
             return
         }
 
@@ -191,7 +197,7 @@ public class AarKay {
             AarKayLogger.logFileErrored(
                 at: sourceUrl,
                 error: error,
-                verbose: options.verbose
+                options: options
             )
             return
         }
@@ -216,7 +222,7 @@ public class AarKay {
                     AarKayLogger.logFileErrored(
                         at: sourceUrl,
                         error: error,
-                        verbose: options.verbose
+                        options: options
                     )
                 }
             }
@@ -224,7 +230,7 @@ public class AarKay {
             AarKayLogger.logFileErrored(
                 at: sourceUrl,
                 error: error,
-                verbose: options.verbose
+                options: options
             )
         }
     }

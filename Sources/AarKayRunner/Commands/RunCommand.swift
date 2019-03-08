@@ -11,12 +11,14 @@ public struct RunCommand: CommandProtocol {
         public let verbose: Bool
         public let force: Bool
         public let dryrun: Bool
+        public let exitOnError: Bool
 
-        public init(global: Bool, verbose: Bool, force: Bool, dryrun: Bool) {
+        public init(global: Bool, verbose: Bool, force: Bool, dryrun: Bool, exitOnError: Bool) {
             self.global = global
             self.verbose = verbose
             self.force = force
             self.dryrun = dryrun
+            self.exitOnError = exitOnError
         }
 
         public static func evaluate(
@@ -27,6 +29,7 @@ public struct RunCommand: CommandProtocol {
                 <*> mode <| Switch(flag: "v", key: "verbose", usage: "Adds verbose logging.")
                 <*> mode <| Switch(flag: "f", key: "force", usage: "Will not check if the directory has any uncomitted changes.")
                 <*> mode <| Switch(flag: "n", key: "dryrun", usage: "Will only create files and will not write them to disk.")
+                <*> mode <| Switch(flag: "e", key: "exitOnError", usage: "Exits the process if an error is encoutered.")
         }
     }
 
@@ -57,7 +60,8 @@ public struct RunCommand: CommandProtocol {
             at: cliUrl.path,
             verbose: options.verbose,
             force: options.force,
-            dryrun: options.dryrun
+            dryrun: options.dryrun,
+            exitOnError: options.exitOnError
         ) { str in
             print(str)
         }

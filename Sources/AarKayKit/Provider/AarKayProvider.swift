@@ -15,13 +15,13 @@ struct AarKayProvider: AarKayService {
     func plugableClass(
         plugin: String
     ) throws -> Plugable.Type? {
-        guard plugin != "NoPlugin" else { return nil }
+        guard plugin.lowercased() != "noplugin" else { return nil }
         if let plugableClass = NSClassFromString(
-            "\(plugin).\(plugin)Plugin"
+            "\(plugin).AarKayPlugin"
         ) as? Plugable.Type {
             return plugableClass
         } else if let plugableClass = NSClassFromString(
-            "aarkay_plugin_\(plugin.lowercased()).\(plugin)Plugin"
+            "aarkay_plugin_\(plugin.lowercased()).AarKayPlugin"
         ) as? Plugable.Type {
             return plugableClass
         } else {
@@ -46,15 +46,10 @@ struct AarKayProvider: AarKayService {
                         .templatesNil(name: plugin)
                 )
             }
-            guard let templates = try Templates(
+            let templates = try Templates(
                 fileManager: fileManager,
                 templates: globalTemplates
-            ) else {
-                throw AarKayKitError.invalidTemplate(
-                    AarKayKitError.InvalidTemplateReason
-                        .templatesNil(name: plugin)
-                )
-            }
+            )
             return StencilProvider(templates: templates)
         }
     }
@@ -71,7 +66,7 @@ extension AarKayProvider {
             return nil
         }
 
-        guard let templates = try Templates(
+        let templates = try Templates(
             fileManager: fileManager,
             templates: plugable.templates().map { templateUrl in
                 var url = URL(fileURLWithPath: templateUrl)
@@ -99,12 +94,7 @@ extension AarKayProvider {
                     )
                 return url
             }
-        ) else {
-            throw AarKayKitError.invalidTemplate(
-                AarKayKitError.InvalidTemplateReason
-                    .templatesNil(name: plugin)
-            )
-        }
+        )
 
         return try plugable.templateService().init(
             templates: templates

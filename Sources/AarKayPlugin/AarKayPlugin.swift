@@ -9,12 +9,12 @@
 import AarKayKit
 import Foundation
 
-class AarKayPluginPlugin: Plugable {
+class AarKayPlugin: Plugable {
     public var context: [String: Any]
 
     public required init(context: [String: Any]) throws {
         self.context = try JSONCoder.dencode(
-            type: AarKayPluginPluginModel.self,
+            type: AarKayPluginModel.self,
             context: context
         )
     }
@@ -28,7 +28,7 @@ class AarKayPluginPlugin: Plugable {
     }
 }
 
-public class AarKayPluginPluginModel: Codable {
+public class AarKayPluginModel: Codable {
     public var isNotPlugin: Bool!
 
     private enum CodingKeys: String, CodingKey {

@@ -9,13 +9,13 @@
 import AarKayKit
 import Foundation
 
-public class Label: NSObject, Templatable {
-    public var datafile: Datafile
+public class Label: View {
     private var model: LabelModel
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: LabelModel.self)
+        var df = datafile
+        self.model = try df.dencode(type: LabelModel.self)
+        try super.init(datafile: datafile)
     }
 }
 

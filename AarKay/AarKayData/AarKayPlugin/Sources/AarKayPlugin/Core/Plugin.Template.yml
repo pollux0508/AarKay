@@ -1,6 +1,5 @@
 name: Plugin
 properties:
-  - name|String
   - properties|[ArgModel]!|[]
   - computedProperties|[ArgModel]?
 computedProperties:

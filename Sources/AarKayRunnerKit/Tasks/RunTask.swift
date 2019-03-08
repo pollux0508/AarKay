@@ -14,12 +14,14 @@ public class RunTask {
         verbose: Bool = false,
         force: Bool = false,
         dryrun: Bool = false,
+        exitOnError: Bool = false,
         standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         var arguments: [String] = []
         if verbose { arguments.append("--verbose") }
         if force { arguments.append("--force") }
         if dryrun { arguments.append("--dryrun") }
+        if exitOnError { arguments.append("--exitOnError") }
         
         return Tasks.execute(
             at: path,

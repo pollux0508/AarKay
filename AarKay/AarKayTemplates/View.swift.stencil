@@ -8,6 +8,7 @@ public struct {{name}}Context {
     {% for item in context %}
     public let {{ item.name }}: {{item.type}}
     {% endfor %}
+
     public init(
         {% for item in context %}
         {{ item.name }}: {{item.type}}{% if item.isOptional %} = nil{% endif %}{% if not forloop.last %}, {% endif %}

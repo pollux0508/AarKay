@@ -24,7 +24,7 @@ public struct Templates {
     ///   - fileManager: The FileManager.
     ///   - templates: The root directories of all Templates.
     /// - Throws: An `Error` if file manager operations encouter any error.
-    public init?(
+    public init(
         fileManager: FileManager,
         templates: [URL]
     ) throws {
@@ -32,7 +32,6 @@ public struct Templates {
         let templatesRootDirs = try templatesDirectories(urls: templates)
         self.directories = try fileManager.subDirectories(at: templatesRootDirs)
         self.files = try templatesFiles(urls: templatesRootDirs)
-        guard !files.isEmpty else { return nil }
     }
 
     /// Finds the Templatefile stored in files corresponding the name.

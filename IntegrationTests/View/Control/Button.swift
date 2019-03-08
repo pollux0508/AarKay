@@ -9,13 +9,13 @@
 import AarKayKit
 import Foundation
 
-public class Button: NSObject, Templatable {
-    public var datafile: Datafile
+public class Button: Control {
     private var model: ButtonModel
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: ButtonModel.self)
+        var df = datafile
+        self.model = try df.dencode(type: ButtonModel.self)
+        try super.init(datafile: datafile)
     }
 }
 

@@ -38,15 +38,23 @@ class AarKayLogger {
     /// Logs for error.
     ///
     /// - Parameter error: The `Error` object.
-    static func logError(_ error: Error) {
+    static func logError(
+        _ error: Error,
+        options: AarKayOptions
+    ) {
         print("   <!> \(error.localizedDescription)".red)
+        if options.exitOnError { exit(1) }
     }
 
     /// Logs for error message.
     ///
     /// - Parameter message: The error message.
-    static func logErrorMessage(_ message: String) {
+    static func logErrorMessage(
+        _ message: String,
+        options: AarKayOptions
+    ) {
         print("   <!> \(message)".red)
+        if options.exitOnError { exit(1) }
     }
 
     /// Logs for `Datafile` location.
@@ -93,11 +101,10 @@ class AarKayLogger {
     static func logFileErrored(
         at url: URL,
         error: Error,
-        verbose: Bool
+        options: AarKayOptions
     ) {
         print("   <!> \(url.path)".red)
-        if verbose {
-            print("\(error.localizedDescription)".red)
-        }
+        if options.verbose { print("\(error.localizedDescription)".red) }
+        if options.exitOnError { exit(1) }
     }
 }

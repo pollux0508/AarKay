@@ -9,13 +9,13 @@
 import AarKayKit
 import Foundation
 
-public class TableView: NSObject, Templatable {
-    public var datafile: Datafile
+public class TableView: ScrollView {
     private var model: TableViewModel
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: TableViewModel.self)
+        var df = datafile
+        self.model = try df.dencode(type: TableViewModel.self)
+        try super.init(datafile: datafile)
     }
 }
 

@@ -9,13 +9,13 @@
 import AarKayKit
 import Foundation
 
-public class StackView: NSObject, Templatable {
-    public var datafile: Datafile
+public class StackView: View {
     private var model: StackViewModel
 
     public required init(datafile: Datafile) throws {
-        self.datafile = datafile
-        self.model = try self.datafile.dencode(type: StackViewModel.self)
+        var df = datafile
+        self.model = try df.dencode(type: StackViewModel.self)
+        try super.init(datafile: datafile)
     }
 }
 
