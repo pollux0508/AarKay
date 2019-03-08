@@ -9,4 +9,14 @@
 import AarKayKit
 import Foundation
 
-public class CollectionViewCellModel: Codable {}
+public class CollectionViewCell: NSObject, Templatable {
+    public var datafile: Datafile
+    private var model: CollectionViewCellModel
+
+    public required init(datafile: Datafile) throws {
+        self.datafile = datafile
+        self.model = try self.datafile.dencode(type: CollectionViewCellModel.self)
+    }
+}
+
+public class CollectionViewCellModel: ViewModel {}

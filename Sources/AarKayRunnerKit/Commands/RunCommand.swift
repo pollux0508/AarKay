@@ -38,18 +38,17 @@ public struct RunCommand: CommandProtocol {
         /// <aarkay Run>
         let aarkayPaths = options.global ?
             AarKayPaths.global : AarKayPaths.local
-        var runnerUrl = aarkayPaths.runnerPath()
-        var cliUrl: URL = aarkayPaths.cliPath()
-
-        if !FileManager.default.fileExists(atPath: runnerUrl.path) || options.global {
-            runnerUrl = AarKayPaths.global.runnerPath()
-            cliUrl = AarKayPaths.global.cliPath()
-        }
+        let runnerUrl = aarkayPaths.runnerPath()
+        let cliUrl: URL = aarkayPaths.cliPath()
 
         guard FileManager.default.fileExists(atPath: runnerUrl.path),
             FileManager.default.fileExists(atPath: cliUrl.path) else {
             return .failure(
-                AarKayError.missingProject(url: runnerUrl.deletingLastPathComponent())
+                AarKayError.missingProject(
+                    url: runnerUrl
+                        .deletingLastPathComponent()
+                        .deletingLastPathComponent()
+                )
             )
         }
 

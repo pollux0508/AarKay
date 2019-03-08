@@ -9,7 +9,17 @@
 import AarKayKit
 import Foundation
 
-public class LabelModel: Codable {
+public class Label: NSObject, Templatable {
+    public var datafile: Datafile
+    private var model: LabelModel
+
+    public required init(datafile: Datafile) throws {
+        self.datafile = datafile
+        self.model = try self.datafile.dencode(type: LabelModel.self)
+    }
+}
+
+public class LabelModel: ViewModel {
     public var text: String?
     public var numberOfLines: Int?
     public var font: String?
@@ -30,7 +40,9 @@ public class LabelModel: Codable {
         case allowsDefaultTighteningForTruncation
     }
 
-    public init(name: String) {}
+    public override init(name: String) {
+        super.init(name: name)
+    }
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -42,9 +54,10 @@ public class LabelModel: Codable {
         self.adjustsFontSizeToFitWidth = try container.decodeIfPresent(Bool.self, forKey: .adjustsFontSizeToFitWidth)
         self.minimumScaleFactor = try container.decodeIfPresent(Float.self, forKey: .minimumScaleFactor)
         self.allowsDefaultTighteningForTruncation = try container.decodeIfPresent(Bool.self, forKey: .allowsDefaultTighteningForTruncation)
+        try super.init(from: decoder)
     }
 
-    public func encode(to encoder: Encoder) throws {
+    public override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(text, forKey: .text)
         try container.encodeIfPresent(numberOfLines, forKey: .numberOfLines)
@@ -54,5 +67,6 @@ public class LabelModel: Codable {
         try container.encodeIfPresent(adjustsFontSizeToFitWidth, forKey: .adjustsFontSizeToFitWidth)
         try container.encodeIfPresent(minimumScaleFactor, forKey: .minimumScaleFactor)
         try container.encodeIfPresent(allowsDefaultTighteningForTruncation, forKey: .allowsDefaultTighteningForTruncation)
+        try super.encode(to: encoder)
     }
 }

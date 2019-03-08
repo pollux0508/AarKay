@@ -9,4 +9,14 @@
 import AarKayKit
 import Foundation
 
-public class ControlModel: Codable {}
+public class Control: NSObject, Templatable {
+    public var datafile: Datafile
+    private var model: ControlModel
+
+    public required init(datafile: Datafile) throws {
+        self.datafile = datafile
+        self.model = try self.datafile.dencode(type: ControlModel.self)
+    }
+}
+
+public class ControlModel: ViewModel {}

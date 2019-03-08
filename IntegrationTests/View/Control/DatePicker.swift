@@ -9,4 +9,14 @@
 import AarKayKit
 import Foundation
 
-public class DatePickerModel: Codable {}
+public class DatePicker: NSObject, Templatable {
+    public var datafile: Datafile
+    private var model: DatePickerModel
+
+    public required init(datafile: Datafile) throws {
+        self.datafile = datafile
+        self.model = try self.datafile.dencode(type: DatePickerModel.self)
+    }
+}
+
+public class DatePickerModel: ControlModel {}

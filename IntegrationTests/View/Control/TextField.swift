@@ -9,4 +9,14 @@
 import AarKayKit
 import Foundation
 
-public class TextFieldModel: Codable {}
+public class TextField: NSObject, Templatable {
+    public var datafile: Datafile
+    private var model: TextFieldModel
+
+    public required init(datafile: Datafile) throws {
+        self.datafile = datafile
+        self.model = try self.datafile.dencode(type: TextFieldModel.self)
+    }
+}
+
+public class TextFieldModel: ControlModel {}

@@ -9,4 +9,14 @@
 import AarKayKit
 import Foundation
 
-public class TableViewModel: Codable {}
+public class TableView: NSObject, Templatable {
+    public var datafile: Datafile
+    private var model: TableViewModel
+
+    public required init(datafile: Datafile) throws {
+        self.datafile = datafile
+        self.model = try self.datafile.dencode(type: TableViewModel.self)
+    }
+}
+
+public class TableViewModel: ScrollViewModel {}

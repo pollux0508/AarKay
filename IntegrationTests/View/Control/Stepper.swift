@@ -9,4 +9,14 @@
 import AarKayKit
 import Foundation
 
-public class StepperModel: Codable {}
+public class Stepper: NSObject, Templatable {
+    public var datafile: Datafile
+    private var model: StepperModel
+
+    public required init(datafile: Datafile) throws {
+        self.datafile = datafile
+        self.model = try self.datafile.dencode(type: StepperModel.self)
+    }
+}
+
+public class StepperModel: ControlModel {}

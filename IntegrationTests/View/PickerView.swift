@@ -9,4 +9,14 @@
 import AarKayKit
 import Foundation
 
-public class PickerViewModel: Codable {}
+public class PickerView: NSObject, Templatable {
+    public var datafile: Datafile
+    private var model: PickerViewModel
+
+    public required init(datafile: Datafile) throws {
+        self.datafile = datafile
+        self.model = try self.datafile.dencode(type: PickerViewModel.self)
+    }
+}
+
+public class PickerViewModel: ViewModel {}

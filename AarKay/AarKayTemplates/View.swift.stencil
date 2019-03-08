@@ -3,6 +3,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
+
 public struct {{name}}Context {
     {% for item in context %}
     public let {{ item.name }}: {{item.type}}
@@ -17,6 +18,7 @@ public struct {{name}}Context {
         {% endfor %}
     }
 }
+
 public class {{name}}Builder {
     public static func build(
       with context: {{name}}Context
@@ -28,6 +30,7 @@ public class {{name}}Builder {
         return {{ name|lowerFirstLetter }}
     }
 }
+
 public class {{name}}: {% block type %}{% if base %}{{base}}{% else %}UIView{% endif %}{% endblock %} {
     let disposeBag = DisposeBag()
     var context: {{name}}Context!
@@ -37,10 +40,12 @@ public class {{name}}: {% block type %}{% if base %}{{base}}{% else %}UIView{% e
     public lazy var {{item.name}} = {{item.type}}
     {% endfor %}
     {% endif %}
+
     func init{{name}}() {
         /// <aarkay init{{name}}>
         /// </aarkay>
     }
+
     func layout{{name}}() {
         /// <aarkay layout{{name}}>
         /// </aarkay>

@@ -9,7 +9,17 @@
 import AarKayKit
 import Foundation
 
-public class StackViewModel: Codable {
+public class StackView: NSObject, Templatable {
+    public var datafile: Datafile
+    private var model: StackViewModel
+
+    public required init(datafile: Datafile) throws {
+        self.datafile = datafile
+        self.model = try self.datafile.dencode(type: StackViewModel.self)
+    }
+}
+
+public class StackViewModel: ViewModel {
     public var axis: String?
     public var distribution: String?
     public var alignment: String?
@@ -28,7 +38,9 @@ public class StackViewModel: Codable {
         case asv
     }
 
-    public init(name: String) {}
+    public override init(name: String) {
+        super.init(name: name)
+    }
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -39,9 +51,10 @@ public class StackViewModel: Codable {
         self.isBaselineRelativeArrangement = try container.decodeIfPresent(Bool.self, forKey: .isBaselineRelativeArrangement)
         self.isLayoutMarginsRelativeArrangement = try container.decodeIfPresent(Bool.self, forKey: .isLayoutMarginsRelativeArrangement)
         self.asv = try container.decodeIfPresent([String].self, forKey: .asv)
+        try super.init(from: decoder)
     }
 
-    public func encode(to encoder: Encoder) throws {
+    public override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(axis, forKey: .axis)
         try container.encodeIfPresent(distribution, forKey: .distribution)
@@ -50,5 +63,6 @@ public class StackViewModel: Codable {
         try container.encodeIfPresent(isBaselineRelativeArrangement, forKey: .isBaselineRelativeArrangement)
         try container.encodeIfPresent(isLayoutMarginsRelativeArrangement, forKey: .isLayoutMarginsRelativeArrangement)
         try container.encodeIfPresent(asv, forKey: .asv)
+        try super.encode(to: encoder)
     }
 }

@@ -9,4 +9,14 @@
 import AarKayKit
 import Foundation
 
-public class SegmentedControlModel: Codable {}
+public class SegmentedControl: NSObject, Templatable {
+    public var datafile: Datafile
+    private var model: SegmentedControlModel
+
+    public required init(datafile: Datafile) throws {
+        self.datafile = datafile
+        self.model = try self.datafile.dencode(type: SegmentedControlModel.self)
+    }
+}
+
+public class SegmentedControlModel: ControlModel {}
