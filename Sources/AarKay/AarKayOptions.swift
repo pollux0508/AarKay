@@ -17,7 +17,7 @@ public struct AarKayOptions {
 
     /// The dryrun flag.
     let dryrun: Bool
-    
+
     /// The exitOnError flag.
     let exitOnError: Bool
 

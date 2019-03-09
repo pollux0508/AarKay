@@ -9,7 +9,7 @@
 import AarKayKit
 import Foundation
 
-class AarKayPlugin: Plugable {
+class AarKayPlugin: Pluggable {
     public var context: [String: Any]
 
     public required init(context: [String: Any]) throws {

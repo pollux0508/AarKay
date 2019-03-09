@@ -7,9 +7,10 @@
 //
 
 import AarKayKit
+import aarkay_plugin_aarkay
 import Foundation
 
-class AarKayPlugin: Plugable {
+class AarKayPlugin: Pluggable {
     public var context: [String: Any]
 
     public required init(context: [String: Any]) throws {

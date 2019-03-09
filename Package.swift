@@ -8,7 +8,7 @@ let package = Package(
     products: [
         .library(name: "AarKay", targets: ["AarKay"]),
         .library(name: "AarKayKit", targets: ["AarKayKit"]),
-        .library(name: "AarKayPlugin", targets: ["AarKayPlugin"]),
+        .library(name: "aarkay-plugin-aarkay", targets: ["aarkay-plugin-aarkay"]),
         .library(name: "AarKayRunnerKit", targets: ["AarKayRunnerKit"]),
         .library(name: "SharedKit", targets: ["SharedKit"]),
         .executable(name: "AarKayCLI", targets: ["AarKayCLI"]),
@@ -62,16 +62,17 @@ let package = Package(
             ]
         ),
         .target(
-            name: "AarKayPlugin",
+            name: "aarkay-plugin-aarkay",
             dependencies: [
                 "AarKayKit",
-            ]
+            ],
+            path: "Sources/AarKayPlugin"
         ),
         .target(
             name: "AarKayCLI",
             dependencies: [
+                "aarkay-plugin-aarkay",
                 "AarKay",
-                "AarKayPlugin",
             ]
         ),
         .target(
@@ -104,7 +105,7 @@ let package = Package(
         .testTarget(
             name: "AarKayPluginTests",
             dependencies: [
-                "AarKayPlugin",
+                "aarkay-plugin-aarkay",
                 "Quick",
                 "Nimble",
             ]

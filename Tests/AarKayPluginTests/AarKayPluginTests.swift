@@ -1,5 +1,5 @@
 import XCTest
-@testable import AarKayPlugin
+@testable import aarkay_plugin_aarkay
 
 class AarKayPluginTests: XCTestCase {
     func testExample() {

@@ -14,13 +14,12 @@ class PluginSpec: QuickSpec {
     override func spec() {
         describe("Plugin") {
             expect { () -> Void in
-                let plugin = try Pluginfile(
+                let plugin = try! Pluginfile(
                     name: "AarKayKitTests",
                     globalContext: nil,
                     globalTemplates: nil
                 )
                 it("should generate files") {
-                    print(plugin.templateService.templates)
                     expect { () -> Void in
                         let generatedFiles = try plugin.generate(
                             fileName: "File",

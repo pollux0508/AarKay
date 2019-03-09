@@ -31,7 +31,7 @@ class RunnerFilesSpec: QuickSpec {
                             name: "aarkay-cli",
                             dependencies: [
                                 "AarKayKit",
-                                "AarKayPlugin",
+                                "aarkay-plugin-aarkay",
                                 "AarKay",
                             ],
                             path: "Sources/AarKayCLI"),],
@@ -40,7 +40,7 @@ class RunnerFilesSpec: QuickSpec {
                 """
                 expect { () -> Void in
                     let dep = try Dependency(string: "https://github.com/RahulKatariya/AarKay.git, 1.0.0")
-                    let packageSwift = RunnerFiles.packageSwift(deps: [dep])
+                    let packageSwift = PackageSwift.contents(deps: [dep])
                     expect(packageSwift).toNot(beNil())
                     expect(packageSwift) == actual
                 }.toNot(throwError())
@@ -65,7 +65,7 @@ class RunnerFilesSpec: QuickSpec {
                             name: "aarkay-cli",
                             dependencies: [
                                 "AarKayKit",
-                                "AarKayPlugin",
+                                "aarkay-plugin-aarkay",
                                 "AarKay",
                                 "aarkay-plugin-test",
                             ],
@@ -76,7 +76,7 @@ class RunnerFilesSpec: QuickSpec {
                 expect { () -> Void in
                     let dep = try Dependency(string: "https://github.com/RahulKatariya/AarKay.git, 1.0.0")
                     let dep2 = try Dependency(string: "./../aarkay-plugin-test, ~> 1.0.0")
-                    let packageSwift = RunnerFiles.packageSwift(deps: [dep, dep2])
+                    let packageSwift = PackageSwift.contents(deps: [dep, dep2])
                     expect(packageSwift).toNot(beNil())
                     expect(packageSwift) == actual
                 }.toNot(throwError())

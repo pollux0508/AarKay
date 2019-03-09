@@ -22,7 +22,7 @@ public class UpdateTask {
         } catch {
             return .failure(error as! AarKayError)
         }
-        
+
         return Tasks.update(
             at: path,
             standardOutput: standardOutput

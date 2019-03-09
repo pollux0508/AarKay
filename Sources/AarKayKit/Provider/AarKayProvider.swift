@@ -12,23 +12,6 @@ struct AarKayProvider: AarKayService {
     var datafileService: DatafileService
     var generatedfileService: GeneratedfileService
 
-    func plugableClass(
-        plugin: String
-    ) throws -> Plugable.Type? {
-        guard plugin.lowercased() != "noplugin" else { return nil }
-        if let plugableClass = NSClassFromString(
-            "\(plugin).AarKayPlugin"
-        ) as? Plugable.Type {
-            return plugableClass
-        } else if let plugableClass = NSClassFromString(
-            "aarkay_plugin_\(plugin.lowercased()).AarKayPlugin"
-        ) as? Plugable.Type {
-            return plugableClass
-        } else {
-            throw AarKayKitError.invalidPlugin(name: plugin)
-        }
-    }
-
     func templateProvider(
         plugin: String,
         globalTemplates: [URL]?,
@@ -62,13 +45,13 @@ extension AarKayProvider {
         plugin: String,
         fileManager: FileManager
     ) throws -> TemplateService? {
-        guard let plugable = try plugableClass(plugin: plugin) else {
+        guard let pluggable = try AarKayKit.pluggableClass(plugin: plugin) else {
             return nil
         }
 
         let templates = try Templates(
             fileManager: fileManager,
-            templates: plugable.templates().map { templateUrl in
+            templates: pluggable.templates().map { templateUrl in
                 var url = URL(fileURLWithPath: templateUrl)
                 if url.path.hasPrefix("/tmp") {
                     print("[OLD]", url.absoluteString)
@@ -96,7 +79,7 @@ extension AarKayProvider {
             }
         )
 
-        return try plugable.templateService().init(
+        return try pluggable.templateService().init(
             templates: templates
         )
     }

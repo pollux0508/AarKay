@@ -8,7 +8,7 @@
 import Foundation
 import Nimble
 import Quick
-@testable import AarKayPlugin
+@testable import aarkay_plugin_aarkay
 
 class NameTypeValueSpec: QuickSpec {
     override func spec() {

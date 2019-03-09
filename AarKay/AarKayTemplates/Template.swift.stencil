@@ -8,7 +8,7 @@
 
 import AarKayKit
 {% if not isNotPlugin %}
-import AarKayPlugin
+import aarkay_plugin_aarkay
 {% endif %}
 import Foundation
 {% for import in imports %}

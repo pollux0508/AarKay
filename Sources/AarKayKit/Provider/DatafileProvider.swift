@@ -10,23 +10,6 @@ import Result
 import SharedKit
 
 struct DatafileProvider: DatafileService {
-    func templateClass(
-        plugin: String,
-        template: String
-    ) -> Templatable.Type? {
-        if let templateClass = NSClassFromString(
-            "\(plugin).\(template)"
-        ) as? Templatable.Type {
-            return templateClass
-        } else if let templateClass = NSClassFromString(
-            "aarkay_plugin_\(plugin.lowercased()).\(template)"
-        ) as? Templatable.Type {
-            return templateClass
-        } else {
-            return nil
-        }
-    }
-
     func serialize(
         plugin: String,
         name: String,

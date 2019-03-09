@@ -19,7 +19,7 @@ extension Git where Base == FileManager {
     /// - Throws: An error if url contents return nil.
     func isDirty(url: URL) throws -> Bool {
         let contents: [String] = try Try {
-            return try self.base.contentsOfDirectory(atPath: url.path)
+            try self.base.contentsOfDirectory(atPath: url.path)
                 .filter { $0 != ".DS_Strore" }
         }.do { error -> Error in
             AarKayError.internalError(

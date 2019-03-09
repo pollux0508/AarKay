@@ -2,7 +2,8 @@
 
 set -e
 echo "version: '.upToNextMinor(from: \"$1\")'" > AarKay/AarKayData/NoPlugin/aarkay-plugin-PLUGINLOWERNAME/Package.yml
-echo "public let AarKayVersion = \"$1\"" > Sources/AarKayRunnerKit/AarKayVersion.swift
+echo "version: '~> \(AarKayVersion)'" > AarKay/AarKayData/NoPlugin/Sources/AarKayRunnerKit/RunnerFiles/AarKayDependency.Runner.yml
+echo "public let AarKayVersion = \"$1\"" > Sources/AarKayRunnerKit/Core/AarKayVersion.swift
 git commit -am "Release v$1 🚀"
 sh scripts/run
 sh scripts/template

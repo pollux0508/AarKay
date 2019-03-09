@@ -55,8 +55,10 @@ public struct Pluginfile {
             globalTemplates: globalTemplates,
             fileManager: fileManager
         )
-        if let plugableType = try aarkayService.plugableClass(plugin: name) {
-            self.globalContext = try plugableType.init(context: globalContext ?? [:]).context
+        if let pluggableType = try AarKayKit.pluggableClass(plugin: name) {
+            self.globalContext = try pluggableType
+                .init(context: globalContext ?? [:])
+                .context
         } else {
             self.globalContext = globalContext ?? [:]
         }
@@ -79,7 +81,7 @@ extension Pluginfile {
         template: String,
         contents: String
     ) throws -> [Result<Generatedfile, AnyError>] {
-        if let templateClass = aarkayService.datafileService.templateClass(
+        if let templateClass = AarKayKit.templateClass(
             plugin: name,
             template: template
         ) {

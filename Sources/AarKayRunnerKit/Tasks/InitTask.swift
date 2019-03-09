@@ -22,7 +22,7 @@ public class InitTask {
         } catch {
             return .failure(error as! AarKayError)
         }
-        
+
         return Tasks.install(
             at: path,
             standardOutput: standardOutput

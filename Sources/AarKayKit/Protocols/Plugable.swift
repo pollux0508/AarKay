@@ -1,5 +1,5 @@
 //
-//  Plugable.swift
+//  Pluggable.swift
 //  AarKayKit
 //
 //  Created by RahulKatariya on 21/01/19.
@@ -8,11 +8,11 @@
 import Foundation
 
 /// Represents a Plugin
-public protocol Plugable: class {
+public protocol Pluggable: class {
     /// The Datafile.
     var context: [String: Any] { get set }
 
-    /// Initializes the Plugable with the global context.
+    /// Initializes the Pluggable with the global context.
     ///
     /// - Parameter context: The global context.
     /// - Throws: An `Error` if decoding model contents encouter any error.
@@ -25,7 +25,7 @@ public protocol Plugable: class {
     static func templateService() -> TemplateService.Type
 }
 
-extension Plugable {
+extension Pluggable {
     /// StencilProvider
     public static func templateService() -> TemplateService.Type {
         return StencilProvider.self

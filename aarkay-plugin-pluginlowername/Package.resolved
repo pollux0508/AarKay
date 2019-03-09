@@ -5,9 +5,9 @@
         "package": "AarKay",
         "repositoryURL": "https://github.com/RahulKatariya/AarKay.git",
         "state": {
-          "branch": null,
-          "revision": "e43119e94b6442efcdd7b6c0b32fe618b82267ac",
-          "version": "0.6.1"
+          "branch": "develop",
+          "revision": "ebbfa62bc43eb3dac2fa45c9ac598884177d8bfe",
+          "version": null
         }
       },
       {

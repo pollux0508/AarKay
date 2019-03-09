@@ -9,7 +9,7 @@ import Foundation
 import Nimble
 import Quick
 import Yams
-@testable import AarKayPlugin
+@testable import aarkay_plugin_aarkay
 
 class TemplateModelSpec: QuickSpec {
     override func spec() {

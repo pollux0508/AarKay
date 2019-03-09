@@ -22,7 +22,7 @@ public class RunTask {
         if force { arguments.append("--force") }
         if dryrun { arguments.append("--dryrun") }
         if exitOnError { arguments.append("--exitOnError") }
-        
+
         return Tasks.execute(
             at: path,
             arguments: arguments,

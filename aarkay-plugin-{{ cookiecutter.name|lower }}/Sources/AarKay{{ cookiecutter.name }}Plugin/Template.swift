@@ -7,7 +7,7 @@
 //
 
 import AarKayKit
-import AarKayPlugin
+import aarkay_plugin_aarkay
 import Foundation
 
 public class Template: NSObject, Templatable {

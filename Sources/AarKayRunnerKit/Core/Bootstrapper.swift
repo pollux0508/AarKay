@@ -76,7 +76,7 @@ public struct Bootstrapper {
         force: Bool = false
     ) throws {
         let url = aarkayPaths.mainSwift()
-        try write(string: RunnerFiles.cliSwift, url: url, force: force)
+        try write(string: CliSwift.contents, url: url, force: force)
     }
 
     /// Creates .swift-version file.
@@ -89,7 +89,7 @@ public struct Bootstrapper {
         force: Bool = false
     ) throws {
         let url = aarkayPaths.swiftVersion()
-        try write(string: RunnerFiles.swiftVersion, url: url, force: force)
+        try write(string: SwiftVersion.contents, url: url, force: force)
     }
 
     /// Creates `AarKayFile` if it doesn't exist already.
@@ -100,7 +100,7 @@ public struct Bootstrapper {
     private func createAarKayFile() throws {
         let url = aarkayPaths.aarkayFile()
         if !fileManager.fileExists(atPath: url.path) {
-            try write(string: RunnerFiles.aarkayFile, url: url, force: false)
+            try write(string: AarKayDependency.contents, url: url, force: false)
         }
     }
 
@@ -130,7 +130,7 @@ public struct Bootstrapper {
             url: aarkayFileUrl,
             fileManager: fileManager
         ).dependencies
-        let contents = RunnerFiles.packageSwift(deps: deps)
+        let contents = PackageSwift.contents(deps: deps)
         let url = aarkayPaths.packageSwift()
         try write(string: contents, url: url, force: true)
     }

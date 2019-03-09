@@ -8,7 +8,7 @@
 import Foundation
 import Nimble
 import Quick
-@testable import AarKayPlugin
+@testable import aarkay_plugin_aarkay
 
 struct Custom {
     let value: String

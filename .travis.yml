@@ -23,7 +23,9 @@ jobs:
         - brew install rename cookiecutter
       script:
         - |
-          echo version: \'.branch\(\"$TRAVIS_COMMIT\"\)\' > $TRAVIS_BUILD_DIR/AarKay/AarKayData/NoPlugin/aarkay-plugin-pluginlowername/Package.yml
+          echo version: \'.revision\(\"$TRAVIS_COMMIT\"\)\' > $TRAVIS_BUILD_DIR/AarKay/AarKayData/NoPlugin/aarkay-plugin-pluginlowername/Package.yml
+        - |
+          echo version: \'r-$TRAVIS_COMMIT\' > $TRAVIS_BUILD_DIR/AarKay/AarKayData/NoPlugin/Sources/AarKayRunnerKit/RunnerFiles/AarKayDependency.Runner.yml
         - git commit -am "Update Plugin Package.swift"
         - sh scripts/run
         - sh scripts/template

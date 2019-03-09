@@ -30,7 +30,7 @@ let package = Package(
         ),
         .target(
             name: "aarkay-plugin-pluginlowername",
-            dependencies: ["AarKayPlugin"],
+            dependencies: ["aarkay-plugin-aarkay"],
             path: "Sources/AarKaypluginnamePlugin"
         ),
     ],
