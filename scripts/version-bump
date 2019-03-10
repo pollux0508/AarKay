@@ -9,4 +9,3 @@ sh scripts/run
 sh scripts/template
 git commit -a --amend --no-edit
 git tag v$1
-git push origin --tags
