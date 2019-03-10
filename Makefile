@@ -27,7 +27,7 @@ release: build
 	zip -r AarKay-v${version}.zip bin/$(INSTALL_NAME)
 	rm -rf bin 
 	sh ./scripts/brew-publish ${version}
-	git push origin --tags
+	git push origin --all --tags
 
 clean:
 	set -e
