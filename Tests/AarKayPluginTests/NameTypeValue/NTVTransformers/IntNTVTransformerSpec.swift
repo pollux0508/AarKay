@@ -14,7 +14,7 @@ class IntNTVTransformerSpec: QuickSpec {
     override func spec() {
         describe("IntNTVTransformer") {
             it("works with Int Type") {
-                let value = TypeValueTransformer(type: "Int", value: "10")?.value
+                let value = StringTransformer(type: "Int", value: "10")?.value
                 guard let expected = value as? Int else {
                     fail("It should return the type as Int")
                     return
@@ -25,7 +25,7 @@ class IntNTVTransformerSpec: QuickSpec {
 
             context("when value is unknown") {
                 it("should return nil") {
-                    expect(TypeValueTransformer(type: "Int", value: "any")?.value).to(beNil())
+                    expect(StringTransformer(type: "Int", value: "any")?.value).to(beNil())
                 }
             }
         }

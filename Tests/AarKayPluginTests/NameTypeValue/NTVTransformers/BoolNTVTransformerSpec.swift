@@ -15,7 +15,7 @@ class BoolNTVTransformerSpec: QuickSpec {
         describe("BoolNTVTransformer") {
             context("when value is true") {
                 it("should be true with Bool Type") {
-                    let value = TypeValueTransformer(type: "Bool", value: "true")?.value
+                    let value = StringTransformer(type: "Bool", value: "true")?.value
                     guard let expected = value as? Bool else {
                         fail("It should return the type as Bool")
                         return
@@ -27,7 +27,7 @@ class BoolNTVTransformerSpec: QuickSpec {
 
             context("when value is yes") {
                 it("should be true with Bool Type") {
-                    let value = TypeValueTransformer(type: "Bool", value: "yes")?.value
+                    let value = StringTransformer(type: "Bool", value: "yes")?.value
                     guard let expected = value as? Bool else {
                         fail("It should return the type as Bool")
                         return
@@ -39,7 +39,7 @@ class BoolNTVTransformerSpec: QuickSpec {
 
             context("when value is 1") {
                 it("should be true with Bool Type") {
-                    let value = TypeValueTransformer(type: "Bool", value: "1")?.value
+                    let value = StringTransformer(type: "Bool", value: "1")?.value
                     guard let expected = value as? Bool else {
                         fail("It should return the type as Bool")
                         return
@@ -51,7 +51,7 @@ class BoolNTVTransformerSpec: QuickSpec {
 
             context("when value is false") {
                 it("should be false with Bool Type") {
-                    let value = TypeValueTransformer(type: "Bool", value: "false")?.value
+                    let value = StringTransformer(type: "Bool", value: "false")?.value
                     guard let expected = value as? Bool else {
                         fail("It should return the type as Bool")
                         return
@@ -63,7 +63,7 @@ class BoolNTVTransformerSpec: QuickSpec {
 
             context("when value is no") {
                 it("should be false with Bool Type") {
-                    let value = TypeValueTransformer(type: "Bool", value: "no")?.value
+                    let value = StringTransformer(type: "Bool", value: "no")?.value
                     guard let expected = value as? Bool else {
                         fail("It should return the type as Bool")
                         return
@@ -75,7 +75,7 @@ class BoolNTVTransformerSpec: QuickSpec {
 
             context("when value is 0") {
                 it("should be false with Bool Type") {
-                    let value = TypeValueTransformer(type: "Bool", value: "0")?.value
+                    let value = StringTransformer(type: "Bool", value: "0")?.value
                     guard let expected = value as? Bool else {
                         fail("It should return the type as Bool")
                         return
@@ -87,7 +87,7 @@ class BoolNTVTransformerSpec: QuickSpec {
 
             context("when value is unknown") {
                 it("should be false with Bool Type") {
-                    expect(TypeValueTransformer(type: "Bool", value: "any")?.value).to(beNil())
+                    expect(StringTransformer(type: "Bool", value: "any")?.value).to(beNil())
                 }
             }
         }

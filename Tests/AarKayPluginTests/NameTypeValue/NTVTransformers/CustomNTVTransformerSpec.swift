@@ -29,10 +29,10 @@ extension Custom: StringTransformable {
 class CustomNTVTransformerSpec: QuickSpec {
     override func spec() {
         describe("CustomNTVTransformer") {
-            TypeValueTransformer.register(transformer: Custom.self)
+            StringTransformer.register(transformer: Custom.self)
 
             it("works with Custom Type") {
-                let value = TypeValueTransformer(type: "Custom", value: "custom")?.value
+                let value = StringTransformer(type: "Custom", value: "custom")?.value
                 guard let expected = value as? Custom else {
                     fail("It should return the type as Custom")
                     return

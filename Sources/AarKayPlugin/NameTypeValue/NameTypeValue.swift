@@ -49,7 +49,7 @@ public struct NameTypeValue {
         var dictionary: [String: Any] = [:]
         for (name, type, value) in zip(names, types, values) {
             let strippedType = isOptional(type: type) ? String(type.dropLast()) : type
-            if let value = TypeValueTransformer(type: strippedType, value: value)?.value {
+            if let value = StringTransformer(type: strippedType, value: value)?.value {
                 dictionary[name] = value
             } else if !isOptional(type: type) {
                 throw NameTypeValueError

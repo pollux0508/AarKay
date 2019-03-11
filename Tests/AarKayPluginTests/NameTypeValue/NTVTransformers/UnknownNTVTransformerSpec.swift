@@ -14,7 +14,7 @@ class UnknownNTVTransformerSpec: QuickSpec {
     override func spec() {
         describe("UnknownNTVTransformer") {
             it("should return nil") {
-                let value = TypeValueTransformer(type: "Unknown", value: "Hello, World!")?.value
+                let value = StringTransformer(type: "Unknown", value: "Hello, World!")?.value
                 expect(value).to(beNil())
             }
         }

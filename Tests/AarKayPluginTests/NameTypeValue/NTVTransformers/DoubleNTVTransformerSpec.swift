@@ -14,7 +14,7 @@ class DoubleNTVTransformerSpec: QuickSpec {
     override func spec() {
         describe("DoubleNTVTransformer") {
             it("works with Double Type") {
-                let value = TypeValueTransformer(type: "Double", value: "10")?.value
+                let value = StringTransformer(type: "Double", value: "10")?.value
                 guard let expected = value as? Double else {
                     fail("It should return the type as Double")
                     return
@@ -25,7 +25,7 @@ class DoubleNTVTransformerSpec: QuickSpec {
 
             context("when value is unknown") {
                 it("should return nil") {
-                    expect(TypeValueTransformer(type: "Double", value: "any")?.value).to(beNil())
+                    expect(StringTransformer(type: "Double", value: "any")?.value).to(beNil())
                 }
             }
         }

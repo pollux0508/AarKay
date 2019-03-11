@@ -1,5 +1,5 @@
 //
-//  TypeValueTransformer.swift
+//  StringTransformer.swift
 //  AarKayPlugin
 //
 //  Created by RahulKatariya on 13/08/18.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// Responsible for transforming string to its respective type.
-public class TypeValueTransformer {
+public class StringTransformer {
     /// Collection of swift type transformers
     private static var transformers: [String: StringTransformable.Type] = [
         "String": String.self,
@@ -32,7 +32,7 @@ public class TypeValueTransformer {
         transformers[String(describing: transformer)] = transformer
     }
 
-    let value: Any?
+    public let value: Any?
 
     /// Initializes a typed value by transforming the given value with respect to type.
     ///
@@ -40,8 +40,8 @@ public class TypeValueTransformer {
     ///   - type: The swift type.
     ///   - value: The value of type in string format.
     /// - Returns: nil if transformer for the type is not registered.
-    init?(type: String, value: String) {
-        if let transformer = TypeValueTransformer.transformers[type] {
+    public init?(type: String, value: String) {
+        if let transformer = StringTransformer.transformers[type] {
             self.value = transformer.transform(value: value)
         } else {
             return nil

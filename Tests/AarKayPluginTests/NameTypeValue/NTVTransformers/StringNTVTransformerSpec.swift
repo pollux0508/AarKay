@@ -14,7 +14,7 @@ class StringNTVTransformerSpec: QuickSpec {
     override func spec() {
         describe("StringNTVTransformer") {
             it("works with String Type") {
-                let value = TypeValueTransformer(type: "String", value: "Hello, World!")?.value
+                let value = StringTransformer(type: "String", value: "Hello, World!")?.value
                 guard let expected = value as? String else {
                     fail("It should return the type as String")
                     return
