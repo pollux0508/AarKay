@@ -18,7 +18,7 @@ class DependencySpec: QuickSpec {
                     fail("Dep should not be nil"); return
                 }
                 expect(dep.urlDescription()) == "https://github.com/RahulKatariya/AarKay.git"
-                expect(dep.version.description()) == ".exact(\"0.0.0\")"
+                expect(dep.versionType.description()) == ".exact(\"0.0.0\")"
                 expect(dep.targetDescription()) == "AarKay"
             }
 
@@ -28,7 +28,7 @@ class DependencySpec: QuickSpec {
                     fail("Dep should not be nil"); return
                 }
                 expect(dep.urlDescription()) == "https://github.com/RahulKatariya/AarKay"
-                expect(dep.version.description()) == ".upToNextMinor(from: \"0.0.0\")"
+                expect(dep.versionType.description()) == ".upToNextMinor(from: \"0.0.0\")"
                 expect(dep.targetDescription()) == "AarKay"
             }
 
@@ -38,7 +38,7 @@ class DependencySpec: QuickSpec {
                     fail("Dep should not be nil"); return
                 }
                 expect(dep.urlDescription()) == "./../RahulKatariya/AarKay"
-                expect(dep.version.description()) == ".upToNextMajor(from: \"0.0.0\")"
+                expect(dep.versionType.description()) == ".upToNextMajor(from: \"0.0.0\")"
                 expect(dep.targetDescription()) == "AarKay"
             }
 
@@ -48,7 +48,7 @@ class DependencySpec: QuickSpec {
                     fail("Dep should not be nil"); return
                 }
                 expect(dep.urlDescription()) == "/Users/RahulKatariya/AarKay"
-                expect(dep.version.description()) == ".exact(\"0.0.0\")"
+                expect(dep.versionType.description()) == ".exact(\"0.0.0\")"
                 expect(dep.targetDescription()) == "AarKay"
             }
 

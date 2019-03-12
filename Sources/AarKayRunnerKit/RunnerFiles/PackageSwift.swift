@@ -13,7 +13,7 @@ class PackageSwift {
     static func contents(deps: [Dependency]) -> String {
         let packages = deps.reduce("") { (result, item) -> String in
             result + """
-            \n        .package(url: \"\(item.urlDescription())\", \(item.version.description())),
+            \n        .package(url: \"\(item.urlDescription())\", \(item.versionType.description())),
             """
         }
 

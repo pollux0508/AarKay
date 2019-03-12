@@ -56,13 +56,13 @@ class AarKayFileSpec: QuickSpec {
                     expect(deps.count) == 3
 
                     expect(deps[0].url.absoluteString) == "https://github.com/RahulKatariya/AarKay.git"
-                    expect(deps[0].version) == .branch("master")
+                    expect(deps[0].versionType) == .branch("master")
 
                     expect(deps[1].url.absoluteString) == "./../aarkay-plugin-test"
-                    expect(deps[1].version) == .upToNextMinor("0.0.0")
+                    expect(deps[1].versionType) == .upToNextMinor("0.0.0")
 
                     expect(deps[2].url.absoluteString) == "/Users/RahulKatariya/Developer/Restofire/Restofire"
-                    expect(deps[2].version) == .upToNextMajor("1.1.0")
+                    expect(deps[2].versionType) == .upToNextMajor("1.1.0")
                 }.toNot(throwError())
             }
 

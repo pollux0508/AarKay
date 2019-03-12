@@ -10,10 +10,13 @@ import Foundation
 /// Represents a plugin dependency for AarKay.
 public struct Dependency: Equatable, Hashable {
     /// The url of dependency.
-    let url: URL
+    public let url: URL
 
+    /// The version of dependency.
+    public let version: String
+    
     /// The version type.
-    let version: VersionType
+    let versionType: VersionType
 
     /// Initializes the AarKay plugin dependency.
     ///
@@ -29,15 +32,16 @@ public struct Dependency: Equatable, Hashable {
             )
         }
         self.url = url
-        guard let version = VersionType(
-            string: comps[1].trimmingCharacters(in: .whitespacesAndNewlines)
+        self.version = comps[1].trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let versionType = VersionType(
+            string: version
         ) else {
             throw AarKayError.aarkayFileParsingFailed(
                 reason: AarKayError.AarKayFileParsingReason
                     .invalidVersion(dependency: string)
             )
         }
-        self.version = version
+        self.versionType = versionType
     }
 
     /// - Returns: Returns the package dependency description for Package.swift.
