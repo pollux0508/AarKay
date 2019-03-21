@@ -19,15 +19,18 @@ dev: test build
 	rm -f $(DEV_INSTALL_PATH)
 	cp -f $(BUILD_PATH) $(DEV_INSTALL_PATH)
 
-release: build
+version-bump:
 	set -e
 	sh ./scripts/version-bump ${version}
+
+release: version-bump build
+	set -e
 	mkdir -p bin
 	cp -f -f $(BUILD_PATH) bin/$(INSTALL_NAME)
 	zip -r AarKay-v${version}.zip bin/$(INSTALL_NAME)
 	rm -rf bin 
 	sh ./scripts/brew-publish ${version}
-	git push origin --all --tags
+	git push origin --tags
 
 clean:
 	set -e
