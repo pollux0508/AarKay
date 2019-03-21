@@ -37,7 +37,7 @@ public struct InitCommand: CommandProtocol {
         if FileManager.default.fileExists(atPath: runnerUrl.path) && !options.force {
             return .failure(.projectAlreadyExists(url: aarkayPaths.url))
         } else {
-            print("Setting up at \(aarkayPaths.url.relativeString). This might take a few minutes...")
+            println("Setting up at \(aarkayPaths.url.relativeString). This might take a few minutes...")
 
             let bootstrapper = options.global ?
                 Bootstrapper.global : Bootstrapper.local

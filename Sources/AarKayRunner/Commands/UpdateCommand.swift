@@ -40,7 +40,7 @@ public struct UpdateCommand: CommandProtocol {
                 .missingProject(url: runnerUrl.deletingLastPathComponent())
             )
         }
-        print("Updating Plugins at \(runnerUrl.relativeString). This might take a few minutes...")
+        println("Updating Plugins at \(runnerUrl.relativeString). This might take a few minutes...")
 
         let bootstrapper = options.global ?
             Bootstrapper.global : Bootstrapper.local

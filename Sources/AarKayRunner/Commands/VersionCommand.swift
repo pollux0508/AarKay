@@ -13,7 +13,7 @@ public struct VersionCommand: CommandProtocol {
 
     public func run(_ options: NoOptions<AarKayError>) -> Result<(), AarKayError> {
         /// <aarkay Version>
-        print(AarKayVersion)
+        println(AarKayVersion)
         return .success(())
         /// </aarkay>
     }

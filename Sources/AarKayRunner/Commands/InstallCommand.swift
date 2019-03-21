@@ -40,7 +40,7 @@ public struct InstallCommand: CommandProtocol {
                 .missingProject(url: runnerUrl.deletingLastPathComponent())
             )
         }
-        print("Installing plugins at \(runnerUrl.relativeString). This might take a few minutes...")
+        println("Installing plugins at \(runnerUrl.relativeString). This might take a few minutes...")
 
         let bootstrapper = options.global ?
             Bootstrapper.global : Bootstrapper.local
