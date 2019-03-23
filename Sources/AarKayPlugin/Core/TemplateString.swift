@@ -22,7 +22,9 @@ public class TemplateStringModel: Codable {
         case subString
     }
 
-    public init(string: String) {
+    public init(
+        string: String
+    ) {
         self.string = string
     }
 

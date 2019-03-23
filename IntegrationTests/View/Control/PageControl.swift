@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class PageControl: Control {
-    private var model: PageControlModel
+    var pagecontrolModel: PageControlModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: PageControlModel.self)
+        self.pagecontrolModel = try df.dencode(type: PageControlModel.self)
         try super.init(datafile: datafile)
     }
 }

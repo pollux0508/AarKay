@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class Switch: Control {
-    private var model: SwitchModel
+    var switchModel: SwitchModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: SwitchModel.self)
+        self.switchModel = try df.dencode(type: SwitchModel.self)
         try super.init(datafile: datafile)
     }
 }

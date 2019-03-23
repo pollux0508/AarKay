@@ -63,7 +63,10 @@ public class ArgModel: Codable {
         case swiftType
     }
 
-    public init(name: String, type: String) {
+    public init(
+        name: String, 
+        type: String
+    ) {
         self.name = name
         self.type = type
     }

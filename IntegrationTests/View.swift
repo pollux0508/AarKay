@@ -11,11 +11,11 @@ import Foundation
 
 public class View: NSObject, Templatable {
     public var datafile: Datafile
-    private var model: ViewModel
+    var viewModel: ViewModel
 
     public required init(datafile: Datafile) throws {
         self.datafile = datafile
-        self.model = try self.datafile.dencode(type: ViewModel.self)
+        self.viewModel = try self.datafile.dencode(type: ViewModel.self)
     }
 }
 
@@ -32,8 +32,14 @@ public class ViewModel: Codable {
         case prefix
     }
 
-    public init(name: String) {
+    public init(
+        name: String, 
+        useNib: Bool = false, 
+        prefix: String = "UI"
+    ) {
         self.name = name
+        self.useNib = useNib
+        self.prefix = prefix
     }
 
     public required init(from decoder: Decoder) throws {

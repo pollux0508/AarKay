@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class Label: View {
-    private var model: LabelModel
+    var labelModel: LabelModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: LabelModel.self)
+        self.labelModel = try df.dencode(type: LabelModel.self)
         try super.init(datafile: datafile)
     }
 }
@@ -40,8 +40,16 @@ public class LabelModel: ViewModel {
         case allowsDefaultTighteningForTruncation
     }
 
-    public override init(name: String) {
-        super.init(name: name)
+    public override init(
+        name: String, 
+        useNib: Bool = false, 
+        prefix: String = "UI"
+    ) {
+        super.init(
+            name: name, 
+            useNib: useNib, 
+            prefix: prefix
+        )
     }
 
     public required init(from decoder: Decoder) throws {

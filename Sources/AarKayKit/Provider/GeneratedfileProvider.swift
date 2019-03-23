@@ -76,6 +76,12 @@ extension GeneratedfileProvider {
     ) throws -> [Generatedfile] {
         let templateUrls = try templateService.templates
             .getTemplatefile(for: template)
+        guard !templateUrls.isEmpty else {
+            throw AarKayKitError.invalidTemplate(
+                AarKayKitError.InvalidTemplateReason
+                    .notFound(name: template)
+            )
+        }
         return try templateUrls.map { templateFile in
             try Try {
                 var df = datafile
@@ -92,11 +98,8 @@ extension GeneratedfileProvider {
                     stringContents: rendered,
                     pathExtension: templateFile.ext
                 )
-            }.do { _ in
-                AarKayKitError.invalidTemplate(
-                    AarKayKitError.InvalidTemplateReason
-                        .notFound(name: template)
-                )
+            }.do { error in
+                AarKayKitError.unknownError(error: error)
             }
         }
     }

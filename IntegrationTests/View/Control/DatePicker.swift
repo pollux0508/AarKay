@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class DatePicker: Control {
-    private var model: DatePickerModel
+    var datepickerModel: DatePickerModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: DatePickerModel.self)
+        self.datepickerModel = try df.dencode(type: DatePickerModel.self)
         try super.init(datafile: datafile)
     }
 }

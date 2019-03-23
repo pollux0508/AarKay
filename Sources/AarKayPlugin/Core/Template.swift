@@ -11,11 +11,11 @@ import Foundation
 
 public class Template: NSObject, Templatable {
     public var datafile: Datafile
-    private var model: TemplateModel
+    var templateModel: TemplateModel
 
     public required init(datafile: Datafile) throws {
         self.datafile = datafile
-        self.model = try self.datafile.dencode(type: TemplateModel.self)
+        self.templateModel = try self.datafile.dencode(type: TemplateModel.self)
     }
 }
 
@@ -41,18 +41,21 @@ public class TemplateModel: Codable {
     public var requiredProperties: [ArgModel]? {
         /// <aarkay requiredProperties>
         return properties.filter { !$0.isOptionalOrWrapped }
+            + properties.filter { $0.isWrapped }
         /// </aarkay>
     }
 
     public var requiredBaseProperties: [ArgModel]? {
         /// <aarkay requiredBaseProperties>
         return baseProperties.filter { !$0.isOptionalOrWrapped }
+            + baseProperties.filter { $0.isWrapped }
         /// </aarkay>
     }
 
     public var requiredAllProperties: [ArgModel]? {
         /// <aarkay requiredAllProperties>
         return (baseProperties + properties).filter { !$0.isOptionalOrWrapped }
+            + (baseProperties + properties).filter { $0.isWrapped }
         /// </aarkay>
     }
 
@@ -71,8 +74,18 @@ public class TemplateModel: Codable {
         case requiredAllProperties
     }
 
-    public init(name: String) {
+    public init(
+        name: String, 
+        isTemplate: Bool = true, 
+        customDecoder: Bool = false, 
+        properties: [ArgModel] = [], 
+        baseProperties: [ArgModel] = []
+    ) {
         self.name = name
+        self.isTemplate = isTemplate
+        self.customDecoder = customDecoder
+        self.properties = properties
+        self.baseProperties = baseProperties
     }
 
     public required init(from decoder: Decoder) throws {

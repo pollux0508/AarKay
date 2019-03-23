@@ -18,8 +18,11 @@ struct DatafileProvider: DatafileService {
         using serializer: InputSerializable,
         globalContext: [String: Any]?
     ) throws -> [Result<Datafile, Error>] {
-        let context = try serializer.context(contents: contents)
+        var context = try serializer.context(contents: contents)
         if name.isCollection {
+            if contents.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                context = [[:]]
+            }
             guard let contextArray = context as? [[String: Any]] else {
                 throw AarKayKitError.invalidContents(
                     AarKayKitError.InvalidContentsReason.arrayExpected
@@ -33,6 +36,9 @@ struct DatafileProvider: DatafileService {
                 globalContext: globalContext
             )
         } else {
+            if contents.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                context = [:]
+            }
             guard let context = context as? [String: Any] else {
                 throw AarKayKitError.invalidContents(
                     AarKayKitError.InvalidContentsReason.objectExpected

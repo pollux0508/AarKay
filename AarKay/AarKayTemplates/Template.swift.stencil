@@ -20,16 +20,16 @@ public class {{name}}: {% if base %}{{base}}{% else %}NSObject, Templatable{% en
     {% if not base %}
     public var datafile: Datafile
     {% endif %}
-    private var model: {{name}}Model
+    var {{name|lowercase}}Model: {{name}}Model
 
     public required init(datafile: Datafile) throws {
         {% if base %}
         var df = datafile
-        self.model = try df.dencode(type: {{name}}Model.self)
+        self.{{name|lowercase}}Model = try df.dencode(type: {{name}}Model.self)
         try super.init(datafile: datafile)
         {% else %}
         self.datafile = datafile
-        self.model = try self.datafile.dencode(type: {{name}}Model.self)
+        self.{{name|lowercase}}Model = try self.datafile.dencode(type: {{name}}Model.self)
         {% endif %}
     }
     {% if inputSerializer %}

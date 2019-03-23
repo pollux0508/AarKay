@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class TableView: ScrollView {
-    private var model: TableViewModel
+    var tableviewModel: TableViewModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: TableViewModel.self)
+        self.tableviewModel = try df.dencode(type: TableViewModel.self)
         try super.init(datafile: datafile)
     }
 }

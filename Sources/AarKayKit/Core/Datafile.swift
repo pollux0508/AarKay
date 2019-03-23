@@ -169,17 +169,25 @@ public struct Datafile {
     ///
     /// - Parameters:
     ///   - model: The model conforming to `Encodable`.
+    ///   - isArray: Whether the model is of type Array. `false` by default.
     ///   - context: The additional context to append.
     /// - Throws: An `Error` if JSON encoding encounters any error.
     public mutating func setContext<T: Encodable>(
-        _ context: [String: Any],
-        with model: T? = nil
+        _ model: T,
+        isArray: Bool = false,
+        with context: [String: Any]? = nil
     ) throws {
-        if let model = model {
-            let object = try encode(model)
-            setContext(context + object)
+        var object: [String: Any]!
+        if isArray {
+            let model = ArrayEncodable(items: model)
+            object = try encode(model)
         } else {
-            setContext(context)
+            object = try encode(model)
+        }
+        if let context = context {
+            setContext(object + context)
+        } else {
+            setContext(object)
         }
     }
 

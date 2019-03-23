@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class TextField: Control {
-    private var model: TextFieldModel
+    var textfieldModel: TextFieldModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: TextFieldModel.self)
+        self.textfieldModel = try df.dencode(type: TextFieldModel.self)
         try super.init(datafile: datafile)
     }
 }

@@ -11,11 +11,11 @@ import Foundation
 
 public class Inheritance: NSObject, Templatable {
     public var datafile: Datafile
-    private var model: InheritanceModel
+    var inheritanceModel: InheritanceModel
 
     public required init(datafile: Datafile) throws {
         self.datafile = datafile
-        self.model = try self.datafile.dencode(type: InheritanceModel.self)
+        self.inheritanceModel = try self.datafile.dencode(type: InheritanceModel.self)
     }
 }
 
@@ -34,7 +34,9 @@ public class InheritanceModel: Codable {
         case subModels
     }
 
-    public init(templateModel: TemplateModel) {
+    public init(
+        templateModel: TemplateModel
+    ) {
         self.templateModel = templateModel
     }
 
@@ -66,15 +68,15 @@ extension Inheritance {
         templateDatafile.setDirectory("AarKay/AarKayTemplates")
         templatefiles(
             datafile: templateDatafile,
-            model: model,
+            model: inheritanceModel,
             all: &all
         )
         var modelFile = datafile
-        try modelFile.setContext(model.templateModel)
+        try modelFile.setContext(inheritanceModel.templateModel)
         modelFile.setTemplate(.name("Template"))
         try modelFiles(
             datafile: modelFile,
-            model: model,
+            model: inheritanceModel,
             all: &all
         )
         return all

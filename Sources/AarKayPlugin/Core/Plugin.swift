@@ -11,11 +11,11 @@ import Foundation
 
 public class Plugin: NSObject, Templatable {
     public var datafile: Datafile
-    private var model: PluginModel
+    var pluginModel: PluginModel
 
     public required init(datafile: Datafile) throws {
         self.datafile = datafile
-        self.model = try self.datafile.dencode(type: PluginModel.self)
+        self.pluginModel = try self.datafile.dencode(type: PluginModel.self)
     }
 }
 
@@ -52,7 +52,11 @@ public class PluginModel: Codable {
         case requiredAllProperties
     }
 
-    public init() {}
+    public init(
+        properties: [ArgModel] = []
+    ) {
+        self.properties = properties
+    }
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -75,7 +79,7 @@ public class PluginModel: Codable {
 extension Plugin {
     public func datafiles() throws -> [Datafile] {
         datafile.setFileName("AarKayPlugin")
-        try datafile.setContext(model, with: ["name": "AarKayPlugin"])
+        try datafile.setContext(pluginModel, with: ["name": "AarKayPlugin"])
         return [datafile]
     }
 }

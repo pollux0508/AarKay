@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class Button: Control {
-    private var model: ButtonModel
+    var buttonModel: ButtonModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: ButtonModel.self)
+        self.buttonModel = try df.dencode(type: ButtonModel.self)
         try super.init(datafile: datafile)
     }
 }

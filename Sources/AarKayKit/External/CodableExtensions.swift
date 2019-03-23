@@ -8,6 +8,10 @@
 import Foundation
 import SharedKit
 
+struct ArrayEncodable<T: Encodable>: Encodable {
+    let items: T
+}
+
 public class JSONCoder {
     /// Decodes and Encodes the model and sets the context.
     ///

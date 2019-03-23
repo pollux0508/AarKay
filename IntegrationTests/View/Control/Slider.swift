@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class Slider: Control {
-    private var model: SliderModel
+    var sliderModel: SliderModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: SliderModel.self)
+        self.sliderModel = try df.dencode(type: SliderModel.self)
         try super.init(datafile: datafile)
     }
 }

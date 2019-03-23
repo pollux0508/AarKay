@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class ImageView: View {
-    private var model: ImageViewModel
+    var imageviewModel: ImageViewModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: ImageViewModel.self)
+        self.imageviewModel = try df.dencode(type: ImageViewModel.self)
         try super.init(datafile: datafile)
     }
 }
@@ -26,8 +26,16 @@ public class ImageViewModel: ViewModel {
         case contentMode
     }
 
-    public override init(name: String) {
-        super.init(name: name)
+    public override init(
+        name: String, 
+        useNib: Bool = false, 
+        prefix: String = "UI"
+    ) {
+        super.init(
+            name: name, 
+            useNib: useNib, 
+            prefix: prefix
+        )
     }
 
     public required init(from decoder: Decoder) throws {

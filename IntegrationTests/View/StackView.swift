@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class StackView: View {
-    private var model: StackViewModel
+    var stackviewModel: StackViewModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: StackViewModel.self)
+        self.stackviewModel = try df.dencode(type: StackViewModel.self)
         try super.init(datafile: datafile)
     }
 }
@@ -38,8 +38,16 @@ public class StackViewModel: ViewModel {
         case asv
     }
 
-    public override init(name: String) {
-        super.init(name: name)
+    public override init(
+        name: String, 
+        useNib: Bool = false, 
+        prefix: String = "UI"
+    ) {
+        super.init(
+            name: name, 
+            useNib: useNib, 
+            prefix: prefix
+        )
     }
 
     public required init(from decoder: Decoder) throws {

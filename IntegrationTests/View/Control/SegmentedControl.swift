@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class SegmentedControl: Control {
-    private var model: SegmentedControlModel
+    var segmentedcontrolModel: SegmentedControlModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: SegmentedControlModel.self)
+        self.segmentedcontrolModel = try df.dencode(type: SegmentedControlModel.self)
         try super.init(datafile: datafile)
     }
 }

@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class Stepper: Control {
-    private var model: StepperModel
+    var stepperModel: StepperModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: StepperModel.self)
+        self.stepperModel = try df.dencode(type: StepperModel.self)
         try super.init(datafile: datafile)
     }
 }

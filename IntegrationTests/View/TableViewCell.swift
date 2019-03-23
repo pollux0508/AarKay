@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class TableViewCell: View {
-    private var model: TableViewCellModel
+    var tableviewcellModel: TableViewCellModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: TableViewCellModel.self)
+        self.tableviewcellModel = try df.dencode(type: TableViewCellModel.self)
         try super.init(datafile: datafile)
     }
 }

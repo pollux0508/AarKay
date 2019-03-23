@@ -26,12 +26,18 @@ public class {{name}}Model: {% if base %}{{base}}Model{% else %}Codable{% endif 
     {% if not requiredAllProperties %}
     public{% if base %} override{% endif %} init() {}
     {% else %}
-    public{% if base %} override{% endif %} init({% for property in requiredAllProperties %}{{property.name}}: {{property.type}}{% if not forloop.last %}, {% endif %}{% endfor %}) {
+    public{% if base %} override{% endif %} init(
+        {% for property in requiredAllProperties %}{{property.name}}: {{property.swiftType}}{% if property.value %} = {{property.value}}{% endif %}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    ) {
         {% for property in requiredProperties %}
         self.{{property.name}} = {{property.name}}
         {% endfor %}
         {% if base %}
-        super.init({% for property in requiredBaseProperties %}{{property.name}}: {{property.name}}{% if not forloop.last %}, {% endif %}{% endfor %})
+        super.init(
+            {% for property in requiredBaseProperties %}{{property.name}}: {{property.name}}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        )
         {% endif %}
     }
     {% endif %}

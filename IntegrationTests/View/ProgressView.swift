@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class ProgressView: View {
-    private var model: ProgressViewModel
+    var progressviewModel: ProgressViewModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: ProgressViewModel.self)
+        self.progressviewModel = try df.dencode(type: ProgressViewModel.self)
         try super.init(datafile: datafile)
     }
 }

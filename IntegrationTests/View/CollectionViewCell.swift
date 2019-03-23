@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class CollectionViewCell: View {
-    private var model: CollectionViewCellModel
+    var collectionviewcellModel: CollectionViewCellModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: CollectionViewCellModel.self)
+        self.collectionviewcellModel = try df.dencode(type: CollectionViewCellModel.self)
         try super.init(datafile: datafile)
     }
 }

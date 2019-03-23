@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class PickerView: View {
-    private var model: PickerViewModel
+    var pickerviewModel: PickerViewModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: PickerViewModel.self)
+        self.pickerviewModel = try df.dencode(type: PickerViewModel.self)
         try super.init(datafile: datafile)
     }
 }

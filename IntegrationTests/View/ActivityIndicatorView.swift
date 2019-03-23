@@ -10,11 +10,11 @@ import AarKayKit
 import Foundation
 
 public class ActivityIndicatorView: View {
-    private var model: ActivityIndicatorViewModel
+    var activityindicatorviewModel: ActivityIndicatorViewModel
 
     public required init(datafile: Datafile) throws {
         var df = datafile
-        self.model = try df.dencode(type: ActivityIndicatorViewModel.self)
+        self.activityindicatorviewModel = try df.dencode(type: ActivityIndicatorViewModel.self)
         try super.init(datafile: datafile)
     }
 }
