@@ -1,13 +1,10 @@
-// swift-tools-version:5.0
+// swift-tools-version:4.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "AarKay",
-    platforms: [
-        .macOS(.v10_12),
-    ],
     products: [
         .library(name: "AarKay", targets: ["AarKay"]),
         .library(name: "AarKayKit", targets: ["AarKayKit"]),
@@ -128,5 +125,5 @@ let package = Package(
             ]
         ),
     ],
-    swiftLanguageVersions: [.v5]
+    swiftLanguageVersions: [.v4, .v4_2]
 )
