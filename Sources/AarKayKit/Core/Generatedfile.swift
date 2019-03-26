@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SharedKit
 
 /// Represents a Generatedfile.
 public struct Generatedfile {

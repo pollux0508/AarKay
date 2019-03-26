@@ -18,11 +18,10 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         /* ------------------------------------------------------ */
-        /* >>> AarKayKit ------------------------------------------- */
+        /* >>> AarKayKit ---------------------------------------- */
         /* ------------------------------------------------------ */
         .package(url: "https://github.com/SwiftGen/StencilSwiftKit.git", .upToNextMajor(from: "2.5.0")),
         .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "1.0.0")),
-        .package(url: "https://github.com/antitypical/Result.git", .upToNextMajor(from: "4.0.0")),
         /* ------------------------------------------------------ */
         /* >>> AarKay ------------------------------------------- */
         /* ------------------------------------------------------ */
@@ -57,7 +56,6 @@ let package = Package(
             dependencies: [
                 "SharedKit",
                 "StencilSwiftKit",
-                "Result",
                 "Yams",
             ]
         ),

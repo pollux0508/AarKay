@@ -6,16 +6,15 @@
 //
 
 import Foundation
-import Result
 import SharedKit
 
 struct GeneratedfileProvider: GeneratedfileService {
     func generatedfiles(
-        datafiles: [Result<Datafile, AnyError>],
+        datafiles: [Result<Datafile, Error>],
         templateService: TemplateService,
         globalContext: [String: Any]?
-    ) -> [Result<Generatedfile, AnyError>] {
-        return datafiles.map { result -> Result<[Generatedfile], AnyError> in
+    ) -> [Result<Generatedfile, Error>] {
+        return datafiles.map { result -> Result<[Generatedfile], Error> in
             switch result {
             case .success(let value):
                 return Result {
@@ -29,8 +28,8 @@ struct GeneratedfileProvider: GeneratedfileService {
                 return .failure(error)
             }
         }.reduce(
-            [Result<Generatedfile, AnyError>]()
-        ) { (initial, next) -> [Result<Generatedfile, AnyError>] in
+            [Result<Generatedfile, Error>]()
+        ) { (initial, next) -> [Result<Generatedfile, Error>] in
             var results = initial
             switch next {
             case .failure(let error):

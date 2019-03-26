@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Result
 
 /// A Type encapsulating all the services required by AarKayKit to perform operations.
 protocol AarKayService {
@@ -51,7 +50,7 @@ protocol DatafileService {
         contents: String,
         using serializer: InputSerializable,
         globalContext: [String: Any]?
-    ) throws -> [Result<Datafile, AnyError>]
+    ) throws -> [Result<Datafile, Error>]
 
     /// Process and modify Datafile object by applying to the given template and create new datafiles.
     ///
@@ -76,8 +75,8 @@ protocol GeneratedfileService {
     ///   - globalContext: The shared context.
     /// - Returns: The Generatedfiles result.
     func generatedfiles(
-        datafiles: [Result<Datafile, AnyError>],
+        datafiles: [Result<Datafile, Error>],
         templateService: TemplateService,
         globalContext: [String: Any]?
-    ) -> [Result<Generatedfile, AnyError>]
+    ) -> [Result<Generatedfile, Error>]
 }

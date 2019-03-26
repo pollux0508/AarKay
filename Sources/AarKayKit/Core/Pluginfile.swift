@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import Result
-import SharedKit
 
 /// Represents a Plugin.
 public struct Pluginfile {
@@ -80,7 +78,7 @@ extension Pluginfile {
         directory: String,
         template: String,
         contents: String
-    ) throws -> [Result<Generatedfile, AnyError>] {
+    ) throws -> [Result<Generatedfile, Error>] {
         if let templateClass = AarKayKit.templateClass(
             plugin: name,
             template: template
@@ -96,10 +94,10 @@ extension Pluginfile {
             )
 
             let templateDatafiles = datafiles
-                .map { result -> [Result<Datafile, AnyError>] in
+                .map { result -> [Result<Datafile, Error>] in
                     switch result {
                     case .success(let value):
-                        let res = Result<[Datafile], AnyError> {
+                        let res = Result<[Datafile], Error> {
                             try aarkayService.datafileService
                                 .templateDatafiles(
                                     datafile: value,
@@ -116,9 +114,9 @@ extension Pluginfile {
                         return [.failure(error)]
                     }
                 }.reduce(
-                    [Result<Datafile, AnyError>]()
-                ) { (initial, next) -> [Result<Datafile, AnyError>] in
-                    var results: [Result<Datafile, AnyError>] = initial
+                    [Result<Datafile, Error>]()
+                ) { (initial, next) -> [Result<Datafile, Error>] in
+                    var results: [Result<Datafile, Error>] = initial
                     next.forEach { results.append($0) }
                     return results
                 }

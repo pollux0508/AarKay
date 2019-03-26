@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Result
 
 struct AarKayProvider: AarKayService {
     var datafileService: DatafileService

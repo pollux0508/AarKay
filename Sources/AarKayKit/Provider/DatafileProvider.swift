@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Result
 import SharedKit
 
 struct DatafileProvider: DatafileService {
@@ -18,7 +17,7 @@ struct DatafileProvider: DatafileService {
         contents: String,
         using serializer: InputSerializable,
         globalContext: [String: Any]?
-    ) throws -> [Result<Datafile, AnyError>] {
+    ) throws -> [Result<Datafile, Error>] {
         let context = try serializer.context(contents: contents)
         if name.isCollection {
             guard let contextArray = context as? [[String: Any]] else {
@@ -46,7 +45,7 @@ struct DatafileProvider: DatafileService {
                 template: template,
                 globalContext: globalContext
             )
-            return [Result<Datafile, AnyError>.success(df)]
+            return [Result<Datafile, Error>.success(df)]
         }
     }
 
@@ -94,9 +93,9 @@ extension DatafileProvider {
         contextArray: [[String: Any]],
         template: String,
         globalContext: [String: Any]?
-    ) -> [Result<Datafile, AnyError>] {
-        return contextArray.map { context -> Result<Datafile, AnyError> in
-            Result<Datafile, AnyError> {
+    ) -> [Result<Datafile, Error>] {
+        return contextArray.map { context -> Result<Datafile, Error> in
+            Result<Datafile, Error> {
                 guard let fileName = context.fileName() ?? context.name() else {
                     throw AarKayKitError.invalidContents(
                         AarKayKitError.InvalidContentsReason.missingFileName

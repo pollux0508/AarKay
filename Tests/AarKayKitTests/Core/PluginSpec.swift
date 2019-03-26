@@ -57,8 +57,8 @@ class PluginSpec: QuickSpec {
                             contents: "- name: Template\n- noname: Template2"
                         )
                         expect(files.count) == 2
-                        expect(files.first?.value).toNot(beNil())
-                        expect(files.last?.value).to(beNil())
+                        expect(try? files.first?.get()).toNot(beNil())
+                        expect(try? files.last?.get()).to(beNil())
                     }.toNot(throwError())
 
                     expect { () -> Void in
@@ -73,8 +73,8 @@ class PluginSpec: QuickSpec {
                             """
                         )
                         expect(files.count) == 2
-                        expect(files.first?.value).toNot(beNil())
-                        expect(files.last?.value).toNot(beNil())
+                        expect(try? files.first?.get()).toNot(beNil())
+                        expect(try? files.last?.get()).toNot(beNil())
                     }.toNot(throwError())
                 }
             }.toNot(throwError())
