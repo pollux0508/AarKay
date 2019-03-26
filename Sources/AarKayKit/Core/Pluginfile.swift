@@ -99,7 +99,7 @@ extension Pluginfile {
                 .map { result -> [Result<Datafile, AnyError>] in
                     switch result {
                     case .success(let value):
-                        let res = Result {
+                        let res = Result<[Datafile], AnyError> {
                             try aarkayService.datafileService
                                 .templateDatafiles(
                                     datafile: value,
