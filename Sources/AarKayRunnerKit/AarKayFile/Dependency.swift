@@ -14,7 +14,7 @@ public struct Dependency: Equatable, Hashable {
 
     /// The version of dependency.
     public let version: String
-    
+
     /// The version type.
     let versionType: VersionType
 

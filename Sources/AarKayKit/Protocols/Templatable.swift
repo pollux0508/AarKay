@@ -8,7 +8,7 @@
 import Foundation
 
 /// Represents a Template.
-public protocol Templatable: class {
+public protocol Templatable: AnyObject {
     /// The Datafile.
     var datafile: Datafile { get set }
 

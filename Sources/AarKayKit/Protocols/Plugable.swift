@@ -8,7 +8,7 @@
 import Foundation
 
 /// Represents a Plugin
-public protocol Pluggable: class {
+public protocol Pluggable: AnyObject {
     /// The Datafile.
     var context: [String: Any] { get set }
 
