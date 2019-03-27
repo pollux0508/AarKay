@@ -33,8 +33,8 @@ public class ViewModel: Codable {
     }
 
     public init(
-        name: String, 
-        useNib: Bool = false, 
+        name: String,
+        useNib: Bool = false,
         prefix: String = "UI"
     ) {
         self.name = name

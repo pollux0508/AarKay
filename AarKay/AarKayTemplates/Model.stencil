@@ -27,7 +27,7 @@ public class {{name}}Model: {% if base %}{{base}}Model{% else %}Codable{% endif 
     public{% if base %} override{% endif %} init() {}
     {% else %}
     public{% if base %} override{% endif %} init(
-        {% for property in requiredAllProperties %}{{property.name}}: {{property.swiftType}}{% if property.value %} = {{property.value}}{% endif %}{% if not forloop.last %}, {% endif %}
+        {% for property in requiredAllProperties %}{{property.name}}: {{property.swiftType}}{% if property.value %} = {{property.value}}{% endif %}{% if not forloop.last %},{% endif %}
         {% endfor %}
     ) {
         {% for property in requiredProperties %}
@@ -35,7 +35,7 @@ public class {{name}}Model: {% if base %}{{base}}Model{% else %}Codable{% endif 
         {% endfor %}
         {% if base %}
         super.init(
-            {% for property in requiredBaseProperties %}{{property.name}}: {{property.name}}{% if not forloop.last %}, {% endif %}
+            {% for property in requiredBaseProperties %}{{property.name}}: {{property.name}}{% if not forloop.last %},{% endif %}
             {% endfor %}
         )
         {% endif %}

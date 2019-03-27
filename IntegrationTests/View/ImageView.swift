@@ -27,13 +27,13 @@ public class ImageViewModel: ViewModel {
     }
 
     public override init(
-        name: String, 
-        useNib: Bool = false, 
+        name: String,
+        useNib: Bool = false,
         prefix: String = "UI"
     ) {
         super.init(
-            name: name, 
-            useNib: useNib, 
+            name: name,
+            useNib: useNib,
             prefix: prefix
         )
     }

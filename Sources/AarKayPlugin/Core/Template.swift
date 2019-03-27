@@ -75,10 +75,10 @@ public class TemplateModel: Codable {
     }
 
     public init(
-        name: String, 
-        isTemplate: Bool = true, 
-        customDecoder: Bool = false, 
-        properties: [ArgModel] = [], 
+        name: String,
+        isTemplate: Bool = true,
+        customDecoder: Bool = false,
+        properties: [ArgModel] = [],
         baseProperties: [ArgModel] = []
     ) {
         self.name = name

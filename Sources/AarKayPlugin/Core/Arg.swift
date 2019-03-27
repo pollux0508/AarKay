@@ -64,7 +64,7 @@ public class ArgModel: Codable {
     }
 
     public init(
-        name: String, 
+        name: String,
         type: String
     ) {
         self.name = name
