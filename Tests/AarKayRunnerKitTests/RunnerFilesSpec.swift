@@ -15,12 +15,15 @@ class RunnerFilesSpec: QuickSpec {
         describe("PackageSwift") {
             it("should work with AarKay dependency") {
                 let actual = """
-                // swift-tools-version:4.2
+                // swift-tools-version:5.0
                 import PackageDescription
                 import Foundation
 
                 let package = Package(
                     name: "AarKayRunner",
+                    platforms: [
+                        .macOS(.v10_12),
+                    ],
                     products: [
                         .executable(name: "aarkay-cli", targets: ["aarkay-cli"])],
                     dependencies: [
@@ -35,7 +38,7 @@ class RunnerFilesSpec: QuickSpec {
                                 "AarKay",
                             ],
                             path: "Sources/AarKayCLI"),],
-                    swiftLanguageVersions: [.v4, .v4_2]
+                    swiftLanguageVersions: [.v5]
                 )
                 """
                 expect { () -> Void in
@@ -48,12 +51,15 @@ class RunnerFilesSpec: QuickSpec {
 
             it("should work with AarKay and file dependency") {
                 let actual = """
-                // swift-tools-version:4.2
+                // swift-tools-version:5.0
                 import PackageDescription
                 import Foundation
 
                 let package = Package(
                     name: "AarKayRunner",
+                    platforms: [
+                        .macOS(.v10_12),
+                    ],
                     products: [
                         .executable(name: "aarkay-cli", targets: ["aarkay-cli"])],
                     dependencies: [
@@ -70,7 +76,7 @@ class RunnerFilesSpec: QuickSpec {
                                 "aarkay-plugin-test",
                             ],
                             path: "Sources/AarKayCLI"),],
-                    swiftLanguageVersions: [.v4, .v4_2]
+                    swiftLanguageVersions: [.v5]
                 )
                 """
                 expect { () -> Void in
