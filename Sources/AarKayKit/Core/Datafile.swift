@@ -191,6 +191,24 @@ public struct Datafile {
         }
     }
 
+    /// Encodes the model to an object, appends it with another object and sets the context.
+    ///
+    /// - Parameters:
+    ///   - model: The model conforming to `Encodable`.
+    ///   - context: The additional context to append.
+    /// - Throws: An `Error` if JSON encoding encounters any error.
+    public mutating func setContext<T: Encodable>(
+        _ context: [String: Any],
+        with model: T? = nil
+    ) throws {
+        if let model = model {
+            let object = try encode(model)
+            setContext(context + object)
+        } else {
+            setContext(context)
+        }
+    }
+
     /// Encodes the model to an object.
     ///
     /// - Parameters: model: The model conforming to `Encodable`.

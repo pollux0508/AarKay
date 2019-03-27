@@ -27,9 +27,9 @@ class TemplateModelSpec: QuickSpec {
                     """
                     let templateModel = try YAMLDecoder().decode(TemplateModel.self, from: templateString)
                     expect(templateModel.properties.count) == 3
-                    expect(templateModel.requiredProperties?.count) == 1
+                    expect(templateModel.requiredProperties?.count) == 2
                     expect(templateModel.allProperties?.count) == 4
-                    expect(templateModel.requiredAllProperties?.count) == 1
+                    expect(templateModel.requiredAllProperties?.count) == 2
                     expect(templateModel.baseProperties?.count) == 0
                     expect(templateModel.requiredBaseProperties?.count) == 0
                     expect(templateModel.computedProperties?.count) == 1
