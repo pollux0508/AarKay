@@ -4,6 +4,47 @@ set -e
 echo "version: '.upToNextMinor(from: \"$1\")'" > AarKay/AarKayData/NoPlugin/aarkay-plugin-PLUGINLOWERNAME/Package.yml
 echo "version: '~> \(AarKayVersion)'" > AarKay/AarKayData/NoPlugin/Sources/AarKayRunnerKit/RunnerFiles/AarKayDependency.Runner.yml
 echo "public let AarKayVersion = \"$1\"" > Sources/AarKayRunnerKit/Core/AarKayVersion.swift
+echo "- name: AarKay
+  version: $1
+  deps:
+    - name: AarKayKit
+      version: ~> $1
+    - name: AarKayRunnerKit
+      version: ~> $1
+    - name: PrettyColors
+      version: ~> 5.0
+    - name: SwiftyTextTable
+      version: ~> 0.8.0
+- name: AarKayKit
+  version: $1
+  deps:
+    - name: SharedKit
+      version: ~> $1
+    - name: StencilSwiftKit
+      version: ~> 2.5
+    - name: Result
+      version: ~> 4.0
+    - name: Yams
+      version: ~> 1.0
+- name: SharedKit
+  version: $1
+- name: AarKayRunnerKit
+  version: $1
+  deps:
+    - name: SharedKit
+      version: ~> $1
+    - name: Commandant
+      version: ~> 0.15.0
+    - name: ReactiveTask
+      version: ~> 0.15.0
+    - name: Curry
+      version: ~> 4.0
+- _fn: AarKayPlugin
+  name: aarkay-plugin-aarkay
+  version: $1
+  deps:
+    - name: AarKayKit
+      version: ~> $1" > AarKay/AarKayData/NoPlugin/[].Spec.yml
 git commit -am "Release v$1 🚀"
 sh scripts/run
 sh scripts/template

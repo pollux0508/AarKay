@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
- s.name = 'SharedKit'
- s.version = '0.7.1'
+ s.name = '{{ name }}'
+ s.version = '{{ version }}'
  s.license = { :type => "MIT", :file => "LICENSE" }
  s.summary = 'AarKay is a language independent code generation framework.'
  s.homepage = 'https://aarkay.xyz'
@@ -14,7 +14,10 @@ Pod::Spec.new do |s|
  s.default_subspec = "Core"
 
  s.subspec "Core" do |ss|
-    ss.source_files = "Sources/SharedKit/**/*.swift"
+    ss.source_files = "Sources/{% if _fn %}{{ _fn }}{% else %}{{ name }}{% endif %}/**/*.swift"
+    {% for dep in deps %}
+    ss.dependency "{{ dep.name }}", "{{ dep.version }}"
+    {% endfor %}
  end
 
 end
