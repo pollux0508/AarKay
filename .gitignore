@@ -104,4 +104,5 @@ buildContext.tar
 # AarKay
 #
 AarKay/AarKayRunner
+aarkay-plugin-pluginlowername/Package.resolved
 AarKay/aarkay-plugin-test
