@@ -37,7 +37,7 @@ clean:
 	swift package clean
 
 build: clean
-	swift build --disable-sandbox -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12" -Xswiftc -Xswiftc "-suppress-warnings" -static-stdlib -c release
+	swift build --disable-sandbox -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12" -Xswiftc -static-stdlib -Xswiftc "-suppress-warnings" -c release
 
 test: clean
 	swift test -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12" -Xswiftc "-suppress-warnings"
