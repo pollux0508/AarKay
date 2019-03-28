@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
  s.name = 'AarKayRunnerKit'
- s.version = '0.8.2'
+ s.version = '0.8.3'
  s.license = { :type => "MIT", :file => "LICENSE" }
  s.summary = 'AarKay is a language independent code generation framework.'
  s.homepage = 'https://aarkay.xyz'
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
  s.subspec "Core" do |ss|
     ss.source_files = "Sources/AarKayRunnerKit/**/*.swift"
-    ss.dependency "SharedKit", "~> 0.8.2"
+    ss.dependency "SharedKit", "~> 0.8.3"
     ss.dependency "Commandant", "~> 0.15.0"
     ss.dependency "ReactiveTask", "~> 0.15.0"
     ss.dependency "Curry", "~> 4.0"
