@@ -26,11 +26,11 @@ class DatafileSpec: QuickSpec {
                 var df = Datafile(
                     fileName: "File",
                     directory: "",
+                    template: template,
+                    globalContext: nil,
                     context: [:],
                     override: true,
-                    skip: false,
-                    template: template,
-                    globalContext: nil
+                    skip: false
                 )
                 let context = Context(name: "Rahul")
                 expect { () -> Void in

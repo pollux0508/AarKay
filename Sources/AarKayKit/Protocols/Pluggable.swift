@@ -18,6 +18,12 @@ public protocol Pluggable: AnyObject {
     /// - Throws: An `Error` if decoding model contents encouter any error.
     init(context: [String: Any]) throws
 
+    /// A set of datafiles to generate.
+    ///
+    /// - Returns: An array of datafile.
+    /// - Throws: An `Error` if datafiles creation encouters any error.
+    func datafiles() throws -> [Datafile]
+
     /// Returns the location of all templates on Disk.
     static func templates() -> [String]
 
@@ -26,6 +32,11 @@ public protocol Pluggable: AnyObject {
 }
 
 extension Pluggable {
+    /// Empty
+    public func datafiles() throws -> [Datafile] {
+        return []
+    }
+
     /// StencilProvider
     public static func templateService() -> TemplateService.Type {
         return StencilProvider.self

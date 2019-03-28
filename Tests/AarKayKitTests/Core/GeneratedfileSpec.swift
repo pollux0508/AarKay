@@ -26,11 +26,11 @@ class GeneratedfileSpec: QuickSpec {
                 let df = Datafile(
                     fileName: "File",
                     directory: "",
+                    template: template,
+                    globalContext: nil,
                     context: ["name": "Rahul"],
                     override: true,
-                    skip: false,
-                    template: template,
-                    globalContext: nil
+                    skip: false
                 )
                 let contents = """
                 Hi, My name is Rahul.
@@ -111,11 +111,11 @@ class GeneratedfileSpec: QuickSpec {
                 let df = Datafile(
                     fileName: "File",
                     directory: "",
+                    template: template,
+                    globalContext: nil,
                     context: ["name": "Rahul"],
                     override: true,
-                    skip: false,
-                    template: template,
-                    globalContext: nil
+                    skip: false
                 )
                 let contents = """
                 Hi, My name is Rahul.

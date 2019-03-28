@@ -85,11 +85,11 @@ extension DatafileProvider {
         return Datafile(
             fileName: fileName.standardized,
             directory: dir,
+            template: .name(template),
+            globalContext: globalContext,
             context: context,
             override: context.override(),
-            skip: context.skip(),
-            template: .name(template),
-            globalContext: globalContext
+            skip: context.skip()
         )
     }
 

@@ -60,19 +60,19 @@ public struct Datafile {
     public init(
         fileName: String,
         directory: String,
-        context: [String: Any],
-        override: Bool,
-        skip: Bool,
         template: Template,
-        globalContext: [String: Any]?
+        globalContext: [String: Any]?,
+        context: [String: Any] = [:],
+        override: Bool = true,
+        skip: Bool = false
     ) {
         self.fileName = fileName.failIfEmpty()
         self.directory = directory
+        self.template = template
+        self.globalContext = globalContext ?? [:]
         self.context = context
         self.override = override
         self.skip = skip
-        self.template = template
-        self.globalContext = globalContext ?? [:]
     }
 
     /// Decodes and Encodes the model and sets the context.
