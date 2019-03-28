@@ -11,13 +11,14 @@ import Result
 public class RunTask {
     public static func run(
         at path: String,
+        workingDirectoryPath: String,
         verbose: Bool = false,
         force: Bool = false,
         dryrun: Bool = false,
         exitOnError: Bool = false,
         standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
-        var arguments: [String] = []
+        var arguments: [String] = ["--path", workingDirectoryPath]
         if verbose { arguments.append("--verbose") }
         if force { arguments.append("--force") }
         if dryrun { arguments.append("--dryrun") }

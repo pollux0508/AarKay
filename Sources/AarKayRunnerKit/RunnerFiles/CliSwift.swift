@@ -4,10 +4,10 @@ import Foundation
 struct CliSwift {
     /// The contents.
     static let contents = """
-    import Foundation
     import AarKay
+    import Foundation
 
-    let url = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
+    let url = URL(fileURLWithPath: CommandLine.arguments[2])
 
     let options = AarKayOptions(
         force: CommandLine.arguments.contains("--force"),
@@ -16,5 +16,6 @@ struct CliSwift {
         exitOnError: CommandLine.arguments.contains("--exitOnError")
     )
     AarKay(url: url, options: options).bootstrap()
+
     """
 }

@@ -23,7 +23,7 @@ version-bump:
 	set -e
 	sh ./scripts/version-bump ${version}
 
-release: version-bump build
+release: test version-bump build
 	set -e
 	mkdir -p bin
 	cp -f -f $(BUILD_PATH) bin/$(INSTALL_NAME)
@@ -36,7 +36,7 @@ clean:
 	set -e
 	swift package clean
 
-build: clean
+build:
 	swift build --disable-sandbox -Xswiftc "-suppress-warnings" -c release
 
 test: clean

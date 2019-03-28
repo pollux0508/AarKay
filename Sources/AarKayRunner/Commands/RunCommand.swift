@@ -43,7 +43,7 @@ public struct RunCommand: CommandProtocol {
         let aarkayPaths = options.global ?
             AarKayPaths.global : AarKayPaths.local
         let runnerUrl = aarkayPaths.runnerPath()
-        let cliUrl: URL = aarkayPaths.cliPath()
+        let cliUrl = aarkayPaths.cliPath()
 
         guard FileManager.default.fileExists(atPath: runnerUrl.path),
             FileManager.default.fileExists(atPath: cliUrl.path) else {
@@ -58,6 +58,7 @@ public struct RunCommand: CommandProtocol {
 
         return RunTask.run(
             at: cliUrl.path,
+            workingDirectoryPath: FileManager.default.currentDirectoryPath,
             verbose: options.verbose,
             force: options.force,
             dryrun: options.dryrun,
