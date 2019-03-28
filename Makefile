@@ -31,18 +31,16 @@ release: version-bump build
 	rm -rf bin 
 	sh ./scripts/brew-publish ${version}
 	git push origin develop && git push origin --tags
-	git checkout master && git reset --hard develop
-	git push origin master
 
 clean:
 	set -e
 	swift package clean
 
 build: clean
-	swift build --disable-sandbox -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12" -Xswiftc "-suppress-warnings" -c release
+	swift build --disable-sandbox -Xswiftc "-suppress-warnings" -c release
 
 test: clean
-	swift test -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12" -Xswiftc "-suppress-warnings"
+	swift test -Xswiftc "-suppress-warnings"
 
 uninstall:
 	set -e

@@ -17,6 +17,8 @@ jobs:
     - stage: Tests
       name: Unit Tests
       script: make test
+      after_success:
+        - bash <(curl -s https://codecov.io/bash) -J 'AarKay' -J 'AarKayKit' -J 'AarKayRunnerKit' -J 'aarkay-plugin-aarkay' -J 'SharedKit'
     - name: Integration Tests
       before_install:
         - brew update

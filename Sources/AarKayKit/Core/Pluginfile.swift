@@ -64,10 +64,16 @@ public struct Pluginfile {
 }
 
 extension Pluginfile {
+    /// Creates GeneratedFile results from `Pluggable`.
+    ///
+    /// - Returns: The `Generatedfile` results.
+    /// - Throws: An `Error` if the program encouters any error.
     public func bootstrap() throws -> [Result<Generatedfile, Error>] {
         if let pluggableType = try AarKayKit.pluggableClass(plugin: name) {
             let pluggable = try pluggableType.init(context: globalContext)
-            let datafiles = try pluggable.datafiles().map { Result<Datafile, Error>.success($0) }
+            let datafiles = try pluggable.datafiles().map {
+                Result<Datafile, Error>.success($0)
+            }
             return aarkayService.generatedfileService.generatedfiles(
                 datafiles: datafiles,
                 templateService: templateService

@@ -3,4 +3,4 @@
 set -e
 
 echo ">>> Running"
-swift run -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12" -Xswiftc "-suppress-warnings" {{ name }}CLI
+swift run -Xswiftc "-suppress-warnings" {{ name }}CLI
