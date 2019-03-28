@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
  s.name = 'SharedKit'
- s.version = '0.8.1'
+ s.version = '0.8.2'
  s.license = { :type => "MIT", :file => "LICENSE" }
  s.summary = 'AarKay is a language independent code generation framework.'
  s.homepage = 'https://aarkay.xyz'
