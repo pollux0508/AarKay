@@ -64,6 +64,18 @@ public struct Pluginfile {
 }
 
 extension Pluginfile {
+    public func bootstrap() throws -> [Result<Generatedfile, Error>] {
+        if let pluggableType = try AarKayKit.pluggableClass(plugin: name) {
+            let pluggable = try pluggableType.init(context: globalContext)
+            let datafiles = try pluggable.datafiles().map { Result<Datafile, Error>.success($0) }
+            return aarkayService.generatedfileService.generatedfiles(
+                datafiles: datafiles,
+                templateService: templateService
+            )
+        }
+        return []
+    }
+
     /// Creates GeneratedFile results from one Datafile on a disk.
     ///
     /// - Parameters:
@@ -123,8 +135,7 @@ extension Pluginfile {
 
             return aarkayService.generatedfileService.generatedfiles(
                 datafiles: templateDatafiles,
-                templateService: templateService,
-                globalContext: globalContext
+                templateService: templateService
             )
         } else {
             let datafiles = try aarkayService.datafileService.serialize(
@@ -139,8 +150,7 @@ extension Pluginfile {
 
             return aarkayService.generatedfileService.generatedfiles(
                 datafiles: datafiles,
-                templateService: templateService,
-                globalContext: globalContext
+                templateService: templateService
             )
         }
     }

@@ -14,7 +14,7 @@ import SharedKit
 /// - nameStringExt: Returned when using a string as a template
 public enum Template {
     case name(String)
-    case nameStringExt(String, String, String)
+    case nameStringExt(String, String, String?)
 
     /// Returns the name of the Template
     public func name() -> String {

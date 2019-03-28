@@ -110,10 +110,19 @@ public class AarKay {
     ) {
         let pluginName = pluginUrl.lastPathComponent
         do {
+            AarKayLogger.logPluginfile(at: pluginUrl)
+
             let plugin = try Pluginfile(
                 name: pluginName,
                 globalContext: globalContext?[pluginName.lowercased()] as? [String: Any],
                 globalTemplates: templateUrls
+            )
+
+            let generatedFiles = try plugin.bootstrap()
+            try generateFiles(
+                sourceUrl: pluginUrl,
+                destination: url,
+                generatedFiles: generatedFiles
             )
 
             /// Create directory tree mirror with source as the AarKayFiles url and destination as the project url.
@@ -206,32 +215,44 @@ public class AarKay {
             let contents = try String(contentsOf: sourceUrl)
 
             /// Returns all generated files result.
-            let renderedfiles = try plugin.generate(
+            let generatedFiles = try plugin.generate(
                 fileName: name,
                 directory: directory,
                 template: template,
                 contents: contents
             )
 
-            try renderedfiles.forEach { generatedfile in
-                switch generatedfile {
-                case .success(let value):
-                    /// Create the file at the mirrored destination url with the generated contents.
-                    try createFile(generatedfile: value, at: destination)
-                case .failure(let error):
-                    AarKayLogger.logFileErrored(
-                        at: sourceUrl,
-                        error: error,
-                        options: options
-                    )
-                }
-            }
+            try generateFiles(
+                sourceUrl: sourceUrl,
+                destination: destination,
+                generatedFiles: generatedFiles
+            )
         } catch {
             AarKayLogger.logFileErrored(
                 at: sourceUrl,
                 error: error,
                 options: options
             )
+        }
+    }
+
+    private func generateFiles(
+        sourceUrl: URL,
+        destination: URL,
+        generatedFiles: [Result<Generatedfile, Error>]
+    ) throws {
+        try generatedFiles.forEach { generatedfile in
+            switch generatedfile {
+            case .success(let value):
+                /// Create the file at the mirrored destination url with the generated contents.
+                try createFile(generatedfile: value, at: destination)
+            case .failure(let error):
+                AarKayLogger.logFileErrored(
+                    at: sourceUrl,
+                    error: error,
+                    options: options
+                )
+            }
         }
     }
 

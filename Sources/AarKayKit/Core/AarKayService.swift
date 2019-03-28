@@ -76,7 +76,6 @@ protocol GeneratedfileService {
     /// - Returns: The Generatedfiles result.
     func generatedfiles(
         datafiles: [Result<Datafile, Error>],
-        templateService: TemplateService,
-        globalContext: [String: Any]?
+        templateService: TemplateService
     ) -> [Result<Generatedfile, Error>]
 }

@@ -57,6 +57,13 @@ class AarKayLogger {
         if options.exitOnError { exit(1) }
     }
 
+    /// Logs for `Pluginfile` name.
+    ///
+    /// - Parameter url: The url of the pluginfile.
+    static func logPluginfile(at url: URL) {
+        print("\(url.lastPathComponent)".magenta)
+    }
+
     /// Logs for `Datafile` location.
     ///
     /// - Parameter url: The url of the datafile.

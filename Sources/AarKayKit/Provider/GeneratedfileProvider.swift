@@ -11,8 +11,7 @@ import SharedKit
 struct GeneratedfileProvider: GeneratedfileService {
     func generatedfiles(
         datafiles: [Result<Datafile, Error>],
-        templateService: TemplateService,
-        globalContext: [String: Any]?
+        templateService: TemplateService
     ) -> [Result<Generatedfile, Error>] {
         return datafiles.map { result -> Result<[Generatedfile], Error> in
             switch result {
@@ -20,8 +19,7 @@ struct GeneratedfileProvider: GeneratedfileService {
                 return Result {
                     try generatedfiles(
                         datafile: value,
-                        templateService: templateService,
-                        globalContext: globalContext
+                        templateService: templateService
                     )
                 }
             case .failure(let error):
@@ -47,16 +45,14 @@ struct GeneratedfileProvider: GeneratedfileService {
 extension GeneratedfileProvider {
     private func generatedfiles(
         datafile: Datafile,
-        templateService: TemplateService,
-        globalContext: [String: Any]?
+        templateService: TemplateService
     ) throws -> [Generatedfile] {
         switch datafile.template {
         case .name(let name):
             return try generatedfiles(
                 datafile: datafile,
                 template: name,
-                templateService: templateService,
-                context: globalContext + datafile.context
+                templateService: templateService
             )
         case .nameStringExt(_, let string, let ext):
             let file = generatedfile(
@@ -71,8 +67,7 @@ extension GeneratedfileProvider {
     private func generatedfiles(
         datafile: Datafile,
         template: String,
-        templateService: TemplateService,
-        context: [String: Any]? = nil
+        templateService: TemplateService
     ) throws -> [Generatedfile] {
         let templateUrls = try templateService.templates
             .getTemplatefile(for: template)
@@ -84,17 +79,12 @@ extension GeneratedfileProvider {
         }
         return try templateUrls.map { templateFile in
             try Try {
-                var df = datafile
-                if let ext = templateFile.ext,
-                    let dirs = context?["dirs"] as? [String: String],
-                    let extDir = dirs[ext] {
-                    df.setDirectory(extDir + "/" + df.directory)
-                }
+                let context = datafile.globalContext + datafile.context
                 let rendered = try templateService.renderTemplate(
                     name: templateFile.template, context: context
                 )
                 return self.generatedfile(
-                    datafile: df,
+                    datafile: datafile,
                     stringContents: rendered,
                     pathExtension: templateFile.ext
                 )
