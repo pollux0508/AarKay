@@ -8,7 +8,9 @@
 import Foundation
 import SharedKit
 
+/// A Type that wraps object array to a dictionary of object array with rootKey as `items`.
 struct ArrayEncodable<T: Encodable>: Encodable {
+    /// The items.
     let items: T
 }
 
