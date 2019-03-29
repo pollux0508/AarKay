@@ -16,7 +16,9 @@ jobs:
   include:
     - stage: Tests
       name: Unit Tests
-      script: make test
+      script: 
+        - swift package generate-xcodeproj --enable-code-coverage
+        - xcodebuild -scheme AarKay-Package test
       after_success:
         - bash <(curl -s https://codecov.io/bash) -J 'AarKay' -J 'AarKayKit' -J 'AarKayRunnerKit' -J 'aarkay-plugin-aarkay' -J 'SharedKit'
     - name: Integration Tests
