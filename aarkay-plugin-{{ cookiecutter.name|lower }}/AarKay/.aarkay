@@ -1,0 +1,2 @@
+aarkay:
+  name: {{ cookiecutter.name }}

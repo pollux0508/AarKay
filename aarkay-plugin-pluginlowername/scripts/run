@@ -3,4 +3,4 @@
 set -e
 
 echo ">>> Running"
-swift run -Xswiftc "-suppress-warnings" 
+swift run -Xswiftc "-suppress-warnings" AarKaypluginnameCLI

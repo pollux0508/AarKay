@@ -12,11 +12,11 @@ import Foundation
 
 public class Template: NSObject, Templatable {
     public var datafile: Datafile
-    private var model: TemplateModel
+    var templateModel: TemplateModel
 
     public required init(datafile: Datafile) throws {
         self.datafile = datafile
-        self.model = try self.datafile.dencode(type: TemplateModel.self)
+        self.templateModel = try self.datafile.dencode(type: TemplateModel.self)
     }
 }
 
@@ -27,7 +27,9 @@ public class TemplateModel: Codable {
         case name
     }
 
-    public init(name: String) {
+    public init(
+        name: String
+    ) {
         self.name = name
     }
 
