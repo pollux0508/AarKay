@@ -16,7 +16,7 @@ jobs:
   include:
     - stage: Tests
       name: Unit Tests
-      script: 
+      script:
         - swift package generate-xcodeproj --enable-code-coverage
         - xcodebuild -scheme AarKay-Package test
       after_success:
@@ -36,13 +36,13 @@ jobs:
         - cd AarKay && cookiecutter --no-input $TRAVIS_BUILD_DIR name=test && cd ..
         - make build
         - echo "./../../AarKay, r-$TRAVIS_COMMIT" > AarKay/AarKayFile
+        # - echo "https://github.com/rahulkatariya/aarkay-plugin-personal.git, b-master" >> AarKay/AarKayFile
         - .build/release/AarKayRunner init
-        - echo "https://github.com/rahulkatariya/aarkay-plugin-personal.git, b-master" >> AarKay/AarKayFile
         - echo "./aarkay-plugin-test, b-master" >> AarKay/AarKayFile
         - .build/release/AarKayRunner install
-        - .build/release/AarKayRunner --verbose --force --exitOnError
+        - .build/release/AarKayRunner --verbose --force #--exitOnError
         - .build/release/AarKayRunner init --global
         - echo "https://github.com/RahulKatariya/AarKay.git, r-$TRAVIS_COMMIT" > $HOME/AarKay/AarKayFile
         - .build/release/AarKayRunner update --global
-        - cd aarkay-plugin-pluginlowername && ../.build/release/AarKayRunner -vfge
+        - cd aarkay-plugin-pluginlowername && ../.build/release/AarKayRunner -vfg
         - sh scripts/run
