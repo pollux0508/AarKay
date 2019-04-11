@@ -24,7 +24,7 @@ let package = Package(
         /* >>> AarKayKit ---------------------------------------- */
         /* ------------------------------------------------------ */
         .package(url: "https://github.com/SwiftGen/StencilSwiftKit.git", .upToNextMajor(from: "2.5.0")),
-        .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "2.0.0")),
         /* ------------------------------------------------------ */
         /* >>> AarKay ------------------------------------------- */
         /* ------------------------------------------------------ */

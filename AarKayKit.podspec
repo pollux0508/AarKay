@@ -17,8 +17,7 @@ Pod::Spec.new do |s|
     ss.source_files = "Sources/AarKayKit/**/*.swift"
     ss.dependency "SharedKit", "~> 0.8.4"
     ss.dependency "StencilSwiftKit", "~> 2.5"
-    ss.dependency "Result", "~> 4.0"
-    ss.dependency "Yams", "~> 1.0"
+    ss.dependency "Yams", "~> 2.0"
  end
 
 end

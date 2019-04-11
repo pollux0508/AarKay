@@ -16,10 +16,8 @@
       version: ~> 0.8.4
     - name: StencilSwiftKit
       version: ~> 2.5
-    - name: Result
-      version: ~> 4.0
     - name: Yams
-      version: ~> 1.0
+      version: ~> 2.0
 - name: SharedKit
   version: 0.8.4
 - name: AarKayRunnerKit
