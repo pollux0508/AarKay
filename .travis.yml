@@ -1,3 +1,4 @@
+os: osx
 language: objective-c
 osx_image: xcode10.2
 branches:
@@ -12,16 +13,41 @@ env:
     - LC_CTYPE=en_US.UTF-8
     - LANG=en_US.UTF-8
 
-jobs:
+aliases:
+  - &xcode
+    script:
+      - swift package generate-xcodeproj --enable-code-coverage
+      - xcodebuild -scheme AarKay-Package test
+    env:
+      - JOB=XCODE
+  - &swiftpm
+    script:
+      - swift --version
+      - make build
+      - make test
+    git:
+      submodules: false
+  - &swiftpm_darwin
+    <<: *swiftpm
+    env: JOB=SWIFTPM_DARWIN
+  - &swiftpm_linux
+    <<: *swiftpm
+    env: JOB=SWIFTPM
+    sudo: required
+    dist: trusty
+    os: linux
+    language: generic
+    before_install:
+      - eval "$(curl -sL https://gist.githubusercontent.com/kylef/5c0475ff02b7c7671d2a/raw/9f442512a46d7a2af7b850d65a7e9bd31edfb09b/swiftenv-install.sh)"
+
+matrix:
   include:
-    - stage: Tests
-      name: Unit Tests
-      script:
-        - swift package generate-xcodeproj --enable-code-coverage
-        - xcodebuild -scheme AarKay-Package test
+    - <<: *xcode
       after_success:
         - bash <(curl -s https://codecov.io/bash) -J 'AarKay' -J 'AarKayKit' -J 'AarKayRunnerKit' -J 'aarkay-plugin-aarkay' -J 'SharedKit'
-    - name: Integration Tests
+    - <<: *swiftpm_darwin
+    - <<: *swiftpm_linux
+    - stage: Integration
       before_install:
         - brew update
         - brew install rename cookiecutter
