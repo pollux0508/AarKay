@@ -2,10 +2,11 @@ import AarKayRunnerKit
 import Commandant
 import Curry
 import Foundation
-import Result
 
 /// Type that encapsulates the configuration and evaluation of the `init` subcommand.
 public struct InitCommand: CommandProtocol {
+    public typealias ClientError = AarKayError
+
     public struct Options: OptionsProtocol {
         public let global: Bool
         public let force: Bool

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Result
 
 public class InitTask {
     public static func run(

@@ -2,10 +2,11 @@ import AarKayRunnerKit
 import Commandant
 import Curry
 import Foundation
-import Result
 
 /// Type that encapsulates the configuration and evaluation of the `run` subcommand.
 public struct RunCommand: CommandProtocol {
+    public typealias ClientError = AarKayError
+
     public struct Options: OptionsProtocol {
         public let global: Bool
         public let verbose: Bool

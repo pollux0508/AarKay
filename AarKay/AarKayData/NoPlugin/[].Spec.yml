@@ -26,9 +26,9 @@
     - name: SharedKit
       version: ~> 0.8.4
     - name: Commandant
-      version: ~> 0.15.0
+      version: ~> 0.17.0
     - name: ReactiveTask
-      version: ~> 0.15.0
+      version: ~> 0.16.0
     - name: Curry
       version: ~> 4.0
 - _fn: AarKayPlugin

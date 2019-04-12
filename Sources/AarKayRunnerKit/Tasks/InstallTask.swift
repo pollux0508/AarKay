@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Result
 
 public class InstallTask {
     public static func run(
