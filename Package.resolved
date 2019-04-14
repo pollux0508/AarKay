@@ -68,8 +68,8 @@
         "package": "ReactiveTask",
         "repositoryURL": "https://github.com/RahulKatariya/ReactiveTask.git",
         "state": {
-          "branch": "linux-support",
-          "revision": "21278426b936be312e9c1a39b14a3b4b42520147",
+          "branch": "master",
+          "revision": "6d82c09b4d3a24851fa5d960ba6b04af273dcd21",
           "version": null
         }
       },

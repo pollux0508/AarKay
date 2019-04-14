@@ -35,7 +35,7 @@ let package = Package(
         /* ------------------------------------------------------ */
         .package(url: "https://github.com/thoughtbot/Curry.git", .upToNextMajor(from: "4.0.0")),
         .package(url: "https://github.com/Carthage/Commandant.git", .upToNextMinor(from: "0.17.0")),
-        .package(url: "https://github.com/RahulKatariya/ReactiveTask.git", .branch("linux-support")),
+        .package(url: "https://github.com/RahulKatariya/ReactiveTask.git", .branch("master")),
         /* ------------------------------------------------------ */
         /* >>> Testing ------------------------------------------ */
         /* ------------------------------------------------------ */
