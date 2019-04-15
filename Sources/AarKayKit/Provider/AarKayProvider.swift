@@ -13,7 +13,8 @@ struct AarKayProvider: AarKayService {
 
     func templateProvider(
         plugin: String,
-        globalTemplates: [URL]?,
+        templates: URL?,
+        globalTemplates: URL?,
         fileManager: FileManager
     ) throws -> TemplateService {
         if let templateService = try templateService(
@@ -28,9 +29,10 @@ struct AarKayProvider: AarKayService {
                         .templatesNil(name: plugin)
                 )
             }
+            let templateUrls = [globalTemplates, templates].compactMap { $0 }
             let templates = try Templates(
                 fileManager: fileManager,
-                templates: globalTemplates
+                templates: templateUrls
             )
             return StencilProvider(templates: templates)
         }

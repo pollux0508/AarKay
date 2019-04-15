@@ -15,8 +15,11 @@ public struct Pluginfile {
     /// The global context shared with all Generatedfiles.
     private(set) var globalContext: [String: Any]
 
+    /// The location of templates.
+    let templates: URL?
+
     /// The location of global templates.
-    let globalTemplates: [URL]?
+    let globalTemplates: URL?
 
     /// The FileManager
     let fileManager: FileManager
@@ -37,11 +40,13 @@ public struct Pluginfile {
     /// - Throws: An `Error` if the templates service encouters any error.
     public init(
         name: String,
+        templates: URL?,
+        globalTemplates: URL?,
         globalContext: [String: Any]?,
-        globalTemplates: [URL]?,
         fileManager: FileManager = FileManager.default
     ) throws {
         self.name = name
+        self.templates = templates
         self.globalTemplates = globalTemplates
         self.fileManager = fileManager
         self.aarkayService = AarKayProvider(
@@ -50,6 +55,7 @@ public struct Pluginfile {
         )
         self.templateService = try aarkayService.templateProvider(
             plugin: name,
+            templates: templates,
             globalTemplates: globalTemplates,
             fileManager: fileManager
         )

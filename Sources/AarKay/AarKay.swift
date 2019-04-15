@@ -72,7 +72,6 @@ public class AarKay {
             /// The global context to be applied to all files being generated.
             let globalContext = try global.context()
             let globalTemplatesUrl = global.templatesUrl()
-            let templateUrls: Set<URL> = [globalTemplatesUrl, aarkayTemplatesUrl]
 
             /// First level of subdirectories in AarKayFiles directory are the names of the plugins.
             let urls = try Try {
@@ -91,7 +90,8 @@ public class AarKay {
             urls.forEach {
                 bootstrapPlugin(
                     pluginUrl: $0,
-                    templateUrls: Array(templateUrls),
+                    templates: aarkayTemplatesUrl,
+                    globalTemplates: globalTemplatesUrl,
                     globalContext: globalContext
                 )
             }
@@ -105,7 +105,8 @@ public class AarKay {
 
     private func bootstrapPlugin(
         pluginUrl: URL,
-        templateUrls: [URL],
+        templates: URL?,
+        globalTemplates: URL?,
         globalContext: [String: Any]? = nil
     ) {
         let pluginName = pluginUrl.lastPathComponent
@@ -114,8 +115,9 @@ public class AarKay {
 
             let plugin = try Pluginfile(
                 name: pluginName,
-                globalContext: globalContext?[pluginName.lowercased()] as? [String: Any],
-                globalTemplates: templateUrls
+                templates: templates,
+                globalTemplates: globalTemplates,
+                globalContext: globalContext?[pluginName.lowercased()] as? [String: Any]
             )
 
             let generatedFiles = try plugin.bootstrap()

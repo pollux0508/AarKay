@@ -19,13 +19,15 @@ protocol AarKayService {
     ///
     /// - Parameters:
     ///   - plugin: The name of the Plugin.
+    ///   - templates: The templates locations.
     ///   - globalTemplates: The global templates locations.
     ///   - fileManager: The file manager.
     /// - Returns: A TemplateService instance to render templates.
     /// - Throws: An `Error` if TemplateService creation encouters any error.
     func templateProvider(
         plugin: String,
-        globalTemplates: [URL]?,
+        templates: URL?,
+        globalTemplates: URL?,
         fileManager: FileManager
     ) throws -> TemplateService
 }
