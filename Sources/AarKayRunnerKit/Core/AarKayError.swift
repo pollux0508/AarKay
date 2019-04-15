@@ -1,5 +1,4 @@
 import Foundation
-import ReactiveTask
 
 /// A type encapsulating all errors related to `AarKay` commands.
 ///
@@ -15,7 +14,7 @@ public enum AarKayError: Error {
     case projectAlreadyExists(url: URL)
     case missingProject(url: URL)
     case aarkayFileParsingFailed(reason: AarKayFileParsingReason)
-    case taskError(TaskError)
+    case taskError(String)
 
     /// The underlying reason the aarkayfile parsing error occurred.
     ///
@@ -64,8 +63,8 @@ extension AarKayError: LocalizedError {
             return "AarKay is not yet setup at \(url.absoluteString). Use `aarkay init [--global]` to setup."
         case .aarkayFileParsingFailed(let reason):
             return reason.localizedDescription
-        case .taskError(let error):
-            return error.description
+        case .taskError(let description):
+            return description
         }
     }
 }

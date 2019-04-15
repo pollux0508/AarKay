@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import ReactiveSwift
-import ReactiveTask
 
 /// Type that encapsulates all task events in AarKay.
 public class Tasks {
@@ -87,52 +85,5 @@ public class Tasks {
         standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         return Task(path, arguments: arguments).run(standardOutput: standardOutput)
-    }
-}
-
-extension Task {
-    /// Launches the task and prints the output.
-    ///
-    /// - Returns: A result containing either success or `AarKayError`
-    internal func run(
-        standardOutput: ((String) -> Void)? = nil
-    ) -> Result<(), AarKayError> {
-        let result = launch()
-            .flatMapTaskEvents(.concat) { data in
-                SignalProducer(
-                    value: String(data: data, encoding: .utf8)
-                )
-            }
-        return result.waitOnCommand(standardOutput: standardOutput)
-    }
-}
-
-extension SignalProducer where Value == TaskEvent<String?>, Error == TaskError {
-    /// Waits on a SignalProducer that implements the behavior of a CommandProtocol.
-    internal func waitOnCommand(
-        standardOutput: ((String) -> Void)? = nil
-    ) -> Result<(), AarKayError> {
-        let result = producer
-            .on(
-                event: { event in
-                    switch event {
-                    case .value(let value):
-                        switch value {
-                        case .standardOutput(let data):
-                            if let o = String(data: data, encoding: .utf8) {
-                                standardOutput?(o)
-                            }
-                        default: break
-                        }
-                    default: break
-                    }
-                }
-            )
-            .mapError(AarKayError.taskError)
-            .then(SignalProducer<(), AarKayError>.empty)
-            .wait()
-
-        Task.waitForAllTaskTermination()
-        return result
     }
 }
