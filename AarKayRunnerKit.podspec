@@ -16,8 +16,8 @@ Pod::Spec.new do |s|
  s.subspec "Core" do |ss|
     ss.source_files = "Sources/AarKayRunnerKit/**/*.swift"
     ss.dependency "SharedKit", "~> 0.8.5"
-    ss.dependency "Commandant", "~> 0.15.0"
-    ss.dependency "ReactiveTask", "~> 0.15.0"
+    ss.dependency "Commandant", "~> 0.17.0"
+    ss.dependency "ReactiveTask", "~> 0.16.0"
     ss.dependency "Curry", "~> 4.0"
  end
 

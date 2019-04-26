@@ -16,10 +16,8 @@
       version: ~> 0.8.5
     - name: StencilSwiftKit
       version: ~> 2.5
-    - name: Result
-      version: ~> 4.0
     - name: Yams
-      version: ~> 1.0
+      version: ~> 2.0
 - name: SharedKit
   version: 0.8.5
 - name: AarKayRunnerKit
@@ -28,9 +26,9 @@
     - name: SharedKit
       version: ~> 0.8.5
     - name: Commandant
-      version: ~> 0.15.0
+      version: ~> 0.17.0
     - name: ReactiveTask
-      version: ~> 0.15.0
+      version: ~> 0.16.0
     - name: Curry
       version: ~> 4.0
 - _fn: AarKayPlugin
