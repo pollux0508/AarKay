@@ -69,7 +69,7 @@ extension AarKayPlugin {
         let svDatafile = Datafile(
             fileName: ".swift-version",
             directory: "",
-            template: .nameStringExt("SwiftVersion", "5.0\n", nil),
+            template: .nameStringExt("SwiftVersion", "5.0.1\n", nil),
             globalContext: context
         )
         return [
