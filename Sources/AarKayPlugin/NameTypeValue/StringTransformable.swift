@@ -28,7 +28,7 @@ extension Bool: StringTransformable {
     /// - Parameter value: The bool value in string format.
     /// - Returns: nil if failed otherwise the casted Bool.
     public static func transform(value: String) -> Bool? {
-        switch value {
+        switch value.lowercased() {
         case "true", "yes", "1": return true
         case "false", "no", "0": return false
         default: return nil
