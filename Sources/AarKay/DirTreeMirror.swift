@@ -58,27 +58,41 @@ class DirTreeMirror {
     /// - Returns: An array of tuple with source url and destination url.
     /// - Throws: FileManager related errors.
     func bootstrap() throws -> [(URL, URL)] {
-        let subpaths = try fileManager.subpathsOfDirectory(atPath: sourceUrl.path)
-        let mirrorUrls: [(URL, URL)] = subpaths
-            .map {
-                URL(
-                    fileURLWithPath: $0,
-                    isDirectory: sourceUrl.appendingPathComponent($0).hasDirectoryPath,
-                    relativeTo: sourceUrl
-                )
-            }
-            .filter {
-                !$0.lastPathComponent.hasPrefix(".") && !$0.hasDirectoryPath
-            }
+        guard let subpaths = fileManager.enumerator(
+            at: sourceUrl,
+            includingPropertiesForKeys: nil,
+            options: [.skipsPackageDescendants, .skipsHiddenFiles],
+            errorHandler: nil
+        ) else {
+            fatalError()
+        }
+        let mirrorUrls: [(URL, URL)] = subpaths.map { $0 as! URL }
+            .filter { $0.shouldAllow() }
+            .map { $0.setBaseURL(sourceUrl) }
             .map {
                 (
                     $0, URL(
                         fileURLWithPath: $0.relativePath,
-                        isDirectory: $0.hasDirectoryPath,
                         relativeTo: destinationUrl
                     )
                 )
             }
         return mirrorUrls
+    }
+}
+
+extension URL {
+    fileprivate func shouldAllow() -> Bool {
+        return (try! resourceValues(forKeys: [.isRegularFileKey]).isRegularFile!)
+            || (try! resourceValues(forKeys: [.isPackageKey]).isPackage!)
+            || (try! resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink!)
+    }
+
+    fileprivate func setBaseURL(_ url: URL) -> URL {
+        let basePath = try! url.resourceValues(forKeys: [.canonicalPathKey]).canonicalPath
+        let cannoicalPath = try! resourceValues(forKeys: [.canonicalPathKey]).canonicalPath
+        let path = cannoicalPath!.replacingOccurrences(of: basePath! + "/", with: "")
+        let finalUrl = URL(fileURLWithPath: path, isDirectory: false, relativeTo: url)
+        return finalUrl
     }
 }

@@ -47,13 +47,11 @@ class PluginSpec: QuickSpec {
                 )
                 it("should generate files") {
                     expect { () -> Void in
-                        try "name: Template"
-                            .write(to: self.url, atomically: true, encoding: .utf8)
                         let generatedFiles = try plugin.generate(
                             fileName: "File",
                             directory: "",
                             template: "Template",
-                            url: self.url
+                            input: .string("name: Template")
                         )
                         expect(generatedFiles.count) == 1
                     }.toNot(throwError())
@@ -65,7 +63,7 @@ class PluginSpec: QuickSpec {
                             fileName: "File",
                             directory: "",
                             template: "Template",
-                            url: self.url
+                            input: .url(self.url)
                         )
                     }.to(throwError())
 
@@ -76,7 +74,7 @@ class PluginSpec: QuickSpec {
                             fileName: "[]",
                             directory: "",
                             template: "Template",
-                            url: self.url
+                            input: .url(self.url)
                         )
                         expect(files.count) == 2
                     }.toNot(throwError())
@@ -88,7 +86,7 @@ class PluginSpec: QuickSpec {
                             fileName: "[]",
                             directory: "",
                             template: "Template",
-                            url: self.url
+                            input: .url(self.url)
                         )
                         expect(files.count) == 2
                         expect(try? files.first?.get()).toNot(beNil())
@@ -96,16 +94,15 @@ class PluginSpec: QuickSpec {
                     }.toNot(throwError())
 
                     expect { () -> Void in
-                        try """
-                            - name: Template
-                            - noname: Template2
-                              _fn: Template2
-                        """.write(to: self.url, atomically: true, encoding: .utf8)
                         let files = try plugin.generate(
                             fileName: "[]",
                             directory: "",
                             template: "Template",
-                            url: self.url
+                            input: .string("""
+                            - name: Template
+                            - noname: Template2
+                              _fn: Template2
+                            """)
                         )
                         expect(files.count) == 2
                         expect(try? files.first?.get()).toNot(beNil())

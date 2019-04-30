@@ -1,3 +1,4 @@
 aarkay:
   isNotPlugin: true
-  name: ""
+  plugins: 
+    - ""

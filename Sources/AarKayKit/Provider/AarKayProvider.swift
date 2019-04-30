@@ -29,7 +29,10 @@ struct AarKayProvider: AarKayService {
                         .templatesNil(name: plugin)
                 )
             }
-            let templateUrls = Array(NSOrderedSet(array: [globalTemplates, templates].compactMap { $0 })) as! [URL]
+            let templateUrls = Array(NSOrderedSet(
+                array: [globalTemplates, templates]
+                    .compactMap { $0 }
+            )) as! [URL]
             let templates = try Templates(
                 fileManager: fileManager,
                 templates: templateUrls

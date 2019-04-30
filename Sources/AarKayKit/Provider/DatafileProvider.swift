@@ -14,16 +14,13 @@ struct DatafileProvider: DatafileService {
         name: String,
         directory: String,
         template: String,
-        url: URL,
+        input: InputType,
         using serializer: InputSerializable,
         globalContext: [String: Any]?
     ) throws -> [Result<Datafile, Error>] {
-        let contents = try serializer.contents(at: url)
-        var context = try serializer.context(contents: contents)
+        var context = try serializer.context(from: input)
         if name.isCollection {
-            if contents.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                context = [[:]]
-            }
+            if context == nil { context = [[:]] }
             guard let contextArray = context as? [[String: Any]] else {
                 throw AarKayKitError.invalidContents(
                     AarKayKitError.InvalidContentsReason.arrayExpected
@@ -37,9 +34,7 @@ struct DatafileProvider: DatafileService {
                 globalContext: globalContext
             )
         } else {
-            if contents.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                context = [:]
-            }
+            if context == nil { context = [:] }
             guard let context = context as? [String: Any] else {
                 throw AarKayKitError.invalidContents(
                     AarKayKitError.InvalidContentsReason.objectExpected

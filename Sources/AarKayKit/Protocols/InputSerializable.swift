@@ -9,19 +9,33 @@ import Foundation
 
 /// Responsible for decoding the contents.
 public protocol InputSerializable {
-    /// Read the contents of the file.
-    func contents(at url: URL) throws -> String
+    /// Decodes the contents from url to Swift object.
+    ///
+    /// - Parameter at: The url.
+    /// - Returns: A Dictionary or an Array.
+    /// - Throws: An `Error` if Decoding encouters any error.
+    func context(at url: URL) throws -> Any?
 
     /// Decodes the contents to Swift object.
     ///
-    /// - Parameter contents: The contents.
+    /// - Parameter at: The contents.
     /// - Returns: A Dictionary or an Array.
     /// - Throws: An `Error` if Decoding encouters any error.
-    func context(contents: String) throws -> Any?
+    func context(from contents: String) throws -> Any?
 }
 
 extension InputSerializable {
-    public func contents(at url: URL) throws -> String {
-        return try String(contentsOf: url)
+    /// Decodes the contents to Swift object.
+    public func context(from contents: String) throws -> Any? {
+        return try YamlInputSerializer().context(from: contents)
+    }
+    
+    func context(from provider: InputType) throws -> Any? {
+        switch provider {
+        case .url(let url):
+            return try context(at: url)
+        case .string(let string):
+            return try context(from: string)
+        }
     }
 }

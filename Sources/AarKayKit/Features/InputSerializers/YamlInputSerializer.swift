@@ -10,13 +10,22 @@ import Yams
 
 /// Responsible for decoding Yaml file.
 public final class YamlInputSerializer: InputSerializable {
-    public func context(contents: String) throws -> Any? {
+    public init() {}
+    public func context(at url: URL) throws -> Any? {
+        let contents = try String(contentsOf: url)
+        return try self.context(from: contents)
+    }
+
+    public func context(from contents: String) throws -> Any? {
         return try YamlInputSerializer.load(contents)
     }
 }
 
 extension YamlInputSerializer {
-    public static func load(_ yaml: String) throws -> Any? {
-        return try Yams.load(yaml: yaml)
+    public static func load(_ contents: String) throws -> Any? {
+        guard !contents
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .isEmpty else { return nil }
+        return try Yams.load(yaml: contents)
     }
 }

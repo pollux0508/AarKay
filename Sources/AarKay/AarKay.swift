@@ -218,7 +218,7 @@ public class AarKay {
                 fileName: name,
                 directory: directory,
                 template: template,
-                url: sourceUrl
+                input: .url(sourceUrl)
             )
 
             try generateFiles(

@@ -7,6 +7,11 @@
 
 import Foundation
 
+public enum InputType {
+    case url(URL)
+    case string(String)
+}
+
 /// Represents a Plugin.
 public struct Pluginfile {
     /// The name of the plugin.
@@ -101,7 +106,7 @@ extension Pluginfile {
         fileName: String,
         directory: String,
         template: String,
-        url: URL
+        input: InputType
     ) throws -> [Result<Generatedfile, Error>] {
         if let templateClass = AarKayKit.templateClass(
             plugin: name,
@@ -112,7 +117,7 @@ extension Pluginfile {
                 name: fileName,
                 directory: directory,
                 template: template,
-                url: url,
+                input: input,
                 using: templateClass.inputSerializer(),
                 globalContext: globalContext
             )
@@ -155,7 +160,7 @@ extension Pluginfile {
                 name: fileName,
                 directory: directory,
                 template: template,
-                url: url,
+                input: input,
                 using: YamlInputSerializer(),
                 globalContext: globalContext
             )

@@ -3,4 +3,6 @@
 set -e
 
 echo ">>> Running"
-swift run -Xswiftc "-suppress-warnings" AarKay{{ name }}CLI
+{% for plugin in plugins %}
+swift run -Xswiftc "-suppress-warnings" AarKay{{ plugin }}CLI
+{% endfor %}

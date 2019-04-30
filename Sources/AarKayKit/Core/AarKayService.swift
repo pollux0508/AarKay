@@ -49,7 +49,7 @@ protocol DatafileService {
         name: String,
         directory: String,
         template: String,
-        url: URL,
+        input: InputType,
         using serializer: InputSerializable,
         globalContext: [String: Any]?
     ) throws -> [Result<Datafile, Error>]
