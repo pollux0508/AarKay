@@ -29,7 +29,7 @@ release: test version-bump build
 	zip -r AarKay-v${version}.zip bin/$(INSTALL_NAME)
 	rm -rf bin 
 	sh ./scripts/brew-publish ${version}
-	git push origin develop && git push origin --tags
+	git push upstream develop && git push upstream --tags
 
 clean:
 	set -e
