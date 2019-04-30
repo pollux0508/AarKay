@@ -14,10 +14,11 @@ struct DatafileProvider: DatafileService {
         name: String,
         directory: String,
         template: String,
-        contents: String,
+        url: URL,
         using serializer: InputSerializable,
         globalContext: [String: Any]?
     ) throws -> [Result<Datafile, Error>] {
+        let contents = try serializer.contents(at: url)
         var context = try serializer.context(contents: contents)
         if name.isCollection {
             if contents.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {

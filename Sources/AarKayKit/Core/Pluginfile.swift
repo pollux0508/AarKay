@@ -94,14 +94,14 @@ extension Pluginfile {
     ///   - fileName: The name of the file.
     ///   - directory: The directory.
     ///   - template: The template to use.
-    ///   - contents: The contents of the file.
+    ///   - url: The url of the file.
     /// - Returns: The `Generatedfile` results.
     /// - Throws: An `Error` if the program encouters any error.
     public func generate(
         fileName: String,
         directory: String,
         template: String,
-        contents: String
+        url: URL
     ) throws -> [Result<Generatedfile, Error>] {
         if let templateClass = AarKayKit.templateClass(
             plugin: name,
@@ -112,7 +112,7 @@ extension Pluginfile {
                 name: fileName,
                 directory: directory,
                 template: template,
-                contents: contents,
+                url: url,
                 using: templateClass.inputSerializer(),
                 globalContext: globalContext
             )
@@ -155,7 +155,7 @@ extension Pluginfile {
                 name: fileName,
                 directory: directory,
                 template: template,
-                contents: contents,
+                url: url,
                 using: YamlInputSerializer(),
                 globalContext: globalContext
             )

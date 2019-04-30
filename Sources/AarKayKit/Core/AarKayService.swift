@@ -40,7 +40,7 @@ protocol DatafileService {
     ///   - plugin: The plugin name.
     ///   - name: The name of the file.
     ///   - template: The template to use.
-    ///   - contents: The contents for the Datafile.
+    ///   - url: The url of the Datafile.
     ///   - serializer: The serializer used to decode the contents.
     /// - Returns: Result of Datafiles
     /// - Throws: An `Error` if serializing encouters any error.
@@ -49,7 +49,7 @@ protocol DatafileService {
         name: String,
         directory: String,
         template: String,
-        contents: String,
+        url: URL,
         using serializer: InputSerializable,
         globalContext: [String: Any]?
     ) throws -> [Result<Datafile, Error>]

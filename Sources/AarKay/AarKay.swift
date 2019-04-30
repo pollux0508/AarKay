@@ -213,15 +213,12 @@ public class AarKay {
             return
         }
         do {
-            /// Read the contents of the Datafile.
-            let contents = try String(contentsOf: sourceUrl)
-
             /// Returns all generated files result.
             let generatedFiles = try plugin.generate(
                 fileName: name,
                 directory: directory,
                 template: template,
-                contents: contents
+                url: sourceUrl
             )
 
             try generateFiles(
