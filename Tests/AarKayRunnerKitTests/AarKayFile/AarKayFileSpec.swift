@@ -43,8 +43,12 @@ class AarKayFileSpec: QuickSpec {
                     let aarkayFileContents = """
                     https://github.com/RahulKatariya/AarKay.git, b-master
                     ./../aarkay-plugin-test, ~> 0.0.0
-                    /Users/RahulKatariya/Developer/Restofire/Restofire, > 1.1.0
+                    /Users/RahulKatariya/Developer/AarKay/AarKayPugins, > 1.1.0
+                    - restofire
+                    - coredata
+                    - uberribs
                     # https://github.com/RahulKatariya/aarkay-plugin-personal.git, b-master
+                    - Personal
                     """
                     try aarkayFileContents.write(
                         to: self.aarkayfileUrl, atomically: true, encoding: .utf8
@@ -61,8 +65,9 @@ class AarKayFileSpec: QuickSpec {
                     expect(deps[1].url.absoluteString) == "./../aarkay-plugin-test"
                     expect(deps[1].versionType) == .upToNextMinor("0.0.0")
 
-                    expect(deps[2].url.absoluteString) == "/Users/RahulKatariya/Developer/Restofire/Restofire"
+                    expect(deps[2].url.absoluteString) == "/Users/RahulKatariya/Developer/AarKay/AarKayPugins"
                     expect(deps[2].versionType) == .upToNextMajor("1.1.0")
+                    expect(deps[2].targets.count) == 3
                 }.toNot(throwError())
             }
 

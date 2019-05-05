@@ -18,7 +18,9 @@ class PackageSwift {
         }
 
         let dependencies = deps.reduce("") { (result, item) -> String in
-            result + "\n                \"\(item.targetDescription())\","
+            result + item.targets.reduce("") { (result, item) -> String in
+                result + "\n                \"\(item)\","
+            }
         }
 
         return """

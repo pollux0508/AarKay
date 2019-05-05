@@ -13,7 +13,7 @@ public final class YamlInputSerializer: InputSerializable {
     public init() {}
     public func context(at url: URL) throws -> Any? {
         let contents = try String(contentsOf: url)
-        return try self.context(from: contents)
+        return try context(from: contents)
     }
 
     public func context(from contents: String) throws -> Any? {

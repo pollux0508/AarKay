@@ -19,7 +19,8 @@ class DependencySpec: QuickSpec {
                 }
                 expect(dep.urlDescription()) == "https://github.com/RahulKatariya/AarKay.git"
                 expect(dep.versionType.description()) == ".exact(\"0.0.0\")"
-                expect(dep.targetDescription()) == "AarKay"
+                expect(dep.targets.count) == 1
+                expect(dep.targets.first) == "AarKay"
             }
 
             it("should work with https and no git") {
@@ -29,7 +30,8 @@ class DependencySpec: QuickSpec {
                 }
                 expect(dep.urlDescription()) == "https://github.com/RahulKatariya/AarKay"
                 expect(dep.versionType.description()) == ".upToNextMinor(from: \"0.0.0\")"
-                expect(dep.targetDescription()) == "AarKay"
+                expect(dep.targets.count) == 1
+                expect(dep.targets.first) == "AarKay"
             }
 
             it("should work with relative file url") {
@@ -39,7 +41,8 @@ class DependencySpec: QuickSpec {
                 }
                 expect(dep.urlDescription()) == "./../RahulKatariya/AarKay"
                 expect(dep.versionType.description()) == ".upToNextMajor(from: \"0.0.0\")"
-                expect(dep.targetDescription()) == "AarKay"
+                expect(dep.targets.count) == 1
+                expect(dep.targets.first) == "AarKay"
             }
 
             it("should work with absolute file url") {
@@ -49,7 +52,8 @@ class DependencySpec: QuickSpec {
                 }
                 expect(dep.urlDescription()) == "/Users/RahulKatariya/AarKay"
                 expect(dep.versionType.description()) == ".exact(\"0.0.0\")"
-                expect(dep.targetDescription()) == "AarKay"
+                expect(dep.targets.count) == 1
+                expect(dep.targets.first) == "AarKay"
             }
 
             it("should fail without version") {

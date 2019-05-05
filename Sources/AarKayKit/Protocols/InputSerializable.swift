@@ -29,7 +29,7 @@ extension InputSerializable {
     public func context(from contents: String) throws -> Any? {
         return try YamlInputSerializer().context(from: contents)
     }
-    
+
     func context(from provider: InputType) throws -> Any? {
         switch provider {
         case .url(let url):
