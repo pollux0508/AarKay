@@ -20,14 +20,14 @@ public class JSONCoder {
     /// - Parameter type: The type of `Codable`.
     /// - Returns: The decoded model.
     /// - Throws: An `Error` if JSON Decoding or Encoding encouters any error.
-    public static func dencode<T: Codable>(type: T.Type, context: Any) throws -> [String: Any] {
+    public static func dencode<T: Codable>(type: T.Type, context: Any) throws -> (T, [String: Any]) {
         let model = try decode(type: type, context: context)
         guard let object = try encode(model) as? [String: Any] else {
             throw AarKayKitError.internalError(
                 "Failed to decode object from encoded data"
             )
         }
-        return object
+        return (model, object)
     }
 
     /// Decodes the dictionary to the `Decodable` type.

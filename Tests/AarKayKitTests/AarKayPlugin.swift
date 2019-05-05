@@ -10,13 +10,16 @@ import AarKayKit
 import Foundation
 
 class AarKayPlugin: Pluggable {
+    public var pluginModel: AarKayPluginModel
     public var context: [String: Any]
 
     public required init(context: [String: Any]) throws {
-        self.context = try JSONCoder.dencode(
+        let (model, context) = try JSONCoder.dencode(
             type: AarKayPluginModel.self,
             context: context
         )
+        self.pluginModel = model
+        self.context = context
     }
 
     static func templates() -> [String] {

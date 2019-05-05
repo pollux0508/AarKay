@@ -1,3 +1,6 @@
 properties:
   - plugins|[String]!|[]
   - isNotPlugin|Bool!|false
+  - swiftVersionFile|Bool!|true
+  - runScriptFile|Bool!|true
+  - swiftFormatFile|Bool!|true
