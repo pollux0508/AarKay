@@ -1,1 +1,1 @@
-public let AarKayVersion = "0.8.6"
+public let AarKayVersion = "0.9.0"

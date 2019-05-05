@@ -1,19 +1,19 @@
 - name: AarKay
-  version: 0.8.6
+  version: 0.9.0
   deps:
     - name: AarKayKit
-      version: ~> 0.8.6
+      version: ~> 0.9.0
     - name: AarKayRunnerKit
-      version: ~> 0.8.6
+      version: ~> 0.9.0
     - name: PrettyColors
       version: ~> 5.0
     - name: SwiftyTextTable
       version: ~> 0.8.0
 - name: AarKayKit
-  version: 0.8.6
+  version: 0.9.0
   deps:
     - name: SharedKit
-      version: ~> 0.8.6
+      version: ~> 0.9.0
     - name: StencilSwiftKit
       version: ~> 2.5
     - name: Result
@@ -21,12 +21,12 @@
     - name: Yams
       version: ~> 1.0
 - name: SharedKit
-  version: 0.8.6
+  version: 0.9.0
 - name: AarKayRunnerKit
-  version: 0.8.6
+  version: 0.9.0
   deps:
     - name: SharedKit
-      version: ~> 0.8.6
+      version: ~> 0.9.0
     - name: Commandant
       version: ~> 0.15.0
     - name: ReactiveTask
@@ -35,7 +35,7 @@
       version: ~> 4.0
 - _fn: AarKayPlugin
   name: aarkay-plugin-aarkay
-  version: 0.8.6
+  version: 0.9.0
   deps:
     - name: AarKayKit
-      version: ~> 0.8.6
+      version: ~> 0.9.0
