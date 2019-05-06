@@ -44,9 +44,10 @@ class AarKayFileSpec: QuickSpec {
                     https://github.com/RahulKatariya/AarKay.git, b-master
                     ./../aarkay-plugin-test, ~> 0.0.0
                     /Users/RahulKatariya/Developer/AarKay/AarKayPugins, > 1.1.0
-                    - restofire
-                    - coredata
-                    - uberribs
+                    -  restofire
+                     -   coredata
+                      #  - commentedTarget
+                     -  uberribs
                     # https://github.com/RahulKatariya/aarkay-plugin-personal.git, b-master
                     - Personal
                     """

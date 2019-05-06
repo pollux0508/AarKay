@@ -42,9 +42,10 @@ public struct AarKayFile: Equatable, Hashable {
                     .missingAarKayDependency(url: url)
             )
         }
+        // TODO: - Optmization
         var urlVersionRanges: [Int: [Int]] = [:]
         for (index, element) in lines.enumerated() {
-            if !element.trimmingCharacters(in: .whitespaces).hasPrefix("-") {
+            if !element.trimmingCharacters(in: CharacterSet(charactersIn: " #")).hasPrefix("-") {
                 urlVersionRanges[index] = []
             } else {
                 urlVersionRanges[urlVersionRanges.keys.sorted().last!]!.append(index)
@@ -52,16 +53,25 @@ public struct AarKayFile: Equatable, Hashable {
         }
         self.dependencies = try urlVersionRanges
             .filter { key, _ -> Bool in
-                return !lines[key].trimmingCharacters(in: .whitespaces).hasPrefix("#")
+                !lines[key].trimmingCharacters(in: .whitespaces)
+                    .hasPrefix(AarKayFile.commentIndicator)
             }
             .sorted { $0.key < $1.key }
             .map { (key, value) -> Dependency in
                 let dep = lines[key]
-                let targets = value.map { lines[$0] }.map { $0.replacingOccurrences(
-                    of: "\\s?-\\s*",
-                    with: "",
-                    options: [.regularExpression]
-                ) }
+                let targets = value
+                    .map { lines[$0] }
+                    .filter {
+                        !$0.trimmingCharacters(in: .whitespaces)
+                            .hasPrefix(AarKayFile.commentIndicator)
+                    }
+                    .map {
+                        $0.replacingOccurrences(
+                            of: "\\s?-\\s*",
+                            with: "",
+                            options: [.regularExpression]
+                        )
+                    }
                 return try Dependency(string: dep, targets: targets)
             }
         let allTargets = dependencies
