@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+bundle exec jazzy \
+  --clean \
+  --module AarKayKit \
+  --output docs
