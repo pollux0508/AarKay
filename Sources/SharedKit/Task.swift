@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import ReactiveTask
-import ReactiveSwift
 
 public struct Task {
     /// The path to the executable that should be launched.
@@ -45,52 +43,28 @@ public struct Task {
     /// - Returns: A result containing either success or `AarKayError`
     public func run(
         output: ((String) -> Void)? = nil
-    ) -> Result<(), TaskError> {
-        let task = ReactiveTask.Task(
-            launchPath,
-            arguments: arguments,
-            workingDirectoryPath: workingDirectoryPath,
-            environment: environment
-        )
-        let result = task.launch()
-            .flatMapTaskEvents(.concat) { data in
-                SignalProducer(
-                    value: String(data: data, encoding: .utf8)
-                )
+    ) -> Result<(), Error> {
+        let process = Process()
+        process.launchPath = launchPath
+        process.arguments = arguments
+        if let env = environment { process.environment = env }
+        if let wdp = workingDirectoryPath { process.currentDirectoryPath = wdp }
+        let outputPipe = Pipe()
+        process.standardOutput = outputPipe
+        outputPipe.fileHandleForReading.readabilityHandler = { fileHandle in
+            if let string = String(data: fileHandle.availableData, encoding: .utf8) {
+                output?(string)
             }
-        return result.waitOnCommand(output: output)
-    }
-}
-
-extension SignalProducer where Value == TaskEvent<String?>, Error == TaskError {
-    /// Waits on a SignalProducer that implements the behavior of a CommandProtocol.
-    internal func waitOnCommand(
-        output: ((String) -> Void)? = nil
-    ) -> Result<(), TaskError> {
-        let result = producer
-            .on(
-                event: { event in
-                    switch event {
-                    case .value(let value):
-                        switch value {
-                        case .standardOutput(let data):
-                            if let o = String(data: data, encoding: .utf8) {
-                                output?(o)
-                            }
-                        case .standardError(let data):
-                            if let o = String(data: data, encoding: .utf8) {
-                                output?(o)
-                            }
-                        default: break
-                        }
-                    default: break
-                    }
-                }
-            )
-            .then(SignalProducer<(), TaskError>.empty)
-            .wait()
-
-        ReactiveTask.Task.waitForAllTaskTermination()
-        return result
+        }
+        let errorPipe = Pipe()
+        process.standardError = errorPipe
+        errorPipe.fileHandleForReading.readabilityHandler = { fileHandle in
+            if let string = String(data: fileHandle.availableData, encoding: .utf8) {
+                output?(string)
+            }
+        }
+        process.launch()
+        process.waitUntilExit()
+        return .success(())
     }
 }

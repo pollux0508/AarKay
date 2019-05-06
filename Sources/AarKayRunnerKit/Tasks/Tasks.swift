@@ -28,7 +28,7 @@ public class Tasks {
             workingDirectoryPath: path
         )
         return task.run(output: output)
-            .mapError { AarKayError.taskError($0.description) }
+            .mapError { AarKayError.taskError($0.localizedDescription) }
     }
 
     /// Updates the dependencies of `AarKayRunner` swift package.
@@ -49,9 +49,14 @@ public class Tasks {
             workingDirectoryPath: path
         )
         let result = task.run(output: output)
-            .mapError { AarKayError.taskError($0.description) }
-        guard result.error == nil else { return result }
-        return build(at: path)
+        switch result {
+        case .success:
+            return build(at: path)
+        case .failure:
+            return result.mapError {
+                AarKayError.taskError($0.localizedDescription)
+            }
+        }
     }
 
     /// Resolves the `AarKayRunner` swift packages with respect to Package.resolved.
@@ -72,9 +77,14 @@ public class Tasks {
             workingDirectoryPath: path
         )
         let result = task.run(output: output)
-            .mapError { AarKayError.taskError($0.description) }
-        guard result.error == nil else { return result }
-        return build(at: path)
+        switch result {
+        case .success:
+            return build(at: path)
+        case .failure:
+            return result.mapError {
+                AarKayError.taskError($0.localizedDescription)
+            }
+        }
     }
 
     /// Executes the path as the shell command.
@@ -90,6 +100,6 @@ public class Tasks {
     ) -> Result<(), AarKayError> {
         return Task(path, arguments: arguments)
             .run(output: output)
-            .mapError { AarKayError.taskError($0.description) }
+            .mapError { AarKayError.taskError($0.localizedDescription) }
     }
 }

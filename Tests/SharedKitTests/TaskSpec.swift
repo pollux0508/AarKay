@@ -14,10 +14,10 @@ class TaskSpec: QuickSpec {
     override func spec() {
         describe("Task") {
             it("should execute") {
-                let result = Task("/bin/echo", arguments: [ "foobar" ])
+                Task("/bin/echo", arguments: ["foobar"])
                     .run(output: { output in
                         print("Output -> \(output)")
-                })
+                    })
             }
         }
     }
