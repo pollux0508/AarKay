@@ -1,6 +1,6 @@
 //
 //  Task.swift
-//  AarKayRunnerKit
+//  SharedKit
 //
 //  Created by Rahul Katariya on 15/04/19.
 //
@@ -9,26 +9,26 @@ import Foundation
 import ReactiveTask
 import ReactiveSwift
 
-struct Task {
+public struct Task {
     /// The path to the executable that should be launched.
-    var launchPath: String
+    public let launchPath: String
 
     /// Any arguments to provide to the executable.
-    var arguments: [String]
+    public let arguments: [String]
 
     /// The path to the working directory in which the process should be
     /// launched.
     ///
     /// If nil, the launched task will inherit the working directory of its
     /// parent.
-    var workingDirectoryPath: String?
+    public let workingDirectoryPath: String?
 
     /// Environment variables to set for the launched process.
     ///
     /// If nil, the launched task will inherit the environment of its parent.
-    var environment: [String: String]?
+    public let environment: [String: String]?
 
-    init(
+    public init(
         _ launchPath: String,
         arguments: [String] = [],
         workingDirectoryPath: String? = nil,
@@ -43,9 +43,9 @@ struct Task {
     /// Launches the task and prints the output.
     ///
     /// - Returns: A result containing either success or `AarKayError`
-    func run(
+    public func run(
         standardOutput: ((String) -> Void)? = nil
-    ) -> Result<(), AarKayError> {
+    ) -> Result<(), TaskError> {
         let task = ReactiveTask.Task(
             launchPath,
             arguments: arguments,
@@ -66,7 +66,7 @@ extension SignalProducer where Value == TaskEvent<String?>, Error == TaskError {
     /// Waits on a SignalProducer that implements the behavior of a CommandProtocol.
     internal func waitOnCommand(
         standardOutput: ((String) -> Void)? = nil
-    ) -> Result<(), AarKayError> {
+    ) -> Result<(), TaskError> {
         let result = producer
             .on(
                 event: { event in
@@ -87,8 +87,7 @@ extension SignalProducer where Value == TaskEvent<String?>, Error == TaskError {
                     }
                 }
             )
-            .mapError { AarKayError.taskError($0.description) }
-            .then(SignalProducer<(), AarKayError>.empty)
+            .then(SignalProducer<(), TaskError>.empty)
             .wait()
 
         ReactiveTask.Task.waitForAllTaskTermination()

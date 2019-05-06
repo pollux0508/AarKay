@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedKit
 
 /// Type that encapsulates all task events in AarKay.
 public class Tasks {
@@ -27,6 +28,7 @@ public class Tasks {
             workingDirectoryPath: path
         )
         return task.run(standardOutput: standardOutput)
+            .mapError { AarKayError.taskError($0.description) }
     }
 
     /// Updates the dependencies of `AarKayRunner` swift package.
@@ -47,6 +49,7 @@ public class Tasks {
             workingDirectoryPath: path
         )
         let result = task.run(standardOutput: standardOutput)
+            .mapError { AarKayError.taskError($0.description) }
         guard result.error == nil else { return result }
         return build(at: path)
     }
@@ -69,6 +72,7 @@ public class Tasks {
             workingDirectoryPath: path
         )
         let result = task.run(standardOutput: standardOutput)
+            .mapError { AarKayError.taskError($0.description) }
         guard result.error == nil else { return result }
         return build(at: path)
     }
@@ -84,6 +88,8 @@ public class Tasks {
         arguments: [String] = [],
         standardOutput: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
-        return Task(path, arguments: arguments).run(standardOutput: standardOutput)
+        return Task(path, arguments: arguments)
+            .run(standardOutput: standardOutput)
+            .mapError { AarKayError.taskError($0.description) }
     }
 }

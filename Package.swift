@@ -87,13 +87,14 @@ let package = Package(
             name: "AarKayRunnerKit",
             dependencies: [
                 "SharedKit",
-                "ReactiveTask",
                 "Curry",
             ]
         ),
         .target(
             name: "SharedKit",
-            dependencies: []
+            dependencies: [
+                "ReactiveTask",
+            ]
         ),
         .testTarget(
             name: "AarKayTests",
@@ -123,6 +124,14 @@ let package = Package(
             name: "AarKayRunnerKitTests",
             dependencies: [
                 "AarKayRunnerKit",
+                "Quick",
+                "Nimble",
+            ]
+        ),
+        .testTarget(
+            name: "SharedKitTests",
+            dependencies: [
+                "SharedKit",
                 "Quick",
                 "Nimble",
             ]
