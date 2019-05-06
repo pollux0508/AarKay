@@ -12,7 +12,7 @@ public class InstallTask {
         at path: String,
         bootstrapper: Bootstrapper,
         force: Bool = false,
-        standardOutput: ((String) -> Void)? = nil
+        output: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         do {
             try bootstrapper.updatePackageSwift(
@@ -24,7 +24,7 @@ public class InstallTask {
 
         return Tasks.install(
             at: path,
-            standardOutput: standardOutput
+            output: output
         )
     }
 }

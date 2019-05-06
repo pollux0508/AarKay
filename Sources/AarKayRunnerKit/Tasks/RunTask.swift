@@ -15,7 +15,7 @@ public class RunTask {
         force: Bool = false,
         dryrun: Bool = false,
         exitOnError: Bool = false,
-        standardOutput: ((String) -> Void)? = nil
+        output: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         var arguments: [String] = ["--path", workingDirectoryPath]
         if verbose { arguments.append("--verbose") }
@@ -26,7 +26,7 @@ public class RunTask {
         return Tasks.execute(
             at: path,
             arguments: arguments,
-            standardOutput: standardOutput
+            output: output
         )
     }
 }

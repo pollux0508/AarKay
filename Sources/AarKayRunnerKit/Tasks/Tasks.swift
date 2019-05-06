@@ -16,7 +16,7 @@ public class Tasks {
     /// - Returns: A result containing either success or `AarKayError`.
     public static func build(
         at path: String,
-        standardOutput: ((String) -> Void)? = nil
+        output: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         let buildArguments = [
             "build", "-c", "debug",
@@ -27,7 +27,7 @@ public class Tasks {
             arguments: buildArguments,
             workingDirectoryPath: path
         )
-        return task.run(standardOutput: standardOutput)
+        return task.run(output: output)
             .mapError { AarKayError.taskError($0.description) }
     }
 
@@ -37,7 +37,7 @@ public class Tasks {
     /// - Returns: A result containing either success or `AarKayError`.
     public static func update(
         at path: String,
-        standardOutput: ((String) -> Void)? = nil
+        output: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         let buildArguments = [
             "package",
@@ -48,7 +48,7 @@ public class Tasks {
             arguments: buildArguments,
             workingDirectoryPath: path
         )
-        let result = task.run(standardOutput: standardOutput)
+        let result = task.run(output: output)
             .mapError { AarKayError.taskError($0.description) }
         guard result.error == nil else { return result }
         return build(at: path)
@@ -60,7 +60,7 @@ public class Tasks {
     /// - Returns: A result containing either success or `AarKayError`.
     public static func install(
         at path: String,
-        standardOutput: ((String) -> Void)? = nil
+        output: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         let buildArguments = [
             "package",
@@ -71,7 +71,7 @@ public class Tasks {
             arguments: buildArguments,
             workingDirectoryPath: path
         )
-        let result = task.run(standardOutput: standardOutput)
+        let result = task.run(output: output)
             .mapError { AarKayError.taskError($0.description) }
         guard result.error == nil else { return result }
         return build(at: path)
@@ -86,10 +86,10 @@ public class Tasks {
     public static func execute(
         at path: String,
         arguments: [String] = [],
-        standardOutput: ((String) -> Void)? = nil
+        output: ((String) -> Void)? = nil
     ) -> Result<(), AarKayError> {
         return Task(path, arguments: arguments)
-            .run(standardOutput: standardOutput)
+            .run(output: output)
             .mapError { AarKayError.taskError($0.description) }
     }
 }

@@ -44,7 +44,7 @@ public struct Task {
     ///
     /// - Returns: A result containing either success or `AarKayError`
     public func run(
-        standardOutput: ((String) -> Void)? = nil
+        output: ((String) -> Void)? = nil
     ) -> Result<(), TaskError> {
         let task = ReactiveTask.Task(
             launchPath,
@@ -58,14 +58,14 @@ public struct Task {
                     value: String(data: data, encoding: .utf8)
                 )
             }
-        return result.waitOnCommand(standardOutput: standardOutput)
+        return result.waitOnCommand(output: output)
     }
 }
 
 extension SignalProducer where Value == TaskEvent<String?>, Error == TaskError {
     /// Waits on a SignalProducer that implements the behavior of a CommandProtocol.
     internal func waitOnCommand(
-        standardOutput: ((String) -> Void)? = nil
+        output: ((String) -> Void)? = nil
     ) -> Result<(), TaskError> {
         let result = producer
             .on(
@@ -75,11 +75,11 @@ extension SignalProducer where Value == TaskEvent<String?>, Error == TaskError {
                         switch value {
                         case .standardOutput(let data):
                             if let o = String(data: data, encoding: .utf8) {
-                                standardOutput?(o)
+                                output?(o)
                             }
                         case .standardError(let data):
                             if let o = String(data: data, encoding: .utf8) {
-                                standardOutput?(o)
+                                output?(o)
                             }
                         default: break
                         }
