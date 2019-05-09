@@ -53,20 +53,20 @@ matrix:
         - brew install rename cookiecutter
       script:
         - |
-          echo version: \'.revision\(\"$TRAVIS_COMMIT\"\)\' > $TRAVIS_BUILD_DIR/AarKay/AarKayData/NoPlugin/aarkay-plugin-pluginlowername/Package.yml
+          echo version: \'.branch\(\"$TRAVIS_BRANCH\"\)\' > $TRAVIS_BUILD_DIR/AarKay/AarKayData/NoPlugin/aarkay-plugin-pluginlowername/Package.yml
         - |
-          echo version: \'r-$TRAVIS_COMMIT\' > $TRAVIS_BUILD_DIR/AarKay/AarKayData/NoPlugin/Sources/AarKayRunnerKit/RunnerFiles/AarKayDependency.Runner.yml
+          echo version: \'b-$TRAVIS_BRANCH\' > $TRAVIS_BUILD_DIR/AarKay/AarKayData/NoPlugin/Sources/AarKayRunnerKit/RunnerFiles/AarKayDependency.Runner.yml
         - git commit -am "Update Plugin Package.swift"
         - sh scripts/run
         - sh scripts/template
         - cd AarKay && cookiecutter --no-input $TRAVIS_BUILD_DIR name=test && cd ..
         - make build
-        - echo "./../../AarKay, r-$TRAVIS_COMMIT" > AarKay/AarKayFile
-        # - echo "https://github.com/rahulkatariya/aarkay-plugin-personal.git, b-master" >> AarKay/AarKayFile
+        - echo "https://github.com/rahulkatariya/AarKay.git, b-$TRAVIS_BRANCH" > AarKay/AarKayFile
+        - echo "https://github.com/rahulkatariya/aarkay-plugin-personal.git, b-master" >> AarKay/AarKayFile
         - .build/release/AarKayRunner init
         - echo "./aarkay-plugin-test, b-master" >> AarKay/AarKayFile
         - .build/release/AarKayRunner install
-        - .build/release/AarKayRunner --verbose --force #--exitOnError
+        - .build/release/AarKayRunner --verbose --force --exitOnError
         - .build/release/AarKayRunner init --global
         - echo "https://github.com/RahulKatariya/AarKay.git, r-$TRAVIS_COMMIT" > $HOME/AarKay/AarKayFile
         - .build/release/AarKayRunner update --global
