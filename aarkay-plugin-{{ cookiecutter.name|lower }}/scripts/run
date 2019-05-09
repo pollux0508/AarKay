@@ -3,4 +3,3 @@
 set -e
 
 echo ">>> Running"
-swift run -Xswiftc "-suppress-warnings" AarKay{{ cookiecutter.name }}CLI
