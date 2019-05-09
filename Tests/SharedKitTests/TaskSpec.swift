@@ -15,7 +15,7 @@ class TaskSpec: QuickSpec {
         describe("Task") {
             it("should execute") {
                 var output = ""
-                let _ = Task("/bin/echo", arguments: ["foobar"])
+                _ = Task("/bin/echo", arguments: ["foobar"])
                     .run { o in output += o }
                 expect(output) == "foobar\n"
             }

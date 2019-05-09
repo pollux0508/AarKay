@@ -62,33 +62,33 @@ public struct Task {
 
         process.standardOutput = outputPipe
         process.standardError = errorPipe
-        
+
         #if !os(Linux)
         outputPipe.fileHandleForReading.readabilityHandler = { fileHandle in
             let data = fileHandle.availableData
-            if let string = String(data: data, encoding: .utf8), data.count > 0  {
+            if let string = String(data: data, encoding: .utf8), data.count > 0 {
                 outputData.append(data)
                 output?(string)
             }
         }
         errorPipe.fileHandleForReading.readabilityHandler = { fileHandle in
             let data = fileHandle.availableData
-            if let string = String(data: data, encoding: .utf8), data.count > 0  {
+            if let string = String(data: data, encoding: .utf8), data.count > 0 {
                 errorData.append(data)
                 output?(string)
             }
         }
         #endif
-        
+
         process.launch()
 
         #if os(Linux)
         outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-        if let string = String(data: outputData, encoding: .utf8), outputData.count > 0  {
+        if let string = String(data: outputData, encoding: .utf8), outputData.count > 0 {
             output?(string)
         }
         errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-        if let string = String(data: errorData, encoding: .utf8), errorData.count > 0  {
+        if let string = String(data: errorData, encoding: .utf8), errorData.count > 0 {
             output?(string)
         }
         #endif
@@ -102,7 +102,7 @@ public struct Task {
         outputPipe.fileHandleForReading.readabilityHandler = nil
         errorPipe.fileHandleForReading.readabilityHandler = nil
         #endif
-        
+
         var result: Result<(), Error>!
         if process.terminationStatus != 0 {
             result = .failure(TaskError(terminationStatus: process.terminationStatus))
