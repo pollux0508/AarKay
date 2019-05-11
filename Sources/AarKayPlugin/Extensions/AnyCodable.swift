@@ -219,6 +219,10 @@ extension _AnyEncodable {
         var container = encoder.singleValueContainer()
 
         switch value {
+        #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
+        case let number as NSNumber:
+            try encode(nsnumber: number, into: &container)
+        #endif
         case is NSNull, is Void:
             try container.encodeNil()
         case let bool as Bool:
@@ -262,6 +266,39 @@ extension _AnyEncodable {
             throw EncodingError.invalidValue(value, context)
         }
     }
+
+    #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
+    private func encode(nsnumber: NSNumber, into container: inout SingleValueEncodingContainer) throws {
+        switch CFNumberGetType(nsnumber) {
+        case .charType:
+            try container.encode(nsnumber.boolValue)
+        case .sInt8Type:
+            try container.encode(nsnumber.int8Value)
+        case .sInt16Type:
+            try container.encode(nsnumber.int16Value)
+        case .sInt32Type:
+            try container.encode(nsnumber.int32Value)
+        case .sInt64Type:
+            try container.encode(nsnumber.int64Value)
+        case .shortType:
+            try container.encode(nsnumber.uint16Value)
+        case .longType:
+            try container.encode(nsnumber.uint32Value)
+        case .longLongType:
+            try container.encode(nsnumber.uint64Value)
+        case .intType, .nsIntegerType, .cfIndexType:
+            try container.encode(nsnumber.intValue)
+        case .floatType, .float32Type:
+            try container.encode(nsnumber.floatValue)
+        case .doubleType, .float64Type, .cgFloatType:
+            try container.encode(nsnumber.doubleValue)
+        #if swift(>=5.0)
+        @unknown default:
+            fatalError()
+        #endif
+        }
+    }
+    #endif
 }
 
 extension AnyEncodable: Equatable {
