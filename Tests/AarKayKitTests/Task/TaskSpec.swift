@@ -8,7 +8,7 @@
 import Foundation
 import Nimble
 import Quick
-@testable import SharedKit
+@testable import AarKayKit
 
 class TaskSpec: QuickSpec {
     override func spec() {

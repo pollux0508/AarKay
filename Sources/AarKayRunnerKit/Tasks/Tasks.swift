@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SharedKit
+import AarKayKit
 
 /// Type that encapsulates all task events in AarKay.
 public class Tasks {

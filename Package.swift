@@ -86,6 +86,7 @@ let package = Package(
             name: "AarKayRunnerKit",
             dependencies: [
                 "SharedKit",
+                "AarKayKit",
                 "Curry",
             ]
         ),
